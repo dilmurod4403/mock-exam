@@ -268,7 +268,14 @@ bot.action("result", async (ctx) => {
 });
 
 // ---------- Ishga tushirish ----------
-bot.launch().then(() => console.log("✅ Bot ishga tushdi. Telegram'da /start bosing."));
+console.log("⏳ Bot ishga tushmoqda...");
+bot
+  .launch({ dropPendingUpdates: true })
+  .catch((err) => {
+    console.error("❌ Bot ishga tushmadi:", err);
+    process.exit(1);
+  });
+console.log("✅ Bot ishladi. Telegram'da /start bosing.");
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));

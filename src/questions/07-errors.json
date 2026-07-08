@@ -43,5 +43,95 @@
     "options": ["catch", "except", "rescue", "error"],
     "correct": [0],
     "explanation": "JavaScript'da xatolik `try ... catch` konstruksiyasi bilan ushlanadi. `except` (Python), `rescue` (Ruby) — boshqa tillarga tegishli."
+  },
+  {
+    "id": "err-06",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\ntry {\n  throw new Error(\"bad\");\n} catch (e) {\n  console.log(e.message);\n}\n```",
+    "options": ["Error", "bad", "e", "undefined"],
+    "correct": [1],
+    "explanation": "`new Error(\"bad\")` xato obyektini yaratadi, uning `message` xossasi \"bad\". catch bloki uni ushlaydi va e.message → \"bad\"."
+  },
+  {
+    "id": "err-07",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\ntry {\n  const a = new Array(-1);\n} catch (e) {\n  console.log(e.name);\n}\n```",
+    "options": ["TypeError", "RangeError", "SyntaxError", "ReferenceError"],
+    "correct": [1],
+    "explanation": "Massiv uzunligi manfiy bo'lishi mumkin emas — `new Array(-1)` `RangeError` (\"Invalid array length\") tashlaydi. RangeError — qiymat ruxsat etilgan diapazondan tashqarida bo'lganda."
+  },
+  {
+    "id": "err-08",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction f() {\n  try {\n    return \"try\";\n  } finally {\n    console.log(\"finally\");\n  }\n}\nconsole.log(f());\n```",
+    "options": ["try", "finally try", "try finally", "finally"],
+    "correct": [1],
+    "explanation": "`finally` return bajarilishidan OLDIN ishlaydi. Avval \"finally\" chop etiladi, keyin funksiya \"try\" ni qaytaradi va u chop etiladi. Tartib: finally, try."
+  },
+  {
+    "id": "err-09",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\ntry {\n  throw \"oops\";\n} catch (e) {\n  console.log(typeof e);\n}\n```",
+    "options": ["\"object\"", "\"string\"", "\"error\"", "\"undefined\""],
+    "correct": [1],
+    "explanation": "JavaScript'da istalgan qiymatni throw qilish mumkin — nafaqat Error obyektini. Bu yerda string tashlangan, shuning uchun typeof e → \"string\"."
+  },
+  {
+    "id": "err-10",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\ntry {\n  null.x;\n} catch (e) {\n  console.log(e.name);\n}\n```",
+    "options": ["ReferenceError", "TypeError", "SyntaxError", "null"],
+    "correct": [1],
+    "explanation": "null obyektning xossasiga murojaat qilish `TypeError` tashlaydi. e.name → \"TypeError\"."
+  },
+  {
+    "id": "err-11",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\ntry {\n  console.log(\"A\");\n} catch (e) {\n  console.log(\"B\");\n} finally {\n  console.log(\"C\");\n}\n```",
+    "options": ["A B C", "A C", "A B", "A"],
+    "correct": [1],
+    "explanation": "try blokida xato yo'q, shuning uchun catch (B) o'tkazib yuboriladi. finally esa doim ishlaydi. Natija: A C."
+  },
+  {
+    "id": "err-12",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\ntry {\n  JSON.parse(\"{bad}\");\n} catch (e) {\n  console.log(e.name);\n}\n```",
+    "options": ["TypeError", "SyntaxError", "RangeError", "ParseError"],
+    "correct": [1],
+    "explanation": "Noto'g'ri formatdagi JSON'ni parse qilganda `SyntaxError` yuz beradi. e.name → \"SyntaxError\"."
+  },
+  {
+    "id": "err-13",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\ntry {\n  try {\n    throw new Error(\"x\");\n  } catch (e) {\n    throw new Error(\"y\");\n  }\n} catch (e) {\n  console.log(e.message);\n}\n```",
+    "options": ["x", "y", "x y", "Error"],
+    "correct": [1],
+    "explanation": "Ichki catch \"x\" ni ushlaydi, lekin yangi xato (\"y\") tashlaydi (rethrow). Tashqi catch \"y\" ni ushlaydi → \"y\"."
+  },
+  {
+    "id": "err-14",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction recurse() {\n  return recurse();\n}\ntry {\n  recurse();\n} catch (e) {\n  console.log(e.name);\n}\n```",
+    "options": ["TypeError", "SyntaxError", "RangeError", "no error"],
+    "correct": [2],
+    "explanation": "Cheksiz rekursiya stek (call stack) ni to'ldiradi va `RangeError` (\"Maximum call stack size exceeded\") tashlaydi."
+  },
+  {
+    "id": "err-15",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\ntry {\n  throw new Error();\n} catch {\n  console.log(\"caught\");\n}\n```",
+    "options": ["SyntaxError", "caught", "undefined", "Error"],
+    "correct": [1],
+    "explanation": "ES2019 dan boshlab catch parametrini (e) tushirib qoldirish mumkin. Xato ushlanadi va \"caught\" chop etiladi."
   }
 ]
