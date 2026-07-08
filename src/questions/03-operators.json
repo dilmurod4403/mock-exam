@@ -1,0 +1,192 @@
+[
+  {
+    "id": "op-01",
+    "topic": "operators",
+    "difficulty": "easy",
+    "question": "What is the output?\n\n```js\nconsole.log(\"5\" + 3);\n```",
+    "options": ["8", "\"53\"", "53", "NaN"],
+    "correct": [1],
+    "explanation": "`+` operatori string bilan ishlaganda konkatenatsiya (birlashtirish) qiladi. Son 3 stringga aylantiriladi va \"5\" + \"3\" = \"53\" (string) hosil bo'ladi."
+  },
+  {
+    "id": "op-02",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(\"5\" - 3);\n```",
+    "options": ["\"53\"", "2", "\"2\"", "NaN"],
+    "correct": [1],
+    "explanation": "`-` operatori faqat sonlar bilan ishlaydi, shuning uchun \"5\" soni 5 ga aylantiriladi va 5 - 3 = 2 (number) chiqadi. Faqat `+` konkatenatsiya qiladi."
+  },
+  {
+    "id": "op-03",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(10 % 3);\n```",
+    "options": ["1", "3", "3.33", "0"],
+    "correct": [0],
+    "explanation": "`%` — qoldiq (modulo) operatori. 10 ni 3 ga bo'lganda butun qismi 3, qoldiq esa 1. Demak 10 % 3 = 1."
+  },
+  {
+    "id": "op-04",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(1 == \"1\");\nconsole.log(1 === \"1\");\n```",
+    "options": [
+      "true, true",
+      "true, false",
+      "false, false",
+      "false, true"
+    ],
+    "correct": [1],
+    "explanation": "`==` tiplarni tenglashtirib (type coercion) taqqoslaydi: 1 == \"1\" → true. `===` esa tip va qiymatni birga tekshiradi, tiplar farqli (number vs string) bo'lgani uchun 1 === \"1\" → false."
+  },
+  {
+    "id": "op-05",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet a = 5;\nconsole.log(a++);\nconsole.log(a);\n```",
+    "options": ["5, 6", "6, 6", "5, 5", "6, 5"],
+    "correct": [0],
+    "explanation": "`a++` — post-inkrement: avval eski qiymat (5) qaytadi, keyin a 1 ga oshadi. Shuning uchun birinchi log 5, ikkinchisi 6 chiqaradi. `++a` bo'lsa 6, 6 bo'lardi."
+  },
+  {
+    "id": "op-06",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(true + true + true);\n```",
+    "options": ["\"truetruetrue\"", "3", "true", "NaN"],
+    "correct": [1],
+    "explanation": "Arifmetik amalda `true` soni 1 ga aylantiriladi (false → 0). Shuning uchun 1 + 1 + 1 = 3 chiqadi."
+  },
+  {
+    "id": "op-07",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(5 > 3 && 2 > 4);\n```",
+    "options": ["true", "false", "5", "undefined"],
+    "correct": [1],
+    "explanation": "`&&` (AND) ikkala tomon ham true bo'lsagina true qaytaradi. 5 > 3 → true, lekin 2 > 4 → false. true && false = false."
+  },
+  {
+    "id": "op-08",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(2 ** 3);\n```",
+    "options": ["6", "8", "9", "23"],
+    "correct": [1],
+    "explanation": "`**` — darajaga ko'tarish (exponentiation) operatori. 2 ** 3 = 2×2×2 = 8."
+  },
+  {
+    "id": "op-09",
+    "topic": "operators",
+    "difficulty": "easy",
+    "question": "What is the output?\n\n```js\nlet a = 5;\na += 3;\nconsole.log(a);\n```",
+    "options": ["5", "3", "8", "53"],
+    "correct": [2],
+    "explanation": "`a += 3` — `a = a + 3` ning qisqa yozilishi. 5 + 3 = 8."
+  },
+  {
+    "id": "op-10",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(2 + 3 * 4);\n```",
+    "options": ["20", "14", "24", "9"],
+    "correct": [1],
+    "explanation": "Ko'paytirish (*) qo'shishdan (+) ustun. Avval 3 * 4 = 12, keyin 2 + 12 = 14."
+  },
+  {
+    "id": "op-11",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(null ?? \"default\");\nconsole.log(0 ?? 5);\n```",
+    "options": [
+      "\"default\", 5",
+      "\"default\", 0",
+      "null, 0",
+      "\"default\", \"default\""
+    ],
+    "correct": [1],
+    "explanation": "`??` (nullish coalescing) faqat null yoki undefined bo'lsa o'ng tomonni qaytaradi. null ?? \"default\" → \"default\". 0 esa null emas, shuning uchun 0 ?? 5 → 0."
+  },
+  {
+    "id": "op-12",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(0 || \"hello\");\n```",
+    "options": ["0", "\"hello\"", "true", "false"],
+    "correct": [1],
+    "explanation": "`||` (OR) birinchi truthy qiymatni qaytaradi. 0 — falsy, shuning uchun keyingi qiymat \"hello\" qaytadi."
+  },
+  {
+    "id": "op-13",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(\"a\" && \"b\");\n```",
+    "options": ["true", "\"a\"", "\"b\"", "false"],
+    "correct": [2],
+    "explanation": "`&&` ikkala tomon truthy bo'lsa, OXIRGI qiymatni qaytaradi. \"a\" va \"b\" ikkalasi truthy, shuning uchun \"b\" qaytadi."
+  },
+  {
+    "id": "op-14",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(!\"\");\n```",
+    "options": ["true", "false", "\"\"", "undefined"],
+    "correct": [0],
+    "explanation": "Bo'sh string — falsy. `!` (NOT) uni teskarisiga o'giradi: !false → true."
+  },
+  {
+    "id": "op-15",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(3 > 2 > 1);\n```",
+    "options": ["true", "false", "1", "SyntaxError"],
+    "correct": [1],
+    "explanation": "Chapdan o'ngga hisoblanadi: 3 > 2 → true. Keyin true > 1 → true 1 ga aylanadi → 1 > 1 → false. Bu klassik 'tuzoq' savol."
+  },
+  {
+    "id": "op-16",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(-\"5\");\n```",
+    "options": ["\"-5\"", "-5", "NaN", "5"],
+    "correct": [1],
+    "explanation": "Unar `-` operatori stringni songa aylantiradi va ishorasini o'zgartiradi: -\"5\" → -5 (number)."
+  },
+  {
+    "id": "op-17",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(5 & 1);\n```",
+    "options": ["1", "5", "6", "0"],
+    "correct": [0],
+    "explanation": "`&` — bit bo'yicha AND. 5 = 101, 1 = 001. Har bitni AND qilamiz: 001 = 1."
+  },
+  {
+    "id": "op-18",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(1 << 2);\n```",
+    "options": ["2", "3", "4", "8"],
+    "correct": [2],
+    "explanation": "`<<` — chapga bit siljitish. 1 (001) ni 2 ta chapga siljitsak 100 = 4 bo'ladi. Har siljish 2 ga ko'paytirishga teng."
+  },
+  {
+    "id": "op-19",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(\"10\" < \"9\");\n```",
+    "options": ["true", "false", "NaN", "TypeError"],
+    "correct": [0],
+    "explanation": "Ikkala tomon string bo'lgani uchun ALIFBO (leksikografik) tartibda taqqoslanadi: birinchi belgilar \"1\" va \"9\". \"1\" kodi kichik, shuning uchun \"10\" < \"9\" → true. (Sonlar sifatida 10 < 9 false bo'lardi.)"
+  },
+  {
+    "id": "op-20",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(typeof 5 + 1);\n```",
+    "options": ["6", "\"number1\"", "\"number\"", "NaN"],
+    "correct": [1],
+    "explanation": "`typeof` operatori `+` dan ustun. Avval typeof 5 → \"number\", keyin \"number\" + 1 → \"number1\" (string konkatenatsiya)."
+  }
+]

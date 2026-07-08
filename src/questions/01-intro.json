@@ -1,0 +1,167 @@
+[
+  {
+    "id": "intro-01",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "Which organization standardizes the language that JavaScript is based on?",
+    "options": ["W3C", "ECMA International (ECMAScript)", "ISO", "IEEE"],
+    "correct": [1],
+    "explanation": "JavaScript ECMAScript standartiga asoslanadi. Bu standart ECMA International tashkiloti tomonidan (ECMA-262 hujjati) nashr etiladi."
+  },
+  {
+    "id": "intro-02",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "How is JavaScript source code executed?",
+    "options": [
+      "It is compiled to machine code before running",
+      "It is interpreted / just-in-time compiled at runtime by an engine",
+      "It must be converted to Java bytecode first",
+      "It runs only after being linked to a C library"
+    ],
+    "correct": [1],
+    "explanation": "JavaScript — interpretatsiya qilinadigan (JIT-kompilyatsiya bilan) til. Kodni V8, SpiderMonkey kabi engine (dvigatel) ish vaqtida bajaradi. Oldindan machine code'ga kompilyatsiya qilinmaydi."
+  },
+  {
+    "id": "intro-03",
+    "topic": "intro",
+    "difficulty": "medium",
+    "question": "What does the directive on the first line do?\n\n```js\n\"use strict\";\nx = 10;\nconsole.log(x);\n```",
+    "options": [
+      "Prints 10 normally",
+      "Enables strict mode, so assigning to an undeclared variable throws a ReferenceError",
+      "Makes x a global constant",
+      "Has no effect in modern engines"
+    ],
+    "correct": [1],
+    "explanation": "\"use strict\" strict rejimni yoqadi. Strict rejimda e'lon qilinmagan o'zgaruvchiga (x) qiymat berish ReferenceError xatosini keltirib chiqaradi. Oddiy rejimda esa x avtomatik global o'zgaruvchi bo'lardi."
+  },
+  {
+    "id": "intro-04",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "Which of the following are valid JavaScript comments? (Select all that apply)",
+    "options": [
+      "// single line",
+      "/* multi\\nline */",
+      "# hash comment",
+      "<!-- html style -->"
+    ],
+    "correct": [0, 1],
+    "explanation": "JavaScript'da faqat ikki xil izoh bor: `//` (bir qatorli) va `/* ... */` (ko'p qatorli). `#` (Python uslubi) va `<!-- -->` (HTML uslubi) JS'da izoh emas."
+  },
+  {
+    "id": "intro-05",
+    "topic": "intro",
+    "difficulty": "medium",
+    "question": "Which statement about JavaScript is TRUE?",
+    "options": [
+      "JavaScript and Java are the same language",
+      "JavaScript is a statically typed language",
+      "JavaScript is a dynamically typed language",
+      "Variable types must be declared explicitly"
+    ],
+    "correct": [2],
+    "explanation": "JavaScript — dinamik tipli til: o'zgaruvchining tipi ish vaqtida aniqlanadi va o'zgarishi mumkin. Java bilan hech qanday aloqasi yo'q (faqat nom o'xshash)."
+  },
+  {
+    "id": "intro-06",
+    "topic": "intro",
+    "difficulty": "medium",
+    "question": "Are these two identifiers the same in JavaScript?\n\n```js\nlet userName;\nlet username;\n```",
+    "options": [
+      "Yes, JavaScript ignores letter case",
+      "No, JavaScript is case-sensitive so they are different",
+      "It causes a SyntaxError",
+      "Only inside functions"
+    ],
+    "correct": [1],
+    "explanation": "JavaScript katta-kichik harflarga sezgir (case-sensitive). `userName` va `username` — ikki xil o'zgaruvchi. Shuning uchun nomlarni doim bir xil yozish kerak."
+  },
+  {
+    "id": "intro-07",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "Which of the following is a reserved keyword in JavaScript?",
+    "options": ["myFunction", "return", "counter", "result"],
+    "correct": [1],
+    "explanation": "`return` — tilning zaxiralangan kalit so'zi (keyword) va uni o'zgaruvchi nomi sifatida ishlatib bo'lmaydi. Qolganlari oddiy identifikatorlar."
+  },
+  {
+    "id": "intro-08",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "Which character is conventionally used to terminate a statement in JavaScript?",
+    "options": ["Colon :", "Semicolon ;", "Period .", "Comma ,"],
+    "correct": [1],
+    "explanation": "Ko'rsatma (statement) nuqta-vergul `;` bilan tugatiladi. JS'da ASI (avtomatik nuqta-vergul qo'yish) bor, lekin aniqlik uchun `;` qo'yish tavsiya etiladi."
+  },
+  {
+    "id": "intro-09",
+    "topic": "intro",
+    "difficulty": "medium",
+    "question": "The set of rules that defines how symbols and words may be combined to form a correct program is called its:",
+    "options": ["Semantics", "Syntax", "Runtime", "Console"],
+    "correct": [1],
+    "explanation": "Sintaksis (syntax) — kodning to'g'ri tuzilish qoidalari. Semantika (semantics) esa kodning MA'NOSI — u nima qilishi bilan bog'liq."
+  },
+  {
+    "id": "intro-10",
+    "topic": "intro",
+    "difficulty": "medium",
+    "question": "What does an interpreter do?",
+    "options": [
+      "Translates the whole program into machine code once, before running",
+      "Reads and executes the source code statement by statement",
+      "Converts machine code back into source code",
+      "Only checks the code for syntax errors"
+    ],
+    "correct": [1],
+    "explanation": "Interpretator kodni ketma-ket, satrma-satr o'qib bajaradi. Kompilyator esa butun kodni oldindan machine code'ga o'giradi. JavaScript interpretatsiya qilinadi (JIT bilan)."
+  },
+  {
+    "id": "intro-11",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "A fixed value written directly in the source code (like 42 or \"hello\") is called a:",
+    "options": ["Variable", "Literal", "Operator", "Function"],
+    "correct": [1],
+    "explanation": "Kodda to'g'ridan-to'g'ri yozilgan o'zgarmas qiymat — literal (masalan, 42, \"hello\", true). O'zgaruvchi esa qiymatni saqlovchi nomdir."
+  },
+  {
+    "id": "intro-12",
+    "topic": "intro",
+    "difficulty": "medium",
+    "question": "Which of the following is a VALID variable identifier? (Select all that apply)",
+    "options": ["_count", "2ndValue", "$price", "my-var"],
+    "correct": [0, 2],
+    "explanation": "Identifikator harf, `_` yoki `$` bilan boshlanishi mumkin. `2ndValue` raqam bilan boshlangani uchun, `my-var` esa `-` (tire) borligi uchun noto'g'ri."
+  },
+  {
+    "id": "intro-13",
+    "topic": "intro",
+    "difficulty": "medium",
+    "question": "Which ECMAScript version introduced the `let` and `const` keywords?",
+    "options": ["ES3", "ES5", "ES6 (ES2015)", "ES2020"],
+    "correct": [2],
+    "explanation": "`let` va `const` ES6 (ES2015) da qo'shilgan. Undan oldin faqat `var` bor edi."
+  },
+  {
+    "id": "intro-14",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "How many values does the Boolean type have?",
+    "options": ["1", "2", "10", "Unlimited"],
+    "correct": [1],
+    "explanation": "Boolean (mantiqiy) tipida faqat ikki qiymat bor: `true` va `false`."
+  },
+  {
+    "id": "intro-15",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "Which method prints a message to the console?",
+    "options": ["console.write()", "console.print()", "console.log()", "print.console()"],
+    "correct": [2],
+    "explanation": "`console.log()` konsolga xabar chiqaradi. Bu debug qilish va natija ko'rish uchun eng ko'p ishlatiladigan usul."
+  }
+]

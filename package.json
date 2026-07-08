@@ -1,0 +1,19 @@
+{
+  "name": "jsa-mock-exam-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for OpenEDG JS Institute JSA (JavaScript Associate) mock exams",
+  "type": "module",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js",
+    "dev": "node --watch src/bot.js",
+    "check": "node src/validate.js"
+  },
+  "keywords": ["javascript", "jsa", "openedg", "certification", "telegram", "quiz"],
+  "author": "Dilmurodbek",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "telegraf": "^4.16.3"
+  }
+}

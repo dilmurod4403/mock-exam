@@ -1,0 +1,47 @@
+[
+  {
+    "id": "err-01",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\ntry {\n  console.log(\"A\");\n  throw new Error(\"oops\");\n  console.log(\"B\");\n} catch (e) {\n  console.log(\"C\");\n}\n```",
+    "options": ["A B C", "A C", "A B", "C"],
+    "correct": [1],
+    "explanation": "\"A\" chop etiladi, keyin throw xato tashlaydi — shuning uchun \"B\" ga yetmaydi. Boshqaruv catch blokiga o'tadi va \"C\" chiqadi. Natija: A C."
+  },
+  {
+    "id": "err-02",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\ntry {\n  console.log(\"try\");\n} finally {\n  console.log(\"finally\");\n}\n```",
+    "options": ["try", "finally", "try finally", "nothing"],
+    "correct": [2],
+    "explanation": "`finally` bloki xato bo'ladimi yoki yo'qmi — DOIMO ishlaydi. Bu yerda xato yo'q, shuning uchun avval \"try\", keyin \"finally\" chiqadi."
+  },
+  {
+    "id": "err-03",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What type of error occurs?\n\n```js\nconsole.log(undefinedVariable);\n```",
+    "options": ["SyntaxError", "TypeError", "ReferenceError", "RangeError"],
+    "correct": [2],
+    "explanation": "E'lon qilinmagan o'zgaruvchiga murojaat qilinganda `ReferenceError` yuz beradi (\"undefinedVariable is not defined\")."
+  },
+  {
+    "id": "err-04",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What type of error occurs?\n\n```js\nconst x = null;\nx.toUpperCase();\n```",
+    "options": ["ReferenceError", "TypeError", "SyntaxError", "no error"],
+    "correct": [1],
+    "explanation": "null qiymatida metod chaqirilsa `TypeError` yuz beradi (\"Cannot read properties of null\"). TypeError — noto'g'ri tipdagi qiymat bilan amal qilinganda."
+  },
+  {
+    "id": "err-05",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "Which block catches an exception in JavaScript?",
+    "options": ["catch", "except", "rescue", "error"],
+    "correct": [0],
+    "explanation": "JavaScript'da xatolik `try ... catch` konstruksiyasi bilan ushlanadi. `except` (Python), `rescue` (Ruby) — boshqa tillarga tegishli."
+  }
+]

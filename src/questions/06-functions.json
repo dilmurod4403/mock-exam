@@ -1,0 +1,182 @@
+[
+  {
+    "id": "fn-01",
+    "topic": "functions",
+    "difficulty": "easy",
+    "question": "What is the output?\n\n```js\nfunction add(a, b) {\n  return a + b;\n}\nconsole.log(add(2, 3));\n```",
+    "options": ["23", "5", "undefined", "NaN"],
+    "correct": [1],
+    "explanation": "Funksiya ikki argumentni qo'shib qaytaradi. Ikkalasi ham son bo'lgani uchun 2 + 3 = 5."
+  },
+  {
+    "id": "fn-02",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfunction greet(name) {\n  return \"Hi \" + name;\n}\nconsole.log(greet());\n```",
+    "options": ["\"Hi \"", "\"Hi undefined\"", "\"Hi null\"", "Error"],
+    "correct": [1],
+    "explanation": "Argument berilmasa, parametr `undefined` bo'ladi. \"Hi \" + undefined → \"Hi undefined\" (undefined stringga aylanadi)."
+  },
+  {
+    "id": "fn-03",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfunction f() {\n  console.log(\"run\");\n}\nconsole.log(typeof f);\n```",
+    "options": ["\"object\"", "\"function\"", "\"undefined\"", "run"],
+    "correct": [1],
+    "explanation": "Funksiyaning tipi `function` bo'ladi. Bu yerda f() chaqirilmagan (qavs yo'q), shuning uchun \"run\" chop etilmaydi — faqat typeof natijasi \"function\" chiqadi."
+  },
+  {
+    "id": "fn-04",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconst double = x => x * 2;\nconsole.log(double(4));\n```",
+    "options": ["8", "\"x * 2\"", "undefined", "NaN"],
+    "correct": [0],
+    "explanation": "Bu arrow (o'q) funksiya. Bitta ifoda bo'lsa, `return` avtomatik. double(4) → 4 * 2 = 8."
+  },
+  {
+    "id": "fn-05",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction f(a, b = 10) {\n  return a + b;\n}\nconsole.log(f(5));\n```",
+    "options": ["5", "15", "NaN", "undefined"],
+    "correct": [1],
+    "explanation": "b uchun standart (default) qiymat 10 berilgan. f(5) chaqirilganda b berilmagani uchun 10 bo'ladi: 5 + 10 = 15."
+  },
+  {
+    "id": "fn-06",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet x = 1;\nfunction change() {\n  let x = 2;\n}\nchange();\nconsole.log(x);\n```",
+    "options": ["1", "2", "undefined", "ReferenceError"],
+    "correct": [0],
+    "explanation": "Funksiya ichidagi `let x = 2` — lokal o'zgaruvchi (function scope). U tashqi x ga ta'sir qilmaydi. Shuning uchun tashqi x hali ham 1."
+  },
+  {
+    "id": "fn-07",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(greet());\nfunction greet() {\n  return \"hi\";\n}\n```",
+    "options": ["hi", "undefined", "ReferenceError", "TypeError"],
+    "correct": [0],
+    "explanation": "Funksiya DEKLARATSIYASI to'liq hoisting bo'ladi — e'longacha chaqirish mumkin. Shuning uchun \"hi\" chiqadi. (Funksiya IFODASI — const f = function... bunday ishlamaydi.)"
+  },
+  {
+    "id": "fn-08",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction sum(...nums) {\n  return nums.reduce((a, b) => a + b, 0);\n}\nconsole.log(sum(1, 2, 3, 4));\n```",
+    "options": ["10", "[1,2,3,4]", "1234", "24"],
+    "correct": [0],
+    "explanation": "`...nums` — rest parametr: barcha argumentlarni massivga yig'adi. reduce ularni jamlaydi: 1+2+3+4 = 10."
+  },
+  {
+    "id": "fn-09",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction counter() {\n  let c = 0;\n  return () => ++c;\n}\nconst inc = counter();\nconsole.log(inc(), inc());\n```",
+    "options": ["0 0", "1 1", "1 2", "undefined undefined"],
+    "correct": [2],
+    "explanation": "Bu closure (yopilma): ichki funksiya tashqi `c` ni 'eslab qoladi'. Har chaqiruvda c oshadi: 1, keyin 2."
+  },
+  {
+    "id": "fn-10",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction multiplier(n) {\n  return x => x * n;\n}\nconst double = multiplier(2);\nconsole.log(double(5));\n```",
+    "options": ["10", "2", "5", "7"],
+    "correct": [0],
+    "explanation": "multiplier(2) ichida n=2 saqlanadi va yangi funksiya qaytadi. double(5) → 5 * 2 = 10. Bu ham closure misoli."
+  },
+  {
+    "id": "fn-11",
+    "topic": "functions",
+    "difficulty": "easy",
+    "question": "What is the output?\n\n```js\nfunction f() {\n  let x = 5;\n}\nconsole.log(f());\n```",
+    "options": ["5", "undefined", "null", "Error"],
+    "correct": [1],
+    "explanation": "Funksiyada `return` bo'lmasa, u avtomatik `undefined` qaytaradi."
+  },
+  {
+    "id": "fn-12",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction fact(n) {\n  return n <= 1 ? 1 : n * fact(n - 1);\n}\nconsole.log(fact(4));\n```",
+    "options": ["4", "10", "24", "12"],
+    "correct": [2],
+    "explanation": "Rekursiya (funksiya o'zini chaqiradi): 4 × 3 × 2 × 1 = 24 (faktorial)."
+  },
+  {
+    "id": "fn-13",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfunction apply(fn, val) {\n  return fn(val);\n}\nconsole.log(apply(x => x + 1, 10));\n```",
+    "options": ["10", "11", "1", "x + 1"],
+    "correct": [1],
+    "explanation": "Funksiyani argument sifatida uzatish — callback. apply ichida fn(10) chaqiriladi → 10 + 1 = 11."
+  },
+  {
+    "id": "fn-14",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconst r = (function () {\n  return 42;\n})();\nconsole.log(r);\n```",
+    "options": ["undefined", "function", "42", "SyntaxError"],
+    "correct": [2],
+    "explanation": "Bu IIFE (darhol chaqiriladigan funksiya ifodasi) — yaratilishi bilan o'zi ishga tushadi. Qaytgan qiymat 42 r ga tushadi."
+  },
+  {
+    "id": "fn-15",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction f() {\n  return arguments.length;\n}\nconsole.log(f(1, 2, 3));\n```",
+    "options": ["0", "3", "undefined", "Error"],
+    "correct": [1],
+    "explanation": "`arguments` — oddiy funksiya ichida barcha uzatilgan argumentlarni saqlaydigan maxsus obyekt. length → 3. (Arrow funksiyalarda arguments yo'q.)"
+  },
+  {
+    "id": "fn-16",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfunction add(a, b) {\n  return a + b;\n}\nconsole.log(add(1, 2, 3, 4));\n```",
+    "options": ["10", "3", "Error", "7"],
+    "correct": [1],
+    "explanation": "Ortiqcha argumentlar (3, 4) shunchaki e'tiborsiz qoldiriladi. Faqat a=1, b=2 ishlatiladi → 3."
+  },
+  {
+    "id": "fn-17",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconst make = () => ({ id: 1 });\nconsole.log(make().id);\n```",
+    "options": ["1", "undefined", "{id: 1}", "SyntaxError"],
+    "correct": [0],
+    "explanation": "Arrow funksiyada obyekt qaytarish uchun uni qavsga olish kerak: `() => ({...})`. Aks holda {} blok deb tushuniladi. make().id → 1."
+  },
+  {
+    "id": "fn-18",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconst f = function (x) {\n  return x * x;\n};\nconsole.log(f(3));\n```",
+    "options": ["6", "9", "33", "undefined"],
+    "correct": [1],
+    "explanation": "Funksiya ifodasi (function expression) o'zgaruvchiga saqlangan. f(3) → 3 * 3 = 9."
+  },
+  {
+    "id": "fn-19",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction f(a, b = a * 2) {\n  return a + b;\n}\nconsole.log(f(3));\n```",
+    "options": ["3", "6", "9", "NaN"],
+    "correct": [2],
+    "explanation": "Standart parametr oldingi parametrdan foydalanishi mumkin. b berilmagani uchun b = a*2 = 6, natija 3 + 6 = 9."
+  },
+  {
+    "id": "fn-20",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfunction check(n) {\n  if (n > 0) return \"pos\";\n  return \"not\";\n}\nconsole.log(check(-5));\n```",
+    "options": ["pos", "not", "undefined", "-5"],
+    "correct": [1],
+    "explanation": "`return` funksiyani darhol to'xtatadi. n > 0 noto'g'ri (-5), shuning uchun birinchi return o'tkazilib, \"not\" qaytadi."
+  }
+]

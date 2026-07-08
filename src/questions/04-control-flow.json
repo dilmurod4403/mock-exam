@@ -1,0 +1,182 @@
+[
+  {
+    "id": "cf-01",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet x = 0;\nif (x) {\n  console.log(\"A\");\n} else {\n  console.log(\"B\");\n}\n```",
+    "options": ["A", "B", "0", "nothing"],
+    "correct": [1],
+    "explanation": "0 — 'falsy' qiymat (false kabi ishlaydi). Shuning uchun if(x) sharti false bo'ladi va else bloki ishlaydi → \"B\". Falsy qiymatlar: 0, \"\", null, undefined, NaN, false."
+  },
+  {
+    "id": "cf-02",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "How many times does this loop run?\n\n```js\nfor (let i = 0; i < 5; i++) {\n  console.log(i);\n}\n```",
+    "options": ["4", "5", "6", "infinite"],
+    "correct": [1],
+    "explanation": "i 0 dan boshlanadi va i < 5 shart bajarilguncha ishlaydi: 0, 1, 2, 3, 4 — jami 5 marta. i=5 bo'lganda shart false bo'lib to'xtaydi."
+  },
+  {
+    "id": "cf-03",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet i = 0;\nwhile (i < 3) {\n  console.log(i);\n  i++;\n}\n```",
+    "options": ["0 1 2", "1 2 3", "0 1 2 3", "infinite loop"],
+    "correct": [0],
+    "explanation": "while sikli i < 3 bo'lguncha ishlaydi. i 0, 1, 2 qiymatlarida chop etiladi, i=3 bo'lganda shart false bo'ladi. Natija: 0 1 2."
+  },
+  {
+    "id": "cf-04",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nswitch (2) {\n  case 1:\n    console.log(\"one\");\n  case 2:\n    console.log(\"two\");\n  case 3:\n    console.log(\"three\");\n  default:\n    console.log(\"other\");\n}\n```",
+    "options": ["two", "two three other", "three", "other"],
+    "correct": [1],
+    "explanation": "`break` yo'qligi sababli 'fall-through' yuz beradi: case 2 dan boshlab, keyingi barcha caselar ham ishlaydi. Natija: two, three, other. Har case oxiriga break qo'yilsa faqat \"two\" chiqardi."
+  },
+  {
+    "id": "cf-05",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfor (let i = 0; i < 5; i++) {\n  if (i === 2) continue;\n  console.log(i);\n}\n```",
+    "options": ["0 1 2 3 4", "0 1 3 4", "0 1", "2"],
+    "correct": [1],
+    "explanation": "`continue` joriy iteratsiyani o'tkazib yuboradi. i === 2 bo'lganda console.log bajarilmaydi, lekin sikl davom etadi. Natija: 0 1 3 4."
+  },
+  {
+    "id": "cf-06",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet result = (5 > 3) ? \"yes\" : \"no\";\nconsole.log(result);\n```",
+    "options": ["yes", "no", "true", "5 > 3"],
+    "correct": [0],
+    "explanation": "Bu ternar (uch amalli) operator: shart ? true_qiymat : false_qiymat. 5 > 3 true bo'lgani uchun \"yes\" qaytadi."
+  },
+  {
+    "id": "cf-07",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet i = 5;\ndo {\n  console.log(i);\n  i++;\n} while (i < 3);\n```",
+    "options": ["nothing", "5", "5 6 7", "infinite loop"],
+    "correct": [1],
+    "explanation": "`do...while` avval tanani BAJARADI, keyin shartni tekshiradi. Shuning uchun shart (5 < 3) noto'g'ri bo'lsa ham, sikl kamida bir marta ishlaydi → 5."
+  },
+  {
+    "id": "cf-08",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfor (const x of [10, 20, 30]) {\n  console.log(x);\n}\n```",
+    "options": ["0 1 2", "10 20 30", "[10, 20, 30]", "30"],
+    "correct": [1],
+    "explanation": "`for...of` massiv QIYMATLARI bo'yicha aylanadi: 10, 20, 30. (Indekslar uchun for...in ishlatiladi.)"
+  },
+  {
+    "id": "cf-09",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconst arr = [10, 20, 30];\nfor (const i in arr) {\n  console.log(i);\n}\n```",
+    "options": ["10 20 30", "0 1 2", "1 2 3", "undefined"],
+    "correct": [1],
+    "explanation": "`for...in` INDEKSLAR (kalitlar) bo'yicha aylanadi: 0, 1, 2 (string ko'rinishida). Qiymatlar uchun for...of ishlatiladi."
+  },
+  {
+    "id": "cf-10",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfor (let i = 0; i < 5; i++) {\n  if (i === 3) break;\n  console.log(i);\n}\n```",
+    "options": ["0 1 2 3 4", "0 1 2", "0 1 2 3", "3"],
+    "correct": [1],
+    "explanation": "`break` siklni butunlay to'xtatadi. i === 3 bo'lganda break ishga tushadi, shuning uchun faqat 0, 1, 2 chop etiladi."
+  },
+  {
+    "id": "cf-11",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet c = 0;\nfor (let i = 0; i < 3; i++) {\n  for (let j = 0; j < 2; j++) {\n    c++;\n  }\n}\nconsole.log(c);\n```",
+    "options": ["5", "6", "3", "2"],
+    "correct": [1],
+    "explanation": "Ichma-ich sikl: tashqi 3 marta, har safar ichki 2 martadan ishlaydi. 3 × 2 = 6 marta c oshadi."
+  },
+  {
+    "id": "cf-12",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nswitch (\"b\") {\n  case \"a\":\n    console.log(1);\n    break;\n  case \"b\":\n    console.log(2);\n    break;\n  default:\n    console.log(3);\n}\n```",
+    "options": ["1", "2", "3", "2 3"],
+    "correct": [1],
+    "explanation": "\"b\" case \"b\" ga mos keladi → 2 chop etiladi. `break` borligi sababli keyingi caselarga o'tmaydi."
+  },
+  {
+    "id": "cf-13",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet x = 15;\nif (x < 10) {\n  console.log(\"low\");\n} else if (x < 20) {\n  console.log(\"mid\");\n} else {\n  console.log(\"high\");\n}\n```",
+    "options": ["low", "mid", "high", "nothing"],
+    "correct": [1],
+    "explanation": "x < 10 noto'g'ri, keyingi shart x < 20 → 15 < 20 → true, shuning uchun \"mid\" chiqadi va qolgan bloklar tekshirilmaydi."
+  },
+  {
+    "id": "cf-14",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet i = 0;\nwhile (i > 5) {\n  console.log(i);\n  i++;\n}\nconsole.log(\"done\");\n```",
+    "options": ["0 done", "done", "0 1 2 3 4 5 done", "infinite loop"],
+    "correct": [1],
+    "explanation": "`while` shartni AVVAL tekshiradi. 0 > 5 noto'g'ri, shuning uchun tana umuman ishlamaydi — faqat \"done\" chiqadi."
+  },
+  {
+    "id": "cf-15",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet sum = 0;\nfor (let i = 1; i <= 4; i++) {\n  sum += i;\n}\nconsole.log(sum);\n```",
+    "options": ["4", "10", "6", "15"],
+    "correct": [1],
+    "explanation": "i 1 dan 4 gacha yig'iladi: 1 + 2 + 3 + 4 = 10."
+  },
+  {
+    "id": "cf-16",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet n = 0;\nlet r = n > 0 ? \"pos\" : n < 0 ? \"neg\" : \"zero\";\nconsole.log(r);\n```",
+    "options": ["pos", "neg", "zero", "0"],
+    "correct": [2],
+    "explanation": "Ichma-ich ternar: n > 0 noto'g'ri → ikkinchi ternarga o'tadi: n < 0 ham noto'g'ri → \"zero\" qaytadi."
+  },
+  {
+    "id": "cf-17",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet count = 0;\nfor (const ch of \"abc\") {\n  count++;\n}\nconsole.log(count);\n```",
+    "options": ["1", "3", "0", "abc"],
+    "correct": [1],
+    "explanation": "String ham iteratsiya qilinadi. for...of har bir belgi bo'yicha aylanadi: 'a', 'b', 'c' — 3 marta."
+  },
+  {
+    "id": "cf-18",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nif ([]) {\n  console.log(\"yes\");\n} else {\n  console.log(\"no\");\n}\n```",
+    "options": ["yes", "no", "[]", "undefined"],
+    "correct": [0],
+    "explanation": "Bo'sh massiv `[]` — obyekt, obyektlar esa har doim TRUTHY. Shuning uchun shart true bo'lib \"yes\" chiqadi (garchi massiv bo'sh bo'lsa ham)."
+  },
+  {
+    "id": "cf-19",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nswitch (1) {\n  case \"1\":\n    console.log(\"string\");\n    break;\n  case 1:\n    console.log(\"number\");\n    break;\n}\n```",
+    "options": ["string", "number", "both", "nothing"],
+    "correct": [1],
+    "explanation": "`switch` case'larni `===` (qat'iy tenglik) bilan solishtiradi. 1 (number) \"1\" (string) ga teng emas, faqat `case 1` ga mos keladi → \"number\"."
+  },
+  {
+    "id": "cf-20",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet i = 0;\nfor (;;) {\n  if (i >= 2) break;\n  console.log(i);\n  i++;\n}\n```",
+    "options": ["infinite loop", "0 1", "0 1 2", "nothing"],
+    "correct": [1],
+    "explanation": "`for(;;)` — shartsiz (cheksiz) sikl, lekin ichida break bor. i 0 va 1 da chop etiladi, i=2 bo'lganda break to'xtatadi → 0 1."
+  }
+]
