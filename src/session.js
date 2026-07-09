@@ -1,13 +1,31 @@
-// Har bir foydalanuvchi uchun imtihon holatini xotirada saqlaydi
-const sessions = new Map();
+// Foydalanuvchi sozlamalari (til, daraja) va faol imtihon holatini xotirada saqlaydi
+const sessions = new Map(); // userId -> faol imtihon
+const prefs = new Map(); // userId -> { lang, level }
 
+// ---------- Sozlamalar ----------
+export function getPrefs(userId) {
+  return prefs.get(userId);
+}
+
+export function setPref(userId, key, value) {
+  const p = prefs.get(userId) || {};
+  p[key] = value;
+  prefs.set(userId, p);
+  return p;
+}
+
+export function getLang(userId) {
+  return prefs.get(userId)?.lang || "uz";
+}
+
+// ---------- Imtihon sessiyasi ----------
 export function startSession(userId, { mode, questions }) {
   const session = {
     mode, // 'exam' | 'quiz' | 'topic'
-    questions, // tanlangan savollar ro'yxati
-    index: 0, // joriy savol raqami
-    selected: new Set(), // joriy savolda belgilangan variantlar (multi uchun)
-    answers: [], // har savol uchun: { picked:[...], correct:bool }
+    questions,
+    index: 0,
+    selected: new Set(),
+    answers: [],
     startTime: Date.now(),
   };
   sessions.set(userId, session);
@@ -26,13 +44,9 @@ export function currentQuestion(session) {
   return session.questions[session.index];
 }
 
-// Variantni belgilash/olib tashlash (multi-answer savollar uchun)
 export function toggleSelection(session, optionIndex) {
-  if (session.selected.has(optionIndex)) {
-    session.selected.delete(optionIndex);
-  } else {
-    session.selected.add(optionIndex);
-  }
+  if (session.selected.has(optionIndex)) session.selected.delete(optionIndex);
+  else session.selected.add(optionIndex);
 }
 
 // Javobni baholaydi va navbatdagi savolga o'tadi. To'g'ri bo'lsa true qaytaradi.
@@ -41,8 +55,7 @@ export function submitAnswer(session) {
   const picked = [...session.selected].sort((a, b) => a - b);
   const correct = [...q.correct].sort((a, b) => a - b);
   const isCorrect =
-    picked.length === correct.length &&
-    picked.every((v, i) => v === correct[i]);
+    picked.length === correct.length && picked.every((v, i) => v === correct[i]);
 
   session.answers.push({ questionId: q.id, picked, isCorrect });
   session.selected = new Set();

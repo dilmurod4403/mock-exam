@@ -1,4 +1,4 @@
-// Savol bankini yuklaydi va tanlash funksiyalarini beradi
+// Savol bankini yuklaydi, mavzu/daraja bo'yicha tanlash funksiyalarini beradi
 import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -6,15 +6,32 @@ import { dirname, join } from "node:path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const QUESTIONS_DIR = join(__dirname, "questions");
 
-// Mavzu kodlari va o'zbekcha nomlari
+// Mavzu kodlari va ikki tildagi nomlari
 export const TOPICS = {
-  intro: "Kirish (Introduction to JS)",
-  variables: "O'zgaruvchilar va tiplar",
-  operators: "Operatorlar",
-  "control-flow": "Boshqaruv (if / loops)",
-  collections: "Massiv va obyektlar",
-  functions: "Funksiyalar",
-  errors: "Xatoliklar (try/catch)",
+  intro: { uz: "Kirish", en: "Introduction" },
+  variables: { uz: "O'zgaruvchilar va tiplar", en: "Variables & types" },
+  operators: { uz: "Operatorlar", en: "Operators" },
+  "control-flow": { uz: "Boshqaruv (if / loops)", en: "Control flow (if / loops)" },
+  collections: { uz: "Massiv va obyektlar", en: "Arrays & objects" },
+  functions: { uz: "Funksiyalar", en: "Functions" },
+  errors: { uz: "Xatoliklar (try/catch)", en: "Errors (try/catch)" },
+};
+
+// Sertifikat darajalari. filter — savol shu darajaga kiradimi.
+// JSE = boshlang'ich (easy/medium), JSA = to'liq bank, JSP = advanced (hozircha bo'sh).
+export const LEVELS = {
+  JSE: {
+    label: "JSE — Entry-Level",
+    filter: (q) => q.difficulty === "easy" || q.difficulty === "medium",
+  },
+  JSA: {
+    label: "JSA — Associate",
+    filter: () => true,
+  },
+  JSP: {
+    label: "JSP — Professional",
+    filter: (q) => Array.isArray(q.levels) && q.levels.includes("JSP"),
+  },
 };
 
 // Barcha savollarni JSON fayllardan yuklaymiz
@@ -22,8 +39,7 @@ function loadAll() {
   const files = readdirSync(QUESTIONS_DIR).filter((f) => f.endsWith(".json"));
   const all = [];
   for (const file of files) {
-    const raw = readFileSync(join(QUESTIONS_DIR, file), "utf8");
-    const items = JSON.parse(raw);
+    const items = JSON.parse(readFileSync(join(QUESTIONS_DIR, file), "utf8"));
     all.push(...items);
   }
   return all;
@@ -41,22 +57,25 @@ export function shuffle(array) {
   return a;
 }
 
-// Berilgan mavzu bo'yicha savollar (mavzu bo'lmasa — hammasi)
-export function getByTopic(topic) {
-  if (!topic) return ALL_QUESTIONS;
-  return ALL_QUESTIONS.filter((q) => q.topic === topic);
+// Daraja + (ixtiyoriy) mavzu bo'yicha savollar to'plami
+export function getPool({ level, topic } = {}) {
+  let pool = ALL_QUESTIONS;
+  const lv = LEVELS[level];
+  if (lv) pool = pool.filter(lv.filter);
+  if (topic) pool = pool.filter((q) => q.topic === topic);
+  return pool;
 }
 
-// n ta tasodifiy savol tanlaydi. Iloji bo'lsa mavzular bo'yicha teng taqsimlaydi.
-export function pickQuestions(n, topic = null) {
-  const pool = getByTopic(topic);
+// n ta tasodifiy savol tanlaydi
+export function pickQuestions(n, opts = {}) {
+  const pool = getPool(opts);
   return shuffle(pool).slice(0, Math.min(n, pool.length));
 }
 
-export function statsByTopic() {
+// Berilgan darajada har mavzuda nechta savol borligi (menyu uchun)
+export function topicCounts(level) {
+  const pool = getPool({ level });
   const counts = {};
-  for (const q of ALL_QUESTIONS) {
-    counts[q.topic] = (counts[q.topic] || 0) + 1;
-  }
+  for (const q of pool) counts[q.topic] = (counts[q.topic] || 0) + 1;
   return counts;
 }

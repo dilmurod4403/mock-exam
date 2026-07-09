@@ -1,5 +1,5 @@
-// Savol bankini tekshiradi: id takrorlanmasligi, variantlar va to'g'ri javob indekslari to'g'riligi
-import { ALL_QUESTIONS, TOPICS, statsByTopic } from "./data.js";
+// Savol bankini tekshiradi: id takrorlanmasligi, variantlar, to'g'ri javob va ikki tilli izoh
+import { ALL_QUESTIONS, TOPICS, topicCounts } from "./data.js";
 
 let errors = 0;
 const ids = new Set();
@@ -24,8 +24,14 @@ for (const q of ALL_QUESTIONS) {
   }
   if (new Set(q.correct).size !== (q.correct?.length ?? 0))
     err(`${where} correct ichida takror indeks bor`);
-  if (!q.explanation || !q.explanation.trim())
-    err(`${where} izoh (explanation) bo'sh`);
+
+  const e = q.explanation;
+  if (!e || typeof e !== "object") {
+    err(`${where} izoh (explanation) { uz, en } obyekt bo'lishi kerak`);
+  } else {
+    if (!e.uz || !e.uz.trim()) err(`${where} o'zbekcha izoh bo'sh`);
+    if (!e.en || !e.en.trim()) err(`${where} inglizcha izoh bo'sh`);
+  }
 }
 
 function err(msg) {
@@ -34,10 +40,12 @@ function err(msg) {
 }
 
 console.log(`\nJami savollar: ${ALL_QUESTIONS.length}`);
-console.log("Mavzular bo'yicha:");
-for (const [topic, count] of Object.entries(statsByTopic())) {
-  console.log(`  • ${TOPICS[topic] ?? topic}: ${count}`);
+console.log("Mavzular bo'yicha (JSA — to'liq bank):");
+for (const [topic, count] of Object.entries(topicCounts("JSA"))) {
+  console.log(`  • ${TOPICS[topic]?.uz ?? topic}: ${count}`);
 }
+const jse = Object.values(topicCounts("JSE")).reduce((a, b) => a + b, 0);
+console.log(`\nJSE (Entry) darajasidagi savollar: ${jse}`);
 
 if (errors === 0) {
   console.log("\n✅ Savol banki toza — xato yo'q.\n");

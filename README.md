@@ -1,14 +1,20 @@
 # JSA Mock Exam Bot 🤖
 
-OpenEDG **JS Institute — JSA (JavaScript Associate)** sertifikatiga tayyorgarlik uchun Telegram bot.
-Savollar ingliz tilida (haqiqiy imtihon kabi), izohlar o'zbekcha.
+OpenEDG **JS Institute** sertifikatlariga tayyorgarlik uchun Telegram bot.
+Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yoki inglizcha** (foydalanuvchi tanlaydi).
+
+## Oqim (foydalanuvchi tajribasi)
+
+`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript; boshqalari tez orada) → **sertifikat darajasi** (JSE / JSA / JSP) → **rejim** (imtihon / test / mavzu) → savollar.
 
 ## Imkoniyatlar
 
+- Ikki tilli interfeys va tushuntirishlar (uz / en)
+- Sertifikat darajalari: **JSE** (Entry, asosiy savollar), **JSA** (Associate, to'liq bank), **JSP** (Professional — tez orada)
 - `/exam` — to'liq mock imtihon (40 savolgacha, 70% o'tish balli)
 - `/quiz` — tezkor mashq (10 savol)
 - `/topic` — mavzu bo'yicha mashq
-- Har javobdan keyin o'zbekcha izoh
+- Har javobdan keyin tanlangan tildagi izoh
 - Yakunda natija: ball, foiz, o'tdi/o'tmadi, sarflangan vaqt
 - Bir nechta to'g'ri javobli savollarni qo'llab-quvvatlaydi
 
@@ -46,18 +52,24 @@ Bot ishga tushgach, Telegram'da botingizga `/start` yozing.
 
 ```json
 {
-  "id": "vars-09",
+  "id": "vars-24",
   "topic": "variables",
   "difficulty": "medium",
   "question": "What is the output?\n\n```js\nconsole.log(...);\n```",
   "options": ["A variant", "B variant", "C variant", "D variant"],
   "correct": [0],
-  "explanation": "O'zbekcha tushuntirish."
+  "explanation": {
+    "uz": "O'zbekcha tushuntirish.",
+    "en": "English explanation."
+  }
 }
 ```
 
 - `topic` — mavzu kodi: `intro`, `variables`, `operators`, `control-flow`, `collections`, `functions`, `errors`
+- `difficulty` — `easy` / `medium` / `hard`. JSE darajasi `easy`+`medium` savollardan iborat
 - `correct` — to'g'ri variant(lar) indeksi (0 dan boshlanadi). Bir nechta bo'lsa: `[0, 2]`
+- `explanation` — **ikki tilda**: `{ "uz": "...", "en": "..." }` (ikkalasi ham majburiy)
+- JSP (Professional) darajasiga savol qo'shish uchun savolga `"levels": ["JSP"]` maydonini qo'shing
 - Savol matnida kod bloklarini <code>```js ... ```</code> ichiga oling
 
 Qo'shgach `npm run check` bilan tekshiring.

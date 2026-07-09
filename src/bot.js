@@ -1,7 +1,11 @@
 import "dotenv/config";
 import { Telegraf, Markup } from "telegraf";
-import { TOPICS, pickQuestions, getByTopic } from "./data.js";
+import { TOPICS, LEVELS, pickQuestions, getPool, topicCounts } from "./data.js";
+import { t, LANGS } from "./i18n.js";
 import {
+  getPrefs,
+  setPref,
+  getLang,
   startSession,
   getSession,
   endSession,
@@ -21,12 +25,14 @@ if (!TOKEN) {
 }
 
 // Imtihon sozlamalari
-const EXAM_SIZE = 40; // haqiqiy JSA ~40 savol
+const EXAM_SIZE = 40;
 const QUIZ_SIZE = 10;
-const PASS_PERCENT = 70; // JSA o'tish balli
+const PASS_PERCENT = 70;
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 const bot = new Telegraf(TOKEN);
+
+const langOf = (ctx) => getLang(ctx.from.id);
 
 // ---------- Matn formatlash (Telegram HTML) ----------
 function esc(s) {
@@ -36,7 +42,7 @@ function esc(s) {
     .replaceAll(">", "&gt;");
 }
 
-// Markdown-ko'rinishdagi savolni Telegram HTML ga o'giradi (```kod``` bloklarini <pre> qiladi)
+// ```kod``` bloklarini <pre> ga o'giradi, qolganini escape qiladi
 function renderText(md) {
   const segments = md.split("```");
   let out = "";
@@ -51,230 +57,283 @@ function renderText(md) {
   return out;
 }
 
-function isMulti(q) {
-  return q.correct.length > 1;
+const isMulti = (q) => q.correct.length > 1;
+
+function explanationOf(q, lang) {
+  const e = q.explanation;
+  if (typeof e === "string") return e;
+  return e?.[lang] || e?.uz || "";
 }
 
-// Savol matnini variantlar bilan tuzadi
-function questionBody(session) {
+// ---------- Onboarding klaviaturalar ----------
+const languageKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback(LANGS.uz, "lang:uz")],
+    [Markup.button.callback(LANGS.en, "lang:en")],
+  ]);
+
+const proglangKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback("🟨 JavaScript", "plang:js")],
+    [Markup.button.callback("🐍 Python 🔜", "plang:py")],
+  ]);
+
+const levelKeyboard = () =>
+  Markup.inlineKeyboard(
+    Object.entries(LEVELS).map(([code, { label }]) => [
+      Markup.button.callback(label, `level:${code}`),
+    ])
+  );
+
+function menuKeyboard(lang) {
+  return Markup.inlineKeyboard([
+    [Markup.button.callback(t(lang, "btn_exam"), "mode:exam")],
+    [Markup.button.callback(t(lang, "btn_quiz"), "mode:quiz")],
+    [Markup.button.callback(t(lang, "btn_topic"), "mode:topic")],
+    [Markup.button.callback(t(lang, "btn_change"), "settings")],
+  ]);
+}
+
+// ---------- Savol ko'rsatish ----------
+function questionBody(session, lang) {
   const q = currentQuestion(session);
-  const num = session.index + 1;
-  const total = session.questions.length;
-  const header = `<b>Savol ${num}/${total}</b>${
-    isMulti(q) ? "  <i>(bir nechta to'g'ri javob)</i>" : ""
-  }\n\n`;
+  const header = t(lang, "question_header", session.index + 1, session.questions.length, isMulti(q));
   const body = renderText(q.question);
-  const opts = q.options
-    .map((o, i) => `${LETTERS[i]}) ${renderText(o)}`)
-    .join("\n");
-  return `${header}${body}\n\n${opts}`;
+  const opts = q.options.map((o, i) => `${LETTERS[i]}) ${renderText(o)}`).join("\n");
+  return `${header}\n\n${body}\n\n${opts}`;
 }
 
-// Variant tugmalari
-function optionKeyboard(session) {
+function optionKeyboard(session, lang) {
   const q = currentQuestion(session);
   const multi = isMulti(q);
-  const rows = q.options.map((_, i) => {
-    const label =
-      multi && session.selected.has(i) ? `☑️ ${LETTERS[i]}` : LETTERS[i];
-    const action = multi ? `toggle:${i}` : `pick:${i}`;
-    return [Markup.button.callback(label, action)];
+  const rows = q.options.map((_o, i) => {
+    const label = multi && session.selected.has(i) ? `☑️ ${LETTERS[i]}` : LETTERS[i];
+    return [Markup.button.callback(label, multi ? `toggle:${i}` : `pick:${i}`)];
   });
-  if (multi) {
-    rows.push([Markup.button.callback("✅ Javobni tasdiqlash", "done")]);
-  }
+  if (multi) rows.push([Markup.button.callback(t(lang, "confirm_btn"), "done")]);
   return Markup.inlineKeyboard(rows);
 }
 
-async function sendQuestion(ctx, session) {
-  await ctx.reply(questionBody(session), {
+async function sendQuestion(ctx, session, lang) {
+  await ctx.reply(questionBody(session, lang), {
     parse_mode: "HTML",
-    ...optionKeyboard(session),
+    ...optionKeyboard(session, lang),
   });
 }
 
-// Javobdan keyingi natija matni (to'g'ri/xato + tushuntirish)
-function feedbackText(q, picked, isCorrect) {
+function feedbackText(q, picked, isCorrect, lang) {
   const correctLetters = q.correct.map((i) => LETTERS[i]).join(", ");
-  const pickedLetters = picked.length
-    ? picked.map((i) => LETTERS[i]).join(", ")
-    : "—";
-  const head = isCorrect
-    ? "✅ <b>To'g'ri!</b>"
-    : `❌ <b>Xato.</b> Siz: ${pickedLetters}`;
+  const pickedLetters = picked.length ? picked.map((i) => LETTERS[i]).join(", ") : "—";
+  const head = isCorrect ? t(lang, "correct_head") : t(lang, "wrong_head", pickedLetters);
   return (
     `${head}\n` +
-    `To'g'ri javob: <b>${correctLetters}</b>\n\n` +
-    `💡 <b>Izoh:</b> ${esc(q.explanation)}`
+    `${t(lang, "correct_answer", correctLetters)}\n\n` +
+    `${t(lang, "explanation_label")} ${esc(explanationOf(q, lang))}`
   );
 }
 
-async function afterAnswer(ctx, session, q, picked, isCorrect) {
-  // Savolni bosib bo'lgach, tugmalarni olib, natijani ko'rsatamiz
+async function afterAnswer(ctx, session, q, picked, isCorrect, lang) {
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   const finished = isFinished(session);
   const btn = finished
-    ? Markup.button.callback("🏁 Natijani ko'rish", "result")
-    : Markup.button.callback("➡️ Keyingi savol", "next");
-  await ctx.reply(feedbackText(q, picked, isCorrect), {
+    ? Markup.button.callback(t(lang, "result_btn"), "result")
+    : Markup.button.callback(t(lang, "next_btn"), "next");
+  await ctx.reply(feedbackText(q, picked, isCorrect, lang), {
     parse_mode: "HTML",
     ...Markup.inlineKeyboard([[btn]]),
   });
 }
 
-// ---------- Natija ----------
-function resultText(session) {
+function resultText(session, lang) {
   const { total, correct, percent } = score(session);
   const passed = percent >= PASS_PERCENT;
   const minutes = Math.max(1, Math.round((Date.now() - session.startTime) / 60000));
-  const verdict = passed
-    ? "🎉 <b>TABRIKLAYMAN — O'TDINGIZ!</b>"
-    : "📚 <b>Hali tayyor emassiz — mashq davom etsin!</b>";
   return (
-    `🏁 <b>Natija</b>\n\n` +
-    `To'g'ri javoblar: <b>${correct}/${total}</b>\n` +
-    `Foiz: <b>${percent}%</b>  (o'tish uchun: ${PASS_PERCENT}%)\n` +
-    `Vaqt: ~${minutes} daqiqa\n\n` +
-    `${verdict}\n\n` +
-    `Qaytadan urinish: /exam yoki /quiz`
+    `${t(lang, "result_title")}\n\n` +
+    `${t(lang, "result_correct", correct, total)}\n` +
+    `${t(lang, "result_percent", percent, PASS_PERCENT)}\n` +
+    `${t(lang, "result_time", minutes)}\n\n` +
+    `${passed ? t(lang, "passed") : t(lang, "failed")}\n\n` +
+    `${t(lang, "retry")}`
   );
 }
 
 // ---------- Buyruqlar ----------
 bot.start((ctx) =>
-  ctx.reply(
-    `👋 Salom, ${ctx.from.first_name}!\n\n` +
-      `Bu — <b>JSA (JavaScript Associate)</b> sertifikatiga tayyorgarlik uchun mock imtihon boti.\n\n` +
-      `<b>Buyruqlar:</b>\n` +
-      `/exam — to'liq imtihon (${EXAM_SIZE} savolgacha, ${PASS_PERCENT}% o'tish)\n` +
-      `/quiz — tezkor mashq (${QUIZ_SIZE} savol)\n` +
-      `/topic — mavzu bo'yicha mashq\n` +
-      `/stop — joriy imtihonni to'xtatish\n` +
-      `/help — yordam\n\n` +
-      `Savollar ingliz tilida, izohlar o'zbekcha. Omad! 🚀`,
-    { parse_mode: "HTML" }
-  )
+  ctx.reply(t(langOf(ctx), "welcome", ctx.from.first_name), {
+    parse_mode: "HTML",
+    ...languageKeyboard(),
+  })
 );
 
-bot.help((ctx) =>
-  ctx.reply(
-    `ℹ️ Har savolda variant tugmasini bosing.\n` +
-      `Ba'zi savollarda bir nechta to'g'ri javob bo'ladi — ularni belgilab, "✅ Tasdiqlash" ni bosing.\n` +
-      `Har javobdan keyin o'zbekcha izoh chiqadi.\n\n` +
-      `/exam, /quiz, /topic, /stop`,
-    { parse_mode: "HTML" }
-  )
-);
+bot.help((ctx) => ctx.reply(t(langOf(ctx), "help"), { parse_mode: "HTML" }));
 
+// Imtihon boshlash
 async function beginExam(ctx, { mode, size, topic }) {
-  const questions = pickQuestions(size, topic);
-  if (questions.length === 0) {
-    return ctx.reply("Bu mavzu bo'yicha hozircha savol yo'q.");
-  }
+  const lang = langOf(ctx);
+  const level = getPrefs(ctx.from.id)?.level;
+  if (!level) return ctx.reply(t(lang, "need_start"));
+
+  const questions = pickQuestions(size, { level, topic });
+  if (questions.length === 0) return ctx.reply(t(lang, "no_questions"));
+
   const session = startSession(ctx.from.id, { mode, questions });
   const label =
     mode === "exam"
-      ? "To'liq imtihon"
+      ? t(lang, "exam_label")
       : topic
-      ? `Mavzu: ${TOPICS[topic]}`
-      : "Tezkor mashq";
-  await ctx.reply(
-    `📝 <b>${label}</b> boshlandi — ${questions.length} ta savol. Omad!`,
-    { parse_mode: "HTML" }
-  );
-  await sendQuestion(ctx, session);
+      ? t(lang, "topic_label", TOPICS[topic][lang])
+      : t(lang, "quiz_label");
+  await ctx.reply(t(lang, "started", label, questions.length), { parse_mode: "HTML" });
+  await sendQuestion(ctx, session, lang);
 }
 
-bot.command("exam", (ctx) =>
-  beginExam(ctx, { mode: "exam", size: EXAM_SIZE, topic: null })
-);
+bot.command("exam", (ctx) => beginExam(ctx, { mode: "exam", size: EXAM_SIZE, topic: null }));
+bot.command("quiz", (ctx) => beginExam(ctx, { mode: "quiz", size: QUIZ_SIZE, topic: null }));
 
-bot.command("quiz", (ctx) =>
-  beginExam(ctx, { mode: "quiz", size: QUIZ_SIZE, topic: null })
-);
+function sendTopicMenu(ctx) {
+  const lang = langOf(ctx);
+  const level = getPrefs(ctx.from.id)?.level;
+  if (!level) return ctx.reply(t(lang, "need_start"));
+  const counts = topicCounts(level);
+  const rows = Object.entries(TOPICS)
+    .filter(([code]) => (counts[code] || 0) > 0)
+    .map(([code, names]) => [
+      Markup.button.callback(`${names[lang]} (${counts[code]})`, `topic:${code}`),
+    ]);
+  return ctx.reply(t(lang, "choose_topic"), Markup.inlineKeyboard(rows));
+}
 
-bot.command("topic", (ctx) => {
-  const rows = Object.entries(TOPICS).map(([code, name]) => {
-    const count = getByTopic(code).length;
-    return [Markup.button.callback(`${name} (${count})`, `topic:${code}`)];
-  });
-  return ctx.reply("Qaysi mavzu bo'yicha mashq qilamiz?", {
-    ...Markup.inlineKeyboard(rows),
-  });
-});
+bot.command("topic", (ctx) => sendTopicMenu(ctx));
 
 bot.command("stop", (ctx) => {
   endSession(ctx.from.id);
-  return ctx.reply("⏹ Imtihon to'xtatildi. Yangisi uchun /exam yoki /quiz.");
+  return ctx.reply(t(langOf(ctx), "stopped"));
 });
 
-// ---------- Callback tugmalar ----------
-bot.action(/^topic:(.+)$/, async (ctx) => {
-  const topic = ctx.match[1];
+// ---------- Onboarding callbacklar ----------
+bot.action(/^lang:(uz|en)$/, async (ctx) => {
+  const lang = ctx.match[1];
+  setPref(ctx.from.id, "lang", lang);
+  await ctx.answerCbQuery(t(lang, "language_set"));
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "choose_proglang"), proglangKeyboard());
+});
+
+bot.action("plang:py", (ctx) => ctx.answerCbQuery(t(langOf(ctx), "python_soon"), { show_alert: true }));
+
+bot.action("plang:js", async (ctx) => {
+  const lang = langOf(ctx);
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await beginExam(ctx, { mode: "topic", size: QUIZ_SIZE, topic });
+  await ctx.reply(t(lang, "choose_level"), levelKeyboard());
 });
 
+bot.action(/^level:(JSE|JSA|JSP)$/, async (ctx) => {
+  const lang = langOf(ctx);
+  const code = ctx.match[1];
+  // Bu darajada savol bormi?
+  if (getPool({ level: code }).length === 0) {
+    return ctx.answerCbQuery(t(lang, "level_soon"), { show_alert: true });
+  }
+  setPref(ctx.from.id, "level", code);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "menu_title", LEVELS[code].label), {
+    parse_mode: "HTML",
+    ...menuKeyboard(lang),
+  });
+});
+
+bot.action("settings", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(langOf(ctx), "choose_language"), languageKeyboard());
+});
+
+// ---------- Rejim tanlash ----------
+bot.action("mode:exam", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await beginExam(ctx, { mode: "exam", size: EXAM_SIZE, topic: null });
+});
+bot.action("mode:quiz", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await beginExam(ctx, { mode: "quiz", size: QUIZ_SIZE, topic: null });
+});
+bot.action("mode:topic", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await sendTopicMenu(ctx);
+});
+
+bot.action(/^topic:(.+)$/, async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await beginExam(ctx, { mode: "topic", size: QUIZ_SIZE, topic: ctx.match[1] });
+});
+
+// ---------- Savol-javob callbacklar ----------
 bot.action(/^toggle:(\d+)$/, async (ctx) => {
   const session = getSession(ctx.from.id);
-  if (!session) return ctx.answerCbQuery("Sessiya topilmadi. /exam ni bosing.");
+  const lang = langOf(ctx);
+  if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
   toggleSelection(session, Number(ctx.match[1]));
   await ctx.answerCbQuery();
-  await ctx.editMessageReplyMarkup(optionKeyboard(session).reply_markup).catch(() => {});
+  await ctx.editMessageReplyMarkup(optionKeyboard(session, lang).reply_markup).catch(() => {});
 });
 
 async function handleSubmit(ctx) {
   const session = getSession(ctx.from.id);
-  if (!session) return ctx.answerCbQuery("Sessiya topilmadi. /exam ni bosing.");
+  const lang = langOf(ctx);
   const q = currentQuestion(session);
   const picked = [...session.selected].sort((a, b) => a - b);
   const isCorrect = submitAnswer(session);
-  await ctx.answerCbQuery(isCorrect ? "To'g'ri ✅" : "Xato ❌");
-  await afterAnswer(ctx, session, q, picked, isCorrect);
+  await ctx.answerCbQuery(isCorrect ? t(lang, "correct_toast") : t(lang, "wrong_toast"));
+  await afterAnswer(ctx, session, q, picked, isCorrect, lang);
 }
 
 bot.action(/^pick:(\d+)$/, async (ctx) => {
   const session = getSession(ctx.from.id);
-  if (!session) return ctx.answerCbQuery("Sessiya topilmadi. /exam ni bosing.");
+  if (!session) return ctx.answerCbQuery(t(langOf(ctx), "session_not_found"));
   session.selected = new Set([Number(ctx.match[1])]);
   await handleSubmit(ctx);
 });
 
 bot.action("done", async (ctx) => {
   const session = getSession(ctx.from.id);
-  if (!session) return ctx.answerCbQuery("Sessiya topilmadi. /exam ni bosing.");
-  if (session.selected.size === 0) {
-    return ctx.answerCbQuery("Avval kamida bitta variant belgilang.");
-  }
+  const lang = langOf(ctx);
+  if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
+  if (session.selected.size === 0) return ctx.answerCbQuery(t(lang, "select_one"));
   await handleSubmit(ctx);
 });
 
 bot.action("next", async (ctx) => {
   const session = getSession(ctx.from.id);
-  if (!session) return ctx.answerCbQuery("Sessiya topilmadi. /exam ni bosing.");
+  const lang = langOf(ctx);
+  if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await sendQuestion(ctx, session);
+  await sendQuestion(ctx, session, lang);
 });
 
 bot.action("result", async (ctx) => {
   const session = getSession(ctx.from.id);
-  if (!session) return ctx.answerCbQuery("Sessiya topilmadi. /exam ni bosing.");
+  const lang = langOf(ctx);
+  if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(resultText(session), { parse_mode: "HTML" });
+  await ctx.reply(resultText(session, lang), { parse_mode: "HTML" });
   endSession(ctx.from.id);
 });
 
 // ---------- Ishga tushirish ----------
 console.log("⏳ Bot ishga tushmoqda...");
-bot
-  .launch({ dropPendingUpdates: true })
-  .catch((err) => {
-    console.error("❌ Bot ishga tushmadi:", err);
-    process.exit(1);
-  });
+bot.launch({ dropPendingUpdates: true }).catch((err) => {
+  console.error("❌ Bot ishga tushmadi:", err);
+  process.exit(1);
+});
 console.log("✅ Bot ishladi. Telegram'da /start bosing.");
 
 process.once("SIGINT", () => bot.stop("SIGINT"));

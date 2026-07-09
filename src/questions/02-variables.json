@@ -6,7 +6,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(typeof NaN);\n```",
     "options": ["\"number\"", "\"NaN\"", "\"undefined\"", "\"object\""],
     "correct": [0],
-    "explanation": "NaN (Not a Number) — bu maxsus qiymat, lekin uning tipi `number` hisoblanadi. Shuning uchun typeof NaN === \"number\"."
+    "explanation": {
+      "uz": "NaN (Not a Number) — bu maxsus qiymat, lekin uning tipi `number` hisoblanadi. Shuning uchun typeof NaN === \"number\".",
+      "en": "NaN (Not a Number) is a special value, but its type is `number`. So typeof NaN === \"number\"."
+    }
   },
   {
     "id": "vars-02",
@@ -15,7 +18,10 @@
     "question": "What is the output?\n\n```js\nlet x;\nconsole.log(typeof x);\n```",
     "options": ["\"null\"", "\"undefined\"", "\"object\"", "ReferenceError"],
     "correct": [1],
-    "explanation": "E'lon qilingan, lekin qiymat berilmagan o'zgaruvchi `undefined` bo'ladi. typeof undefined === \"undefined\"."
+    "explanation": {
+      "uz": "E'lon qilingan, lekin qiymat berilmagan o'zgaruvchi `undefined` bo'ladi. typeof undefined === \"undefined\".",
+      "en": "A variable that is declared but not assigned is `undefined`. typeof undefined === \"undefined\"."
+    }
   },
   {
     "id": "vars-03",
@@ -24,7 +30,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(typeof null);\n```",
     "options": ["\"null\"", "\"undefined\"", "\"object\"", "\"number\""],
     "correct": [2],
-    "explanation": "Bu JavaScript'ning mashhur tarixiy 'xatosi': typeof null === \"object\". null aslida primitiv qiymat, lekin typeof uni \"object\" deb qaytaradi."
+    "explanation": {
+      "uz": "Bu JavaScript'ning mashhur tarixiy 'xatosi': typeof null === \"object\". null aslida primitiv qiymat, lekin typeof uni \"object\" deb qaytaradi.",
+      "en": "This is JavaScript's famous historical 'bug': typeof null === \"object\". null is actually a primitive value, but typeof returns \"object\" for it."
+    }
   },
   {
     "id": "vars-04",
@@ -33,7 +42,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(Number(\"3.14abc\"));\n```",
     "options": ["3.14", "3", "NaN", "\"3.14\""],
     "correct": [2],
-    "explanation": "Number() butun stringni songa aylantiradi. \"3.14abc\" to'liq son emas, shuning uchun NaN qaytadi. Agar parseFloat(\"3.14abc\") ishlatilsa, 3.14 qaytardi."
+    "explanation": {
+      "uz": "Number() butun stringni songa aylantiradi. \"3.14abc\" to'liq son emas, shuning uchun NaN qaytadi. Agar parseFloat(\"3.14abc\") ishlatilsa, 3.14 qaytardi.",
+      "en": "Number() converts the whole string to a number. \"3.14abc\" is not a valid number, so it returns NaN. parseFloat(\"3.14abc\") would return 3.14 instead."
+    }
   },
   {
     "id": "vars-05",
@@ -42,7 +54,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(0.1 + 0.2 === 0.3);\n```",
     "options": ["true", "false", "TypeError", "undefined"],
     "correct": [1],
-    "explanation": "Suzuvchi nuqtali (floating-point) sonlar aniq saqlanmaydi. 0.1 + 0.2 aslida 0.30000000000000004 bo'ladi, shuning uchun 0.3 ga teng emas — natija false."
+    "explanation": {
+      "uz": "Suzuvchi nuqtali (floating-point) sonlar aniq saqlanmaydi. 0.1 + 0.2 aslida 0.30000000000000004 bo'ladi, shuning uchun 0.3 ga teng emas — natija false.",
+      "en": "Floating-point numbers aren't stored exactly. 0.1 + 0.2 is actually 0.30000000000000004, so it isn't equal to 0.3 — the result is false."
+    }
   },
   {
     "id": "vars-06",
@@ -51,7 +66,10 @@
     "question": "Which keyword declares a block-scoped variable that CANNOT be reassigned?",
     "options": ["var", "let", "const", "static"],
     "correct": [2],
-    "explanation": "`const` — blok doirasida (block scope) va qayta qiymat berib bo'lmaydigan o'zgaruvchi. `let` blok doirali lekin qayta qiymat berish mumkin, `var` funksiya doirali."
+    "explanation": {
+      "uz": "`const` — blok doirasida (block scope) va qayta qiymat berib bo'lmaydigan o'zgaruvchi. `let` blok doirali lekin qayta qiymat berish mumkin, `var` funksiya doirali.",
+      "en": "`const` is block-scoped and cannot be reassigned. `let` is block-scoped but reassignable, and `var` is function-scoped."
+    }
   },
   {
     "id": "vars-07",
@@ -60,7 +78,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(x);\nvar x = 5;\n```",
     "options": ["5", "undefined", "ReferenceError", "null"],
     "correct": [1],
-    "explanation": "`var` bilan e'lon qilingan o'zgaruvchi 'hoisting' tufayli tepaga ko'tariladi, lekin qiymati emas. Shuning uchun console.log undefined chiqaradi (xato bermaydi). Agar `let` bo'lsa, ReferenceError bo'lardi (temporal dead zone)."
+    "explanation": {
+      "uz": "`var` bilan e'lon qilingan o'zgaruvchi 'hoisting' tufayli tepaga ko'tariladi, lekin qiymati emas. Shuning uchun console.log undefined chiqaradi (xato bermaydi). Agar `let` bo'lsa, ReferenceError bo'lardi (temporal dead zone).",
+      "en": "A `var` declaration is hoisted to the top, but its value is not. So console.log prints undefined (no error). With `let` it would throw a ReferenceError (temporal dead zone)."
+    }
   },
   {
     "id": "vars-08",
@@ -69,7 +90,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(typeof \"123\");\n```",
     "options": ["\"number\"", "\"string\"", "\"undefined\"", "123"],
     "correct": [1],
-    "explanation": "Qo'shtirnoq ichidagi hamma narsa — string (matn). Ichida raqamlar bo'lsa ham typeof \"string\" qaytadi."
+    "explanation": {
+      "uz": "Qo'shtirnoq ichidagi hamma narsa — string (matn). Ichida raqamlar bo'lsa ham typeof \"string\" qaytadi.",
+      "en": "Anything inside quotes is a string. Even if it contains digits, typeof returns \"string\"."
+    }
   },
   {
     "id": "vars-09",
@@ -78,7 +102,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(parseInt(\"10px\"));\n```",
     "options": ["NaN", "10", "\"10\"", "10px"],
     "correct": [1],
-    "explanation": "`parseInt()` string boshidagi butun sonni o'qiydi va son bo'lmagan qismda to'xtaydi. \"10px\" dan 10 (number) qaytadi."
+    "explanation": {
+      "uz": "`parseInt()` string boshidagi butun sonni o'qiydi va son bo'lmagan qismda to'xtaydi. \"10px\" dan 10 (number) qaytadi.",
+      "en": "`parseInt()` reads the integer at the start of the string and stops at the first non-numeric part. From \"10px\" it returns 10 (a number)."
+    }
   },
   {
     "id": "vars-10",
@@ -87,7 +114,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(typeof String(123));\n```",
     "options": ["\"number\"", "\"string\"", "\"object\"", "123"],
     "correct": [1],
-    "explanation": "`String(123)` sonni \"123\" stringiga aylantiradi. Shuning uchun typeof natijasi \"string\"."
+    "explanation": {
+      "uz": "`String(123)` sonni \"123\" stringiga aylantiradi. Shuning uchun typeof natijasi \"string\".",
+      "en": "`String(123)` converts the number to the string \"123\". So typeof returns \"string\"."
+    }
   },
   {
     "id": "vars-11",
@@ -101,7 +131,10 @@
       "true, false"
     ],
     "correct": [1],
-    "explanation": "Bo'sh string \"\" — falsy, shuning uchun Boolean(\"\") → false. \"false\" esa bo'sh bo'lmagan string, u truthy — Boolean(\"false\") → true (matn mazmuni emas, uzunligi muhim)."
+    "explanation": {
+      "uz": "Bo'sh string \"\" — falsy, shuning uchun Boolean(\"\") → false. \"false\" esa bo'sh bo'lmagan string, u truthy — Boolean(\"false\") → true (matn mazmuni emas, uzunligi muhim).",
+      "en": "An empty string \"\" is falsy, so Boolean(\"\") → false. \"false\" is a non-empty string, which is truthy — Boolean(\"false\") → true (the length matters, not the text)."
+    }
   },
   {
     "id": "vars-12",
@@ -110,7 +143,10 @@
     "question": "What is the output?\n\n```js\nlet name = \"Ali\";\nconsole.log(`Hello, ${name}!`);\n```",
     "options": ["Hello, ${name}!", "Hello, Ali!", "Hello, name!", "SyntaxError"],
     "correct": [1],
-    "explanation": "Backtick (`) ichidagi ${...} — template literal. ${name} o'zgaruvchi qiymati bilan almashadi: \"Hello, Ali!\"."
+    "explanation": {
+      "uz": "Backtick (`) ichidagi ${...} — template literal. ${name} o'zgaruvchi qiymati bilan almashadi: \"Hello, Ali!\".",
+      "en": "Inside backticks, ${...} is a template literal. ${name} is replaced by the variable's value: \"Hello, Ali!\"."
+    }
   },
   {
     "id": "vars-13",
@@ -119,7 +155,10 @@
     "question": "What is the output?\n\n```js\nconst PI = 3.14;\nPI = 3.15;\nconsole.log(PI);\n```",
     "options": ["3.14", "3.15", "TypeError", "undefined"],
     "correct": [2],
-    "explanation": "`const` bilan e'lon qilingan o'zgaruvchiga qayta qiymat berib bo'lmaydi. `PI = 3.15` TypeError (\"Assignment to constant variable\") tashlaydi."
+    "explanation": {
+      "uz": "`const` bilan e'lon qilingan o'zgaruvchiga qayta qiymat berib bo'lmaydi. `PI = 3.15` TypeError (\"Assignment to constant variable\") tashlaydi.",
+      "en": "A `const` variable cannot be reassigned. `PI = 3.15` throws a TypeError (\"Assignment to constant variable\")."
+    }
   },
   {
     "id": "vars-14",
@@ -128,7 +167,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(10 / 0);\n```",
     "options": ["0", "NaN", "Infinity", "TypeError"],
     "correct": [2],
-    "explanation": "JavaScript'da songa 0 ga bo'lish xato bermaydi — `Infinity` qaytaradi. typeof Infinity ham \"number\"."
+    "explanation": {
+      "uz": "JavaScript'da songa 0 ga bo'lish xato bermaydi — `Infinity` qaytaradi. typeof Infinity ham \"number\".",
+      "en": "In JavaScript, dividing a number by 0 does not throw — it returns `Infinity`. typeof Infinity is also \"number\"."
+    }
   },
   {
     "id": "vars-15",
@@ -137,7 +179,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(NaN === NaN);\n```",
     "options": ["true", "false", "NaN", "TypeError"],
     "correct": [1],
-    "explanation": "NaN — o'ziga ham teng bo'lmagan yagona qiymat. NaN === NaN → false. Tekshirish uchun `Number.isNaN()` ishlatiladi."
+    "explanation": {
+      "uz": "NaN — o'ziga ham teng bo'lmagan yagona qiymat. NaN === NaN → false. Tekshirish uchun `Number.isNaN()` ishlatiladi.",
+      "en": "NaN is the only value not equal to itself. NaN === NaN → false. Use `Number.isNaN()` to check for it."
+    }
   },
   {
     "id": "vars-16",
@@ -146,7 +191,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(parseInt(\"11\", 2));\n```",
     "options": ["11", "2", "3", "NaN"],
     "correct": [2],
-    "explanation": "parseInt ning ikkinchi argumenti — sanoq sistemasi (radix). \"11\" ikkilik (binary) sanoqda 1×2 + 1 = 3 ga teng."
+    "explanation": {
+      "uz": "parseInt ning ikkinchi argumenti — sanoq sistemasi (radix). \"11\" ikkilik (binary) sanoqda 1×2 + 1 = 3 ga teng.",
+      "en": "The second argument of parseInt is the radix. \"11\" in binary equals 1×2 + 1 = 3."
+    }
   },
   {
     "id": "vars-17",
@@ -155,7 +203,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(0xFF);\n```",
     "options": ["255", "\"0xFF\"", "16", "NaN"],
     "correct": [0],
-    "explanation": "`0x` prefiksi o'n oltilik (hexadecimal) sonni bildiradi. 0xFF = 15×16 + 15 = 255."
+    "explanation": {
+      "uz": "`0x` prefiksi o'n oltilik (hexadecimal) sonni bildiradi. 0xFF = 15×16 + 15 = 255.",
+      "en": "The `0x` prefix denotes a hexadecimal number. 0xFF = 15×16 + 15 = 255."
+    }
   },
   {
     "id": "vars-18",
@@ -164,7 +215,10 @@
     "question": "What is the output?\n\n```js\nlet s = \"hi\";\ns[0] = \"H\";\nconsole.log(s);\n```",
     "options": ["\"Hi\"", "\"hi\"", "\"H\"", "TypeError"],
     "correct": [1],
-    "explanation": "String'lar o'zgarmas (immutable). Belgini indeks orqali o'zgartirib bo'lmaydi — amal e'tiborsiz qoladi va string \"hi\" bo'lib qoladi."
+    "explanation": {
+      "uz": "String'lar o'zgarmas (immutable). Belgini indeks orqali o'zgartirib bo'lmaydi — amal e'tiborsiz qoladi va string \"hi\" bo'lib qoladi.",
+      "en": "Strings are immutable. You cannot change a character by index — the assignment is ignored and the string stays \"hi\"."
+    }
   },
   {
     "id": "vars-19",
@@ -173,7 +227,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(\"5\" * \"2\");\n```",
     "options": ["\"52\"", "10", "\"10\"", "NaN"],
     "correct": [1],
-    "explanation": "`*` operatori faqat sonlar bilan ishlaydi, shuning uchun ikkala string ham songa aylantiriladi: 5 * 2 = 10 (number)."
+    "explanation": {
+      "uz": "`*` operatori faqat sonlar bilan ishlaydi, shuning uchun ikkala string ham songa aylantiriladi: 5 * 2 = 10 (number).",
+      "en": "The `*` operator works only with numbers, so both strings are converted to numbers: 5 * 2 = 10 (a number)."
+    }
   },
   {
     "id": "vars-20",
@@ -187,7 +244,10 @@
       "false, true"
     ],
     "correct": [1],
-    "explanation": "`==` bilan undefined va null bir-biriga teng (true). Lekin `===` tipni ham tekshiradi — tiplari farqli bo'lgani uchun false."
+    "explanation": {
+      "uz": "`==` bilan undefined va null bir-biriga teng (true). Lekin `===` tipni ham tekshiradi — tiplari farqli bo'lgani uchun false.",
+      "en": "With `==`, undefined and null are equal (true). But `===` also checks the type — since their types differ, it's false."
+    }
   },
   {
     "id": "vars-21",
@@ -196,7 +256,10 @@
     "question": "What is the output?\n\n```js\nconsole.log(typeof true);\n```",
     "options": ["\"boolean\"", "\"true\"", "\"number\"", "\"string\""],
     "correct": [0],
-    "explanation": "true va false — boolean tipidagi qiymatlar. typeof true → \"boolean\"."
+    "explanation": {
+      "uz": "true va false — boolean tipidagi qiymatlar. typeof true → \"boolean\".",
+      "en": "true and false are boolean values. typeof true → \"boolean\"."
+    }
   },
   {
     "id": "vars-22",
@@ -205,7 +268,10 @@
     "question": "What is the output?\n\n```js\nlet x = 5;\nx = \"five\";\nconsole.log(typeof x);\n```",
     "options": ["\"number\"", "\"string\"", "Error", "\"undefined\""],
     "correct": [1],
-    "explanation": "JS dinamik tipli — o'zgaruvchining tipi qiymatga qarab o'zgaradi. x avval son edi, keyin stringga aylandi, shuning uchun typeof → \"string\"."
+    "explanation": {
+      "uz": "JS dinamik tipli — o'zgaruvchining tipi qiymatga qarab o'zgaradi. x avval son edi, keyin stringga aylandi, shuning uchun typeof → \"string\".",
+      "en": "JS is dynamically typed — a variable's type changes with its value. x was a number, then became a string, so typeof → \"string\"."
+    }
   },
   {
     "id": "vars-23",
@@ -214,6 +280,9 @@
     "question": "What is the output?\n\n```js\nconsole.log(Number(\"\"));\n```",
     "options": ["NaN", "0", "\"\"", "undefined"],
     "correct": [1],
-    "explanation": "Bo'sh stringni Number() ga bersak, 0 qaytadi (kutilganidek NaN emas!). Bu JS'ning e'tibor beriladigan xususiyatlaridan biri."
+    "explanation": {
+      "uz": "Bo'sh stringni Number() ga bersak, 0 qaytadi (kutilganidek NaN emas!). Bu JS'ning e'tibor beriladigan xususiyatlaridan biri.",
+      "en": "Passing an empty string to Number() returns 0 (not NaN as you might expect!). This is one of JavaScript's noteworthy quirks."
+    }
   }
 ]

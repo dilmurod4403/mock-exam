@@ -6,7 +6,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  console.log(\"A\");\n  throw new Error(\"oops\");\n  console.log(\"B\");\n} catch (e) {\n  console.log(\"C\");\n}\n```",
     "options": ["A B C", "A C", "A B", "C"],
     "correct": [1],
-    "explanation": "\"A\" chop etiladi, keyin throw xato tashlaydi — shuning uchun \"B\" ga yetmaydi. Boshqaruv catch blokiga o'tadi va \"C\" chiqadi. Natija: A C."
+    "explanation": {
+      "uz": "\"A\" chop etiladi, keyin throw xato tashlaydi — shuning uchun \"B\" ga yetmaydi. Boshqaruv catch blokiga o'tadi va \"C\" chiqadi. Natija: A C.",
+      "en": "\"A\" is printed, then throw raises an error — so \"B\" is never reached. Control jumps to catch and \"C\" prints. Result: A C."
+    }
   },
   {
     "id": "err-02",
@@ -15,7 +18,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  console.log(\"try\");\n} finally {\n  console.log(\"finally\");\n}\n```",
     "options": ["try", "finally", "try finally", "nothing"],
     "correct": [2],
-    "explanation": "`finally` bloki xato bo'ladimi yoki yo'qmi — DOIMO ishlaydi. Bu yerda xato yo'q, shuning uchun avval \"try\", keyin \"finally\" chiqadi."
+    "explanation": {
+      "uz": "`finally` bloki xato bo'ladimi yoki yo'qmi — DOIMO ishlaydi. Bu yerda xato yo'q, shuning uchun avval \"try\", keyin \"finally\" chiqadi.",
+      "en": "The `finally` block ALWAYS runs, whether or not there's an error. Here there's no error, so \"try\" prints first, then \"finally\"."
+    }
   },
   {
     "id": "err-03",
@@ -24,7 +30,10 @@
     "question": "What type of error occurs?\n\n```js\nconsole.log(undefinedVariable);\n```",
     "options": ["SyntaxError", "TypeError", "ReferenceError", "RangeError"],
     "correct": [2],
-    "explanation": "E'lon qilinmagan o'zgaruvchiga murojaat qilinganda `ReferenceError` yuz beradi (\"undefinedVariable is not defined\")."
+    "explanation": {
+      "uz": "E'lon qilinmagan o'zgaruvchiga murojaat qilinganda `ReferenceError` yuz beradi (\"undefinedVariable is not defined\").",
+      "en": "Referencing an undeclared variable causes a `ReferenceError` (\"undefinedVariable is not defined\")."
+    }
   },
   {
     "id": "err-04",
@@ -33,7 +42,10 @@
     "question": "What type of error occurs?\n\n```js\nconst x = null;\nx.toUpperCase();\n```",
     "options": ["ReferenceError", "TypeError", "SyntaxError", "no error"],
     "correct": [1],
-    "explanation": "null qiymatida metod chaqirilsa `TypeError` yuz beradi (\"Cannot read properties of null\"). TypeError — noto'g'ri tipdagi qiymat bilan amal qilinganda."
+    "explanation": {
+      "uz": "null qiymatida metod chaqirilsa `TypeError` yuz beradi (\"Cannot read properties of null\"). TypeError — noto'g'ri tipdagi qiymat bilan amal qilinganda.",
+      "en": "Calling a method on null throws a `TypeError` (\"Cannot read properties of null\"). A TypeError occurs when operating on a value of the wrong type."
+    }
   },
   {
     "id": "err-05",
@@ -42,7 +54,10 @@
     "question": "Which block catches an exception in JavaScript?",
     "options": ["catch", "except", "rescue", "error"],
     "correct": [0],
-    "explanation": "JavaScript'da xatolik `try ... catch` konstruksiyasi bilan ushlanadi. `except` (Python), `rescue` (Ruby) — boshqa tillarga tegishli."
+    "explanation": {
+      "uz": "JavaScript'da xatolik `try ... catch` konstruksiyasi bilan ushlanadi. `except` (Python), `rescue` (Ruby) — boshqa tillarga tegishli.",
+      "en": "In JavaScript, exceptions are caught with the `try ... catch` construct. `except` (Python) and `rescue` (Ruby) belong to other languages."
+    }
   },
   {
     "id": "err-06",
@@ -51,7 +66,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  throw new Error(\"bad\");\n} catch (e) {\n  console.log(e.message);\n}\n```",
     "options": ["Error", "bad", "e", "undefined"],
     "correct": [1],
-    "explanation": "`new Error(\"bad\")` xato obyektini yaratadi, uning `message` xossasi \"bad\". catch bloki uni ushlaydi va e.message → \"bad\"."
+    "explanation": {
+      "uz": "`new Error(\"bad\")` xato obyektini yaratadi, uning `message` xossasi \"bad\". catch bloki uni ushlaydi va e.message → \"bad\".",
+      "en": "`new Error(\"bad\")` creates an error object whose `message` property is \"bad\". The catch block catches it and e.message → \"bad\"."
+    }
   },
   {
     "id": "err-07",
@@ -60,7 +78,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  const a = new Array(-1);\n} catch (e) {\n  console.log(e.name);\n}\n```",
     "options": ["TypeError", "RangeError", "SyntaxError", "ReferenceError"],
     "correct": [1],
-    "explanation": "Massiv uzunligi manfiy bo'lishi mumkin emas — `new Array(-1)` `RangeError` (\"Invalid array length\") tashlaydi. RangeError — qiymat ruxsat etilgan diapazondan tashqarida bo'lganda."
+    "explanation": {
+      "uz": "Massiv uzunligi manfiy bo'lishi mumkin emas — `new Array(-1)` `RangeError` (\"Invalid array length\") tashlaydi. RangeError — qiymat ruxsat etilgan diapazondan tashqarida bo'lganda.",
+      "en": "An array length can't be negative — `new Array(-1)` throws a `RangeError` (\"Invalid array length\"). A RangeError occurs when a value is outside the allowed range."
+    }
   },
   {
     "id": "err-08",
@@ -69,7 +90,10 @@
     "question": "What is the output?\n\n```js\nfunction f() {\n  try {\n    return \"try\";\n  } finally {\n    console.log(\"finally\");\n  }\n}\nconsole.log(f());\n```",
     "options": ["try", "finally try", "try finally", "finally"],
     "correct": [1],
-    "explanation": "`finally` return bajarilishidan OLDIN ishlaydi. Avval \"finally\" chop etiladi, keyin funksiya \"try\" ni qaytaradi va u chop etiladi. Tartib: finally, try."
+    "explanation": {
+      "uz": "`finally` return bajarilishidan OLDIN ishlaydi. Avval \"finally\" chop etiladi, keyin funksiya \"try\" ni qaytaradi va u chop etiladi. Tartib: finally, try.",
+      "en": "`finally` runs BEFORE the return completes. First \"finally\" prints, then the function returns \"try\", which is printed. Order: finally, try."
+    }
   },
   {
     "id": "err-09",
@@ -78,7 +102,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  throw \"oops\";\n} catch (e) {\n  console.log(typeof e);\n}\n```",
     "options": ["\"object\"", "\"string\"", "\"error\"", "\"undefined\""],
     "correct": [1],
-    "explanation": "JavaScript'da istalgan qiymatni throw qilish mumkin — nafaqat Error obyektini. Bu yerda string tashlangan, shuning uchun typeof e → \"string\"."
+    "explanation": {
+      "uz": "JavaScript'da istalgan qiymatni throw qilish mumkin — nafaqat Error obyektini. Bu yerda string tashlangan, shuning uchun typeof e → \"string\".",
+      "en": "In JavaScript you can throw any value — not just an Error object. Here a string is thrown, so typeof e → \"string\"."
+    }
   },
   {
     "id": "err-10",
@@ -87,7 +114,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  null.x;\n} catch (e) {\n  console.log(e.name);\n}\n```",
     "options": ["ReferenceError", "TypeError", "SyntaxError", "null"],
     "correct": [1],
-    "explanation": "null obyektning xossasiga murojaat qilish `TypeError` tashlaydi. e.name → \"TypeError\"."
+    "explanation": {
+      "uz": "null obyektning xossasiga murojaat qilish `TypeError` tashlaydi. e.name → \"TypeError\".",
+      "en": "Accessing a property on null throws a `TypeError`. e.name → \"TypeError\"."
+    }
   },
   {
     "id": "err-11",
@@ -96,7 +126,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  console.log(\"A\");\n} catch (e) {\n  console.log(\"B\");\n} finally {\n  console.log(\"C\");\n}\n```",
     "options": ["A B C", "A C", "A B", "A"],
     "correct": [1],
-    "explanation": "try blokida xato yo'q, shuning uchun catch (B) o'tkazib yuboriladi. finally esa doim ishlaydi. Natija: A C."
+    "explanation": {
+      "uz": "try blokida xato yo'q, shuning uchun catch (B) o'tkazib yuboriladi. finally esa doim ishlaydi. Natija: A C.",
+      "en": "There's no error in the try block, so catch (B) is skipped. finally always runs. Result: A C."
+    }
   },
   {
     "id": "err-12",
@@ -105,7 +138,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  JSON.parse(\"{bad}\");\n} catch (e) {\n  console.log(e.name);\n}\n```",
     "options": ["TypeError", "SyntaxError", "RangeError", "ParseError"],
     "correct": [1],
-    "explanation": "Noto'g'ri formatdagi JSON'ni parse qilganda `SyntaxError` yuz beradi. e.name → \"SyntaxError\"."
+    "explanation": {
+      "uz": "Noto'g'ri formatdagi JSON'ni parse qilganda `SyntaxError` yuz beradi. e.name → \"SyntaxError\".",
+      "en": "Parsing malformed JSON throws a `SyntaxError`. e.name → \"SyntaxError\"."
+    }
   },
   {
     "id": "err-13",
@@ -114,7 +150,10 @@
     "question": "What is the output?\n\n```js\ntry {\n  try {\n    throw new Error(\"x\");\n  } catch (e) {\n    throw new Error(\"y\");\n  }\n} catch (e) {\n  console.log(e.message);\n}\n```",
     "options": ["x", "y", "x y", "Error"],
     "correct": [1],
-    "explanation": "Ichki catch \"x\" ni ushlaydi, lekin yangi xato (\"y\") tashlaydi (rethrow). Tashqi catch \"y\" ni ushlaydi → \"y\"."
+    "explanation": {
+      "uz": "Ichki catch \"x\" ni ushlaydi, lekin yangi xato (\"y\") tashlaydi (rethrow). Tashqi catch \"y\" ni ushlaydi → \"y\".",
+      "en": "The inner catch catches \"x\" but throws a new error (\"y\") — a rethrow. The outer catch catches \"y\" → \"y\"."
+    }
   },
   {
     "id": "err-14",
@@ -123,7 +162,10 @@
     "question": "What is the output?\n\n```js\nfunction recurse() {\n  return recurse();\n}\ntry {\n  recurse();\n} catch (e) {\n  console.log(e.name);\n}\n```",
     "options": ["TypeError", "SyntaxError", "RangeError", "no error"],
     "correct": [2],
-    "explanation": "Cheksiz rekursiya stek (call stack) ni to'ldiradi va `RangeError` (\"Maximum call stack size exceeded\") tashlaydi."
+    "explanation": {
+      "uz": "Cheksiz rekursiya stek (call stack) ni to'ldiradi va `RangeError` (\"Maximum call stack size exceeded\") tashlaydi.",
+      "en": "Infinite recursion fills the call stack and throws a `RangeError` (\"Maximum call stack size exceeded\")."
+    }
   },
   {
     "id": "err-15",
@@ -132,6 +174,9 @@
     "question": "What is the output?\n\n```js\ntry {\n  throw new Error();\n} catch {\n  console.log(\"caught\");\n}\n```",
     "options": ["SyntaxError", "caught", "undefined", "Error"],
     "correct": [1],
-    "explanation": "ES2019 dan boshlab catch parametrini (e) tushirib qoldirish mumkin. Xato ushlanadi va \"caught\" chop etiladi."
+    "explanation": {
+      "uz": "ES2019 dan boshlab catch parametrini (e) tushirib qoldirish mumkin. Xato ushlanadi va \"caught\" chop etiladi.",
+      "en": "Since ES2019, the catch parameter (e) can be omitted. The error is caught and \"caught\" is printed."
+    }
   }
 ]
