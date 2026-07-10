@@ -1,0 +1,118 @@
+[
+  {
+    "id": "pb-01",
+    "topic": "blocks",
+    "difficulty": "easy",
+    "levels": ["1Z0-149"],
+    "question": "Which sections of a PL/SQL block are MANDATORY?",
+    "options": [
+      "DECLARE and BEGIN",
+      "BEGIN and END",
+      "DECLARE, BEGIN and EXCEPTION",
+      "Only DECLARE"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "PL/SQL blokida faqat bajariluvchi qism majburiy: `BEGIN ... END;`. `DECLARE` (e'lonlar) va `EXCEPTION` (istisnolar) bo'limlari ixtiyoriy.",
+      "en": "Only the executable section is mandatory in a PL/SQL block: `BEGIN ... END;`. The `DECLARE` (declarations) and `EXCEPTION` sections are optional."
+    }
+  },
+  {
+    "id": "pb-02",
+    "topic": "blocks",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does %TYPE do here?\n\n```sql\nDECLARE\n  v_sal employees.salary%TYPE;\nBEGIN\n  NULL;\nEND;\n```",
+    "options": [
+      "Declares v_sal as VARCHAR2",
+      "Declares v_sal with the same datatype as the salary column",
+      "Copies the value of salary",
+      "Creates a new column"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`%TYPE` o'zgaruvchini ustun (yoki boshqa o'zgaruvchi) bilan bir xil ma'lumot tipida e'lon qiladi. Bu jadval tuzilishi o'zgarsa, kod avtomatik moslashadi.",
+      "en": "`%TYPE` declares a variable with the same datatype as a column (or another variable). If the table structure changes, the code adapts automatically."
+    }
+  },
+  {
+    "id": "pb-03",
+    "topic": "blocks",
+    "difficulty": "easy",
+    "levels": ["1Z0-149"],
+    "question": "Which operator assigns a value to a variable in PL/SQL?",
+    "options": ["=", ":=", "==", "=>"],
+    "correct": [1],
+    "explanation": {
+      "uz": "PL/SQL'da qiymat berish operatori `:=`. `=` esa faqat taqqoslash (tenglik) uchun ishlatiladi.",
+      "en": "The assignment operator in PL/SQL is `:=`. The `=` sign is used only for comparison (equality)."
+    }
+  },
+  {
+    "id": "pb-04",
+    "topic": "blocks",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "To see the output of DBMS_OUTPUT.PUT_LINE in SQL*Plus / SQL Developer, what must be enabled?",
+    "options": [
+      "COMMIT;",
+      "SET SERVEROUTPUT ON",
+      "Nothing, it always shows",
+      "A cursor must be open"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`DBMS_OUTPUT.PUT_LINE` matnni buferga yozadi. Uni ko'rish uchun sessiyada `SET SERVEROUTPUT ON` yoqilishi kerak, aks holda hech narsa ko'rinmaydi.",
+      "en": "`DBMS_OUTPUT.PUT_LINE` writes text to a buffer. To display it, `SET SERVEROUTPUT ON` must be enabled in the session; otherwise nothing appears."
+    }
+  },
+  {
+    "id": "pb-05",
+    "topic": "blocks",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "What happens?\n\n```sql\nDECLARE\n  c_tax CONSTANT NUMBER := 0.2;\nBEGIN\n  c_tax := 0.3;\nEND;\n```",
+    "options": [
+      "Runs and c_tax becomes 0.3",
+      "Compilation error: cannot assign to a constant",
+      "c_tax stays 0.2 with no error",
+      "Runtime NULL"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`CONSTANT` bilan e'lon qilingan o'zgaruvchiga qayta qiymat berib bo'lmaydi. `c_tax := 0.3` kompilyatsiya xatosini (PLS-00363) keltirib chiqaradi.",
+      "en": "A variable declared as `CONSTANT` cannot be reassigned. `c_tax := 0.3` causes a compilation error (PLS-00363)."
+    }
+  },
+  {
+    "id": "pb-06",
+    "topic": "blocks",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What is v_emp in this declaration?\n\n```sql\nDECLARE\n  v_emp employees%ROWTYPE;\nBEGIN\n  NULL;\nEND;\n```",
+    "options": [
+      "A single VARCHAR2 value",
+      "A record whose fields match all columns of the employees table",
+      "A copy of one employee row's data",
+      "A cursor"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`%ROWTYPE` jadvalning barcha ustunlariga mos maydonlarga ega RECORD (yozuv) e'lon qiladi. Masalan, v_emp.salary, v_emp.hire_date kabi maydonlarga murojaat qilish mumkin.",
+      "en": "`%ROWTYPE` declares a RECORD with fields matching all columns of the table. For example, you can access v_emp.salary, v_emp.hire_date, etc."
+    }
+  },
+  {
+    "id": "pb-07",
+    "topic": "blocks",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What is the initial value of an uninitialized PL/SQL variable?\n\n```sql\nDECLARE\n  v_x NUMBER;\nBEGIN\n  NULL;\nEND;\n```",
+    "options": ["0", "NULL", "undefined", "It raises an error"],
+    "correct": [1],
+    "explanation": {
+      "uz": "PL/SQL'da e'lon qilingan, lekin qiymat berilmagan o'zgaruvchi `NULL` bo'ladi (0 emas). Agar NOT NULL cheklovi qo'yilsa, e'londa qiymat berish shart.",
+      "en": "In PL/SQL, a declared but uninitialized variable is `NULL` (not 0). If a NOT NULL constraint is applied, it must be initialized at declaration."
+    }
+  }
+]

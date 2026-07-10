@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { Telegraf, Markup } from "telegraf";
-import { TOPICS, LEVELS, pickQuestions, getPool, topicCounts } from "./data.js";
+import { PROG_LANGS, pickQuestions, getPool, topicCounts, levelPass } from "./data.js";
 import { t, LANGS } from "./i18n.js";
 import {
   getPrefs,
@@ -27,7 +27,6 @@ if (!TOKEN) {
 // Imtihon sozlamalari
 const EXAM_SIZE = 40;
 const QUIZ_SIZE = 10;
-const PASS_PERCENT = 70;
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 const bot = new Telegraf(TOKEN);
@@ -48,7 +47,7 @@ function renderText(md) {
   let out = "";
   segments.forEach((seg, i) => {
     if (i % 2 === 1) {
-      const code = seg.replace(/^(js|javascript)\n/, "").replace(/\n$/, "");
+      const code = seg.replace(/^(js|javascript|sql|plsql)\n/, "").replace(/\n$/, "");
       out += `<pre><code>${esc(code)}</code></pre>`;
     } else {
       out += esc(seg);
@@ -73,14 +72,15 @@ const languageKeyboard = () =>
   ]);
 
 const proglangKeyboard = () =>
-  Markup.inlineKeyboard([
-    [Markup.button.callback("🟨 JavaScript", "plang:js")],
-    [Markup.button.callback("🐍 Python 🔜", "plang:py")],
-  ]);
-
-const levelKeyboard = () =>
   Markup.inlineKeyboard(
-    Object.entries(LEVELS).map(([code, { label }]) => [
+    Object.entries(PROG_LANGS).map(([code, cfg]) => [
+      Markup.button.callback(cfg.comingSoon ? `${cfg.label} 🔜` : cfg.label, `plang:${code}`),
+    ])
+  );
+
+const levelKeyboard = (plang) =>
+  Markup.inlineKeyboard(
+    Object.entries(PROG_LANGS[plang].levels).map(([code, { label }]) => [
       Markup.button.callback(label, `level:${code}`),
     ])
   );
@@ -146,12 +146,13 @@ async function afterAnswer(ctx, session, q, picked, isCorrect, lang) {
 
 function resultText(session, lang) {
   const { total, correct, percent } = score(session);
-  const passed = percent >= PASS_PERCENT;
+  const pass = levelPass(session.plang, session.level);
+  const passed = percent >= pass;
   const minutes = Math.max(1, Math.round((Date.now() - session.startTime) / 60000));
   return (
     `${t(lang, "result_title")}\n\n` +
     `${t(lang, "result_correct", correct, total)}\n` +
-    `${t(lang, "result_percent", percent, PASS_PERCENT)}\n` +
+    `${t(lang, "result_percent", percent, pass)}\n` +
     `${t(lang, "result_time", minutes)}\n\n` +
     `${passed ? t(lang, "passed") : t(lang, "failed")}\n\n` +
     `${t(lang, "retry")}`
@@ -171,18 +172,19 @@ bot.help((ctx) => ctx.reply(t(langOf(ctx), "help"), { parse_mode: "HTML" }));
 // Imtihon boshlash
 async function beginExam(ctx, { mode, size, topic }) {
   const lang = langOf(ctx);
-  const level = getPrefs(ctx.from.id)?.level;
-  if (!level) return ctx.reply(t(lang, "need_start"));
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  const { plang, level } = prefs;
 
-  const questions = pickQuestions(size, { level, topic });
+  const questions = pickQuestions(size, { plang, level, topic });
   if (questions.length === 0) return ctx.reply(t(lang, "no_questions"));
 
-  const session = startSession(ctx.from.id, { mode, questions });
+  const session = startSession(ctx.from.id, { mode, questions, plang, level });
   const label =
     mode === "exam"
       ? t(lang, "exam_label")
       : topic
-      ? t(lang, "topic_label", TOPICS[topic][lang])
+      ? t(lang, "topic_label", PROG_LANGS[plang].topics[topic][lang])
       : t(lang, "quiz_label");
   await ctx.reply(t(lang, "started", label, questions.length), { parse_mode: "HTML" });
   await sendQuestion(ctx, session, lang);
@@ -193,14 +195,16 @@ bot.command("quiz", (ctx) => beginExam(ctx, { mode: "quiz", size: QUIZ_SIZE, top
 
 function sendTopicMenu(ctx) {
   const lang = langOf(ctx);
-  const level = getPrefs(ctx.from.id)?.level;
-  if (!level) return ctx.reply(t(lang, "need_start"));
-  const counts = topicCounts(level);
-  const rows = Object.entries(TOPICS)
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  const { plang, level } = prefs;
+  const counts = topicCounts({ plang, level });
+  const rows = Object.entries(PROG_LANGS[plang].topics)
     .filter(([code]) => (counts[code] || 0) > 0)
     .map(([code, names]) => [
       Markup.button.callback(`${names[lang]} (${counts[code]})`, `topic:${code}`),
     ]);
+  if (rows.length === 0) return ctx.reply(t(lang, "no_questions"));
   return ctx.reply(t(lang, "choose_topic"), Markup.inlineKeyboard(rows));
 }
 
@@ -220,26 +224,32 @@ bot.action(/^lang:(uz|en)$/, async (ctx) => {
   await ctx.reply(t(lang, "choose_proglang"), proglangKeyboard());
 });
 
-bot.action("plang:py", (ctx) => ctx.answerCbQuery(t(langOf(ctx), "python_soon"), { show_alert: true }));
-
-bot.action("plang:js", async (ctx) => {
-  const lang = langOf(ctx);
-  await ctx.answerCbQuery();
-  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(t(lang, "choose_level"), levelKeyboard());
-});
-
-bot.action(/^level:(JSE|JSA|JSP)$/, async (ctx) => {
+bot.action(/^plang:(.+)$/, async (ctx) => {
   const lang = langOf(ctx);
   const code = ctx.match[1];
+  const cfg = PROG_LANGS[code];
+  if (!cfg || cfg.comingSoon || Object.keys(cfg.levels).length === 0) {
+    return ctx.answerCbQuery(t(lang, "coming_soon"), { show_alert: true });
+  }
+  setPref(ctx.from.id, "plang", code);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "choose_level"), levelKeyboard(code));
+});
+
+bot.action(/^level:(.+)$/, async (ctx) => {
+  const lang = langOf(ctx);
+  const code = ctx.match[1];
+  const plang = getPrefs(ctx.from.id)?.plang;
+  if (!plang) return ctx.answerCbQuery(t(lang, "need_start"), { show_alert: true });
   // Bu darajada savol bormi?
-  if (getPool({ level: code }).length === 0) {
+  if (getPool({ plang, level: code }).length === 0) {
     return ctx.answerCbQuery(t(lang, "level_soon"), { show_alert: true });
   }
   setPref(ctx.from.id, "level", code);
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(t(lang, "menu_title", LEVELS[code].label), {
+  await ctx.reply(t(lang, "menu_title", PROG_LANGS[plang].levels[code].label), {
     parse_mode: "HTML",
     ...menuKeyboard(lang),
   });

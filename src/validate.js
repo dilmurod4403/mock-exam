@@ -1,16 +1,21 @@
-// Savol bankini tekshiradi: id takrorlanmasligi, variantlar, to'g'ri javob va ikki tilli izoh
-import { ALL_QUESTIONS, TOPICS, topicCounts } from "./data.js";
+// Savol bankini tekshiradi: id, mavzu (til ichida), variant/javob indekslari, ikki tilli izoh, darajalar
+import { ALL_QUESTIONS, PROG_LANGS, getPool } from "./data.js";
 
 let errors = 0;
 const ids = new Set();
 
 for (const q of ALL_QUESTIONS) {
-  const where = `[${q.id ?? "NO-ID"}]`;
+  const where = `[${q.plang}/${q.id ?? "NO-ID"}]`;
   if (!q.id) err(`${where} id yo'q`);
   if (ids.has(q.id)) err(`${where} id takrorlangan`);
   ids.add(q.id);
 
-  if (!TOPICS[q.topic]) err(`${where} noma'lum mavzu: "${q.topic}"`);
+  const cfg = PROG_LANGS[q.plang];
+  if (!cfg) {
+    err(`${where} noma'lum dasturlash tili`);
+    continue;
+  }
+  if (!cfg.topics[q.topic]) err(`${where} bu tilda noma'lum mavzu: "${q.topic}"`);
   if (typeof q.question !== "string" || !q.question.trim())
     err(`${where} savol matni bo'sh`);
   if (!Array.isArray(q.options) || q.options.length < 2)
@@ -32,6 +37,11 @@ for (const q of ALL_QUESTIONS) {
     if (!e.uz || !e.uz.trim()) err(`${where} o'zbekcha izoh bo'sh`);
     if (!e.en || !e.en.trim()) err(`${where} inglizcha izoh bo'sh`);
   }
+
+  // `levels` bo'lsa — shu tilning darajalaridan bo'lishi kerak
+  for (const lvl of q.levels || []) {
+    if (!cfg.levels[lvl]) err(`${where} noma'lum daraja: "${lvl}"`);
+  }
 }
 
 function err(msg) {
@@ -39,13 +49,14 @@ function err(msg) {
   errors++;
 }
 
-console.log(`\nJami savollar: ${ALL_QUESTIONS.length}`);
-console.log("Mavzular bo'yicha (JSA — to'liq bank):");
-for (const [topic, count] of Object.entries(topicCounts("JSA"))) {
-  console.log(`  • ${TOPICS[topic]?.uz ?? topic}: ${count}`);
+console.log(`\nJami savollar: ${ALL_QUESTIONS.length}\n`);
+for (const [plang, cfg] of Object.entries(PROG_LANGS)) {
+  const total = ALL_QUESTIONS.filter((q) => q.plang === plang).length;
+  console.log(`${cfg.label}  —  ${total} ta savol`);
+  for (const level of Object.keys(cfg.levels)) {
+    console.log(`    ${level}: ${getPool({ plang, level }).length}`);
+  }
 }
-const jse = Object.values(topicCounts("JSE")).reduce((a, b) => a + b, 0);
-console.log(`\nJSE (Entry) darajasidagi savollar: ${jse}`);
 
 if (errors === 0) {
   console.log("\n✅ Savol banki toza — xato yo'q.\n");

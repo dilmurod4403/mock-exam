@@ -9,7 +9,7 @@ const S = {
     choose_language: "🌐 Tilni tanlang / Choose your language:",
     language_set: "Til tanlandi: O'zbek ✅",
     choose_proglang: "💻 Qaysi dasturlash tili bo'yicha mashq qilamiz?",
-    python_soon: "Python savollari tez orada qo'shiladi 🔜",
+    coming_soon: "Bu til uchun savollar tez orada qo'shiladi 🔜",
     choose_level: "🎯 Sertifikat darajasini tanlang:",
     level_soon: "Bu daraja uchun savollar tez orada qo'shiladi 🔜",
     menu_title: (level) =>
@@ -54,7 +54,7 @@ const S = {
     choose_language: "🌐 Choose your language / Tilni tanlang:",
     language_set: "Language set: English ✅",
     choose_proglang: "💻 Which programming language do you want to practice?",
-    python_soon: "Python questions are coming soon 🔜",
+    coming_soon: "Questions for this language are coming soon 🔜",
     choose_level: "🎯 Choose a certification level:",
     level_soon: "Questions for this level are coming soon 🔜",
     menu_title: (level) =>

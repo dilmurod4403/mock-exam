@@ -1,0 +1,105 @@
+[
+  {
+    "id": "pcu-01",
+    "topic": "cursors",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What is the correct order of operations for an EXPLICIT cursor?",
+    "options": [
+      "OPEN, DECLARE, FETCH, CLOSE",
+      "DECLARE, OPEN, FETCH, CLOSE",
+      "DECLARE, FETCH, OPEN, CLOSE",
+      "OPEN, FETCH, CLOSE, DECLARE"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Explicit kursor bilan ishlash tartibi: DECLARE (e'lon) → OPEN (ochish) → FETCH (satr olish) → CLOSE (yopish). Har bosqich o'z o'rnida bo'lishi shart.",
+      "en": "The order for an explicit cursor is: DECLARE → OPEN → FETCH → CLOSE. Each step must occur in this sequence."
+    }
+  },
+  {
+    "id": "pcu-02",
+    "topic": "cursors",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which cursor attribute returns TRUE when the last FETCH did NOT return a row?",
+    "options": ["%FOUND", "%NOTFOUND", "%ROWCOUNT", "%ISOPEN"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`%NOTFOUND` oxirgi FETCH satr qaytarmaganida TRUE bo'ladi — odatda sikldan chiqish sharti sifatida ishlatiladi (EXIT WHEN c%NOTFOUND).",
+      "en": "`%NOTFOUND` is TRUE when the last FETCH returned no row — commonly used as a loop exit condition (EXIT WHEN c%NOTFOUND)."
+    }
+  },
+  {
+    "id": "pcu-03",
+    "topic": "cursors",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Regarding this cursor FOR loop, which statement is TRUE?\n\n```sql\nBEGIN\n  FOR rec IN (SELECT ename FROM emp) LOOP\n    DBMS_OUTPUT.PUT_LINE(rec.ename);\n  END LOOP;\nEND;\n```",
+    "options": [
+      "You must OPEN and CLOSE the cursor manually",
+      "The loop opens, fetches and closes the cursor automatically",
+      "rec must be declared in DECLARE",
+      "It only fetches the first row"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Cursor FOR loop kursorni avtomatik ochadi, har satrni FETCH qiladi va oxirida yopadi. `rec` yozuvi ham avtomatik e'lon qilinadi — qo'lda OPEN/FETCH/CLOSE kerak emas.",
+      "en": "A cursor FOR loop automatically opens the cursor, fetches each row, and closes it at the end. The `rec` record is also declared implicitly — no manual OPEN/FETCH/CLOSE is needed."
+    }
+  },
+  {
+    "id": "pcu-04",
+    "topic": "cursors",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does SQL%ROWCOUNT return right after an UPDATE?\n\n```sql\nBEGIN\n  UPDATE emp SET sal = sal * 1.1 WHERE deptno = 10;\n  DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT);\nEND;\n```",
+    "options": [
+      "The number of rows updated by the statement",
+      "Always 1",
+      "The total rows in the table",
+      "TRUE or FALSE"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`SQL%ROWCOUNT` — oxirgi DML (yoki implicit SELECT INTO) ta'sir qilgan satrlar sonini qaytaradi. Bu yerda deptno=10 bo'yicha yangilangan satrlar soni.",
+      "en": "`SQL%ROWCOUNT` returns the number of rows affected by the most recent DML (or implicit SELECT INTO). Here it's the count of rows updated for deptno=10."
+    }
+  },
+  {
+    "id": "pcu-05",
+    "topic": "cursors",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "How do you open this parameterized cursor for department 10?\n\n```sql\nCURSOR c_emp(p_dept NUMBER) IS\n  SELECT ename FROM emp WHERE deptno = p_dept;\n```",
+    "options": [
+      "OPEN c_emp;",
+      "OPEN c_emp(10);",
+      "OPEN c_emp WHERE deptno = 10;",
+      "FETCH c_emp(10);"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Parametrli kursor ochilganda argument beriladi: `OPEN c_emp(10);`. Bu p_dept parametriga 10 qiymatini uzatadi.",
+      "en": "A parameterized cursor is opened by passing the argument: `OPEN c_emp(10);`. This passes 10 to the p_dept parameter."
+    }
+  },
+  {
+    "id": "pcu-06",
+    "topic": "cursors",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What kind of cursor does a `SELECT ... INTO` statement use?",
+    "options": [
+      "An explicit cursor you must declare",
+      "An implicit cursor managed by Oracle",
+      "No cursor at all",
+      "A REF cursor"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`SELECT ... INTO` implicit (yashirin) kursordan foydalanadi — Oracle uni avtomatik boshqaradi. U aynan bitta satr qaytarishi kerak, aks holda NO_DATA_FOUND yoki TOO_MANY_ROWS yuz beradi.",
+      "en": "`SELECT ... INTO` uses an implicit cursor managed automatically by Oracle. It must return exactly one row, otherwise NO_DATA_FOUND or TOO_MANY_ROWS is raised."
+    }
+  }
+]

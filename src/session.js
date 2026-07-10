@@ -19,10 +19,12 @@ export function getLang(userId) {
 }
 
 // ---------- Imtihon sessiyasi ----------
-export function startSession(userId, { mode, questions }) {
+export function startSession(userId, { mode, questions, plang, level }) {
   const session = {
     mode, // 'exam' | 'quiz' | 'topic'
     questions,
+    plang, // dasturlash tili (javascript / plsql ...)
+    level, // sertifikat darajasi
     index: 0,
     selected: new Set(),
     answers: [],

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "pc-01",
+    "topic": "control",
+    "difficulty": "easy",
+    "levels": ["1Z0-149"],
+    "question": "Which keyword introduces an \"else-if\" branch in a PL/SQL IF statement?",
+    "options": ["ELSEIF", "ELSE IF", "ELSIF", "ELIF"],
+    "correct": [2],
+    "explanation": {
+      "uz": "PL/SQL'da to'g'ri kalit so'z — `ELSIF` (bir so'z, 'E' harfsiz). Konstruksiya: IF ... THEN ... ELSIF ... THEN ... ELSE ... END IF;",
+      "en": "The correct keyword in PL/SQL is `ELSIF` (one word, no second 'E'). Structure: IF ... THEN ... ELSIF ... THEN ... ELSE ... END IF;"
+    }
+  },
+  {
+    "id": "pc-02",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What is printed?\n\n```sql\nBEGIN\n  FOR i IN 1..3 LOOP\n    DBMS_OUTPUT.PUT_LINE(i);\n  END LOOP;\nEND;\n```",
+    "options": ["1 2 3", "0 1 2", "1 2 3 4", "1"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Sonli FOR sikli 1 dan 3 gacha (chegaralar kiradi) aylanadi: 1, 2, 3. Sikl hisoblagichi (i) avtomatik e'lon qilinadi.",
+      "en": "A numeric FOR loop iterates from 1 to 3 inclusive: 1, 2, 3. The loop counter (i) is declared implicitly."
+    }
+  },
+  {
+    "id": "pc-03",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What is printed?\n\n```sql\nBEGIN\n  FOR i IN REVERSE 1..3 LOOP\n    DBMS_OUTPUT.PUT_LINE(i);\n  END LOOP;\nEND;\n```",
+    "options": ["1 2 3", "3 2 1", "3 3 3", "error"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`REVERSE` sikni teskari tartibda aylantiradi, lekin chegaralar baribir kichikdan kattaga yoziladi (1..3). Natija: 3, 2, 1.",
+      "en": "`REVERSE` iterates in descending order, but the bounds are still written low..high (1..3). Result: 3, 2, 1."
+    }
+  },
+  {
+    "id": "pc-04",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does EXIT WHEN do?\n\n```sql\nDECLARE\n  v_i NUMBER := 1;\nBEGIN\n  LOOP\n    EXIT WHEN v_i > 3;\n    v_i := v_i + 1;\n  END LOOP;\n  DBMS_OUTPUT.PUT_LINE(v_i);\nEND;\n```",
+    "options": ["3", "4", "infinite loop", "1"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Basic LOOP `EXIT WHEN` sharti bajarilganda to'xtaydi. v_i 1→2→3→4 bo'ladi; v_i=4 da 4 > 3 rost bo'lib sikl to'xtaydi. Natija: 4.",
+      "en": "A basic LOOP stops when the `EXIT WHEN` condition is true. v_i goes 1→2→3→4; at v_i=4, 4 > 3 is true and the loop ends. Result: 4."
+    }
+  },
+  {
+    "id": "pc-05",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Do you need to explicitly declare the counter variable `i` in a numeric FOR loop?\n\n```sql\nFOR i IN 1..5 LOOP ... END LOOP;\n```",
+    "options": [
+      "Yes, it must be declared in DECLARE",
+      "No, it is declared implicitly and scoped to the loop",
+      "Only if used outside the loop",
+      "It must be a package variable"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "FOR sikl hisoblagichi avtomatik (implicit) e'lon qilinadi va faqat sikl ichida mavjud bo'ladi. Uni DECLARE'da e'lon qilish shart emas; sikldan tashqarida ko'rinmaydi.",
+      "en": "The FOR loop counter is declared implicitly and exists only inside the loop. You don't declare it in DECLARE, and it isn't visible outside the loop."
+    }
+  },
+  {
+    "id": "pc-06",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What is printed?\n\n```sql\nDECLARE\n  v_grade CHAR(1) := 'B';\n  v_result VARCHAR2(20);\nBEGIN\n  v_result := CASE v_grade\n    WHEN 'A' THEN 'Excellent'\n    WHEN 'B' THEN 'Good'\n    ELSE 'Other'\n  END;\n  DBMS_OUTPUT.PUT_LINE(v_result);\nEND;\n```",
+    "options": ["Excellent", "Good", "Other", "NULL"],
+    "correct": [1],
+    "explanation": {
+      "uz": "CASE ifodasi v_grade = 'B' ga mos WHEN shoxini tanlaydi va 'Good' qaytaradi. CASE ifodasi qiymat qaytargani uchun uni o'zgaruvchiga berish mumkin.",
+      "en": "The CASE expression matches the WHEN branch for v_grade = 'B' and returns 'Good'. Because a CASE expression returns a value, it can be assigned to a variable."
+    }
+  },
+  {
+    "id": "pc-07",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What is printed?\n\n```sql\nDECLARE\n  v_i NUMBER := 1;\nBEGIN\n  WHILE v_i <= 3 LOOP\n    v_i := v_i + 1;\n  END LOOP;\n  DBMS_OUTPUT.PUT_LINE(v_i);\nEND;\n```",
+    "options": ["3", "4", "1", "infinite loop"],
+    "correct": [1],
+    "explanation": {
+      "uz": "WHILE shartni har aylanishdan oldin tekshiradi. v_i 1→2→3→4 bo'ladi; v_i=4 da 4 <= 3 yolg'on bo'lib sikl to'xtaydi. Natija: 4.",
+      "en": "WHILE checks the condition before each iteration. v_i goes 1→2→3→4; at v_i=4, 4 <= 3 is false and the loop ends. Result: 4."
+    }
+  }
+]
