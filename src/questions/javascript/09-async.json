@@ -1,0 +1,132 @@
+[
+  {
+    "id": "as-01",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nasync function f() { return 5; }\nf().then(v => console.log(v));\n```",
+    "options": ["5", "Promise", "undefined", "[object Promise]"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`async` funksiya har doim Promise qaytaradi. `return 5` — resolve(5) bilan bir xil, shuning uchun .then callback'iga 5 keladi.",
+      "en": "An `async` function always returns a Promise. `return 5` is equivalent to resolving with 5, so the .then callback receives 5."
+    }
+  },
+  {
+    "id": "as-02",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nasync function f() { return 1; }\nconsole.log(f() instanceof Promise);\n```",
+    "options": ["true", "false", "1", "TypeError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`async` funksiyani chaqirsak, natija Promise obyekti bo'ladi (qiymat emas). Shuning uchun f() instanceof Promise → true.",
+      "en": "Calling an `async` function yields a Promise object (not the raw value). So f() instanceof Promise → true."
+    }
+  },
+  {
+    "id": "as-03",
+    "topic": "async",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output order?\n\n```js\nconsole.log(\"A\");\nsetTimeout(() => console.log(\"B\"), 0);\nPromise.resolve().then(() => console.log(\"C\"));\nconsole.log(\"D\");\n```",
+    "options": ["A B C D", "A D C B", "A D B C", "A C D B"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Avval sinxron kod: A, D. Keyin mikrovazifa (Promise.then): C. Oxirida makrovazifa (setTimeout): B. Tartib: A D C B. Promise'lar setTimeout'dan oldin ishlaydi.",
+      "en": "First synchronous code: A, D. Then the microtask (Promise.then): C. Last the macrotask (setTimeout): B. Order: A D C B. Promises run before setTimeout."
+    }
+  },
+  {
+    "id": "as-04",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nasync function f() {\n  const x = await Promise.resolve(10);\n  console.log(x);\n}\nf();\n```",
+    "options": ["10", "Promise", "undefined", "Error"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`await` Promise hal bo'lishini kutadi va uning qiymatini qaytaradi. Promise.resolve(10) → 10, shuning uchun x = 10.",
+      "en": "`await` waits for the Promise to settle and returns its resolved value. Promise.resolve(10) → 10, so x = 10."
+    }
+  },
+  {
+    "id": "as-05",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nPromise.all([Promise.resolve(1), Promise.resolve(2)])\n  .then(v => console.log(v));\n```",
+    "options": ["1 2", "[1, 2]", "3", "[Promise, Promise]"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`Promise.all` barcha Promise'lar hal bo'lishini kutadi va natijalarni MASSIV qilib qaytaradi: [1, 2].",
+      "en": "`Promise.all` waits for all promises to resolve and returns their results as an ARRAY: [1, 2]."
+    }
+  },
+  {
+    "id": "as-06",
+    "topic": "async",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nasync function f() {\n  try {\n    await Promise.reject(new Error(\"boom\"));\n  } catch (e) {\n    console.log(e.message);\n  }\n}\nf();\n```",
+    "options": ["boom", "undefined", "Error", "unhandled rejection"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`await` bilan rad etilgan (rejected) Promise istisno tashlaydi, uni try/catch ushlaydi. e.message → \"boom\".",
+      "en": "An awaited rejected Promise throws an exception, which try/catch handles. e.message → \"boom\"."
+    }
+  },
+  {
+    "id": "as-07",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nPromise.resolve(1)\n  .then(x => x + 1)\n  .then(x => x * 2)\n  .then(x => console.log(x));\n```",
+    "options": ["1", "2", "4", "3"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Har `.then` oldingi natijani oladi va qaytargan qiymatini keyingisiga uzatadi: 1 → 2 → 4. Zanjir: (1+1)=2, (2*2)=4.",
+      "en": "Each `.then` receives the previous result and passes its return to the next: 1 → 2 → 4. Chain: (1+1)=2, (2*2)=4."
+    }
+  },
+  {
+    "id": "as-08",
+    "topic": "async",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output order?\n\n```js\nconsole.log(0);\nasync function f() {\n  console.log(1);\n  await null;\n  console.log(3);\n}\nf();\nconsole.log(2);\n```",
+    "options": ["0 1 2 3", "0 1 3 2", "0 2 1 3", "0 3 1 2"],
+    "correct": [0],
+    "explanation": {
+      "uz": "async funksiya `await` gacha sinxron ishlaydi: 0, keyin f() → 1. `await` funksiyani to'xtatadi, boshqaruv qaytadi → 2. So'ng mikrovazifada davom etadi → 3. Tartib: 0 1 2 3.",
+      "en": "An async function runs synchronously up to `await`: 0, then f() → 1. `await` suspends the function, control returns → 2. Then it resumes in a microtask → 3. Order: 0 1 2 3."
+    }
+  },
+  {
+    "id": "as-09",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nPromise.reject(\"err\").catch(e => console.log(\"caught\", e));\n```",
+    "options": ["caught err", "err", "unhandled", "undefined"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`Promise.reject` rad etilgan Promise yaratadi. `.catch` uni ushlaydi va callback'ga sababni (\"err\") uzatadi → \"caught err\".",
+      "en": "`Promise.reject` creates a rejected Promise. `.catch` handles it and passes the reason (\"err\") to the callback → \"caught err\"."
+    }
+  },
+  {
+    "id": "as-10",
+    "topic": "async",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nPromise.race([\n  Promise.resolve(\"fast\"),\n  new Promise(r => setTimeout(() => r(\"slow\"), 100))\n]).then(v => console.log(v));\n```",
+    "options": ["fast", "slow", "[fast, slow]", "both"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`Promise.race` birinchi hal bo'lgan Promise natijasini qaytaradi. Promise.resolve(\"fast\") darhol tayyor, setTimeout esa 100ms kutadi → \"fast\".",
+      "en": "`Promise.race` settles with the first promise to settle. Promise.resolve(\"fast\") is ready immediately, while setTimeout waits 100ms → \"fast\"."
+    }
+  }
+]

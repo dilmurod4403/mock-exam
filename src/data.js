@@ -20,10 +20,18 @@ export const PROG_LANGS = {
       collections: { uz: "Massiv va obyektlar", en: "Arrays & objects" },
       functions: { uz: "Funksiyalar", en: "Functions" },
       errors: { uz: "Xatoliklar (try/catch)", en: "Errors (try/catch)" },
+      oop: { uz: "Obyektlar va OOP (this, class)", en: "Objects & OOP (this, class)" },
+      async: { uz: "Asinxron (Promise, async/await)", en: "Asynchronous (Promise, async/await)" },
+      advanced: { uz: "Ilg'or (closure, ES6+, generator)", en: "Advanced (closures, ES6+, generators)" },
     },
+    // JSE/JSA — asosiy bank (JSP-teglilardan tashqari); JSP — faqat ilg'or (levels: ["JSP"]) savollar
     levels: {
-      JSE: { label: "JSE — Entry-Level", pass: 70, filter: (q) => q.difficulty === "easy" || q.difficulty === "medium" },
-      JSA: { label: "JSA — Associate", pass: 70, filter: () => true },
+      JSE: {
+        label: "JSE — Entry-Level",
+        pass: 70,
+        filter: (q) => (q.difficulty === "easy" || q.difficulty === "medium") && !q.levels?.includes("JSP"),
+      },
+      JSA: { label: "JSA — Associate", pass: 70, filter: (q) => !q.levels?.includes("JSP") },
       JSP: { label: "JSP — Professional", pass: 70, filter: (q) => q.levels?.includes("JSP") },
     },
   },

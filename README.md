@@ -11,7 +11,7 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 
 - Ikki tilli interfeys va tushuntirishlar (uz / en)
 - Ko'p dasturlash tili — har biri o'z mavzulari va sertifikat darajalariga ega:
-  - **JavaScript:** JSE (Entry) · JSA (Associate, to'liq bank) · JSP (Professional — tez orada)
+  - **JavaScript:** JSE (Entry) · JSA (Associate) · JSP (Professional — OOP, async, closure/ES6+)
   - **PL/SQL:** 1Z0-149 (PL/SQL Developer, to'liq) · 1Z0-071 (Oracle SQL — tez orada)
   - **Python:** tez orada
 - `/exam` — to'liq mock imtihon (40 savolgacha, 70% o'tish balli)

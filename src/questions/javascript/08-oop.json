@@ -1,0 +1,132 @@
+[
+  {
+    "id": "oop-01",
+    "topic": "oop",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst obj = {\n  x: 10,\n  getX() { return this.x; }\n};\nconsole.log(obj.getX());\n```",
+    "options": ["10", "undefined", "NaN", "ReferenceError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Metod obyekt orqali chaqirilganda (obj.getX()), `this` — o'sha obyekt (obj). Shuning uchun this.x = 10.",
+      "en": "When a method is called via the object (obj.getX()), `this` refers to that object (obj). So this.x = 10."
+    }
+  },
+  {
+    "id": "oop-02",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst counter = {\n  count: 0,\n  start() {\n    [1, 2, 3].forEach(() => { this.count++; });\n    return this.count;\n  }\n};\nconsole.log(counter.start());\n```",
+    "options": ["0", "3", "undefined", "NaN"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Arrow funksiya o'z `this` iga ega emas — u tashqi doiradagi `this` ni oladi (bu yerda counter). Shuning uchun forEach ichida this.count to'g'ri oshadi: 3.",
+      "en": "An arrow function has no own `this` — it uses the enclosing `this` (here counter). So this.count increments correctly inside forEach: 3."
+    }
+  },
+  {
+    "id": "oop-03",
+    "topic": "oop",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass Animal {\n  constructor(name) { this.name = name; }\n  speak() { return `${this.name} makes a sound`; }\n}\nconsole.log(new Animal(\"Dog\").speak());\n```",
+    "options": ["Dog makes a sound", "undefined makes a sound", "makes a sound", "TypeError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`constructor` yangi obyektga name = \"Dog\" ni o'rnatadi. speak() metodi shu name'dan foydalanadi → \"Dog makes a sound\".",
+      "en": "The `constructor` sets name = \"Dog\" on the new object. The speak() method uses that name → \"Dog makes a sound\"."
+    }
+  },
+  {
+    "id": "oop-04",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass A {\n  greet() { return \"A\"; }\n}\nclass B extends A {\n  greet() { return super.greet() + \"B\"; }\n}\nconsole.log(new B().greet());\n```",
+    "options": ["A", "B", "AB", "BA"],
+    "correct": [2],
+    "explanation": {
+      "uz": "B klassi A dan meros oladi. B.greet() ichida `super.greet()` ota-klass metodini (\"A\") chaqiradi va \"B\" qo'shadi → \"AB\".",
+      "en": "Class B inherits from A. Inside B.greet(), `super.greet()` calls the parent method (\"A\") and appends \"B\" → \"AB\"."
+    }
+  },
+  {
+    "id": "oop-05",
+    "topic": "oop",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass Cat {}\nconst c = new Cat();\nconsole.log(c instanceof Cat);\n```",
+    "options": ["true", "false", "\"Cat\"", "undefined"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`instanceof` obyekt berilgan klass (konstruktor) nusxasi ekanini tekshiradi. c Cat'dan yaratilgani uchun true.",
+      "en": "`instanceof` checks whether an object is an instance of the given class (constructor). c was created from Cat, so true."
+    }
+  },
+  {
+    "id": "oop-06",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nfunction Person(name) { this.name = name; }\nPerson.prototype.hello = function () {\n  return \"Hi \" + this.name;\n};\nconsole.log(new Person(\"Ali\").hello());\n```",
+    "options": ["Hi Ali", "Hi undefined", "TypeError", "Hi name"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`prototype` ga qo'shilgan metod barcha nusxalar uchun umumiy bo'ladi. new Person(\"Ali\") obyekti hello() ni prototipdan meros oladi → \"Hi Ali\".",
+      "en": "A method added to `prototype` is shared by all instances. The new Person(\"Ali\") object inherits hello() from the prototype → \"Hi Ali\"."
+    }
+  },
+  {
+    "id": "oop-07",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst proto = { greet() { return \"hello\"; } };\nconst obj = Object.create(proto);\nconsole.log(obj.greet());\n```",
+    "options": ["hello", "undefined", "TypeError", "{}"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`Object.create(proto)` prototipi proto bo'lgan yangi obyekt yaratadi. obj'da greet yo'q, lekin u prototip zanjiri orqali proto.greet() ni topadi → \"hello\".",
+      "en": "`Object.create(proto)` creates a new object whose prototype is proto. obj has no greet of its own, but finds proto.greet() via the prototype chain → \"hello\"."
+    }
+  },
+  {
+    "id": "oop-08",
+    "topic": "oop",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass MathHelper {\n  static square(x) { return x * x; }\n}\nconsole.log(MathHelper.square(4));\n```",
+    "options": ["16", "8", "undefined", "TypeError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`static` metod klass nusxasiga emas, klassning o'ziga tegishli. U to'g'ridan-to'g'ri MathHelper.square(4) orqali chaqiriladi → 16.",
+      "en": "A `static` method belongs to the class itself, not to instances. It is called directly via MathHelper.square(4) → 16."
+    }
+  },
+  {
+    "id": "oop-09",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass Circle {\n  constructor(r) { this.r = r; }\n  get area() { return 3.14 * this.r * this.r; }\n}\nconsole.log(new Circle(2).area);\n```",
+    "options": ["12.56", "6.28", "function", "undefined"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`get area()` — getter: u xossa kabi (qavssiz) o'qiladi. new Circle(2).area → 3.14 × 2 × 2 = 12.56.",
+      "en": "`get area()` is a getter: it is read like a property (without parentheses). new Circle(2).area → 3.14 × 2 × 2 = 12.56."
+    }
+  },
+  {
+    "id": "oop-10",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst obj = { x: 5, getX() { return this.x; } };\nconst other = { x: 99 };\nconsole.log(obj.getX.call(other));\n```",
+    "options": ["5", "99", "undefined", "NaN"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`call(other)` funksiyani chaqirganda `this` ni other ga majburan bog'laydi. Shuning uchun this.x = other.x = 99.",
+      "en": "`call(other)` invokes the function with `this` explicitly bound to other. So this.x = other.x = 99."
+    }
+  }
+]
