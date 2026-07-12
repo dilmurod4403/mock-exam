@@ -5,12 +5,15 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 
 ## Oqim (foydalanuvchi tajribasi)
 
-`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript; boshqalari tez orada) → **sertifikat darajasi** (JSE / JSA / JSP) → **rejim** (imtihon / test / mavzu) → savollar.
+`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript / PL/SQL; Python tez orada) → **sertifikat darajasi** → **rejim** (imtihon / test / mavzu) → savollar.
 
 ## Imkoniyatlar
 
 - Ikki tilli interfeys va tushuntirishlar (uz / en)
-- Sertifikat darajalari: **JSE** (Entry, asosiy savollar), **JSA** (Associate, to'liq bank), **JSP** (Professional — tez orada)
+- Ko'p dasturlash tili — har biri o'z mavzulari va sertifikat darajalariga ega:
+  - **JavaScript:** JSE (Entry) · JSA (Associate, to'liq bank) · JSP (Professional — tez orada)
+  - **PL/SQL:** 1Z0-149 (PL/SQL Developer, to'liq) · 1Z0-071 (Oracle SQL — tez orada)
+  - **Python:** tez orada
 - `/exam` — to'liq mock imtihon (40 savolgacha, 70% o'tish balli)
 - `/quiz` — tezkor mashq (10 savol)
 - `/topic` — mavzu bo'yicha mashq
@@ -48,7 +51,9 @@ Bot ishga tushgach, Telegram'da botingizga `/start` yozing.
 
 ## Yangi savol qo'shish
 
-`src/questions/` ichidagi JSON fayllarga savol qo'shing. Format:
+Savollar dasturlash tili bo'yicha papkalarga ajratilgan: `src/questions/<til>/*.json`
+(masalan `src/questions/javascript/`, `src/questions/plsql/`). Papka nomi savolning
+dasturlash tilini bildiradi. Format:
 
 ```json
 {
@@ -65,12 +70,12 @@ Bot ishga tushgach, Telegram'da botingizga `/start` yozing.
 }
 ```
 
-- `topic` — mavzu kodi: `intro`, `variables`, `operators`, `control-flow`, `collections`, `functions`, `errors`
-- `difficulty` — `easy` / `medium` / `hard`. JSE darajasi `easy`+`medium` savollardan iborat
+- `topic` — mavzu kodi (til katalogiga qarab). JS: `intro`, `variables`, ...; PL/SQL: `blocks`, `control`, `cursors`, `exceptions`, `subprograms`, `triggers`, `collections`. Ro'yxat: `src/data.js` → `PROG_LANGS`
+- `difficulty` — `easy` / `medium` / `hard`. JS'da JSE darajasi `easy`+`medium` savollardan iborat
 - `correct` — to'g'ri variant(lar) indeksi (0 dan boshlanadi). Bir nechta bo'lsa: `[0, 2]`
 - `explanation` — **ikki tilda**: `{ "uz": "...", "en": "..." }` (ikkalasi ham majburiy)
-- JSP (Professional) darajasiga savol qo'shish uchun savolga `"levels": ["JSP"]` maydonini qo'shing
-- Savol matnida kod bloklarini <code>```js ... ```</code> ichiga oling
+- `levels` — savol qaysi sertifikat darajalariga tegishli (masalan `["1Z0-149"]` yoki JS uchun `["JSP"]`). Darajalar `PROG_LANGS` da belgilangan
+- Savol matnida kod bloklarini <code>```js ... ```</code> yoki <code>```sql ... ```</code> ichiga oling
 
 Qo'shgach `npm run check` bilan tekshiring.
 

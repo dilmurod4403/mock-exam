@@ -1,0 +1,118 @@
+[
+  {
+    "id": "ps-01",
+    "topic": "subprograms",
+    "difficulty": "easy",
+    "levels": ["1Z0-149"],
+    "question": "What must every FUNCTION have that a PROCEDURE does not require?",
+    "options": [
+      "An IN parameter",
+      "A RETURN clause and a returned value",
+      "A BEGIN block",
+      "An EXCEPTION section"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Funksiya qiymat qaytarishi shart — sarlavhada `RETURN <tip>` va tanada `RETURN <qiymat>;` bo'lishi kerak. Protsedura esa qiymat qaytarmaydi (OUT parametr orqali natija berishi mumkin).",
+      "en": "A function must return a value — it needs `RETURN <type>` in the header and `RETURN <value>;` in the body. A procedure does not return a value (it can pass results via OUT parameters)."
+    }
+  },
+  {
+    "id": "ps-02",
+    "topic": "subprograms",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What is the DEFAULT parameter mode in a PL/SQL subprogram?",
+    "options": ["OUT", "IN OUT", "IN", "REF"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Parametr rejimi ko'rsatilmasa, u `IN` bo'ladi (faqat o'qish uchun). `OUT` — qiymat qaytarish, `IN OUT` — kirish va chiqish uchun.",
+      "en": "If no mode is specified, a parameter is `IN` (read-only). `OUT` is for returning a value, and `IN OUT` is for both input and output."
+    }
+  },
+  {
+    "id": "ps-03",
+    "topic": "subprograms",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does an OUT parameter do?",
+    "options": [
+      "Passes a value into the subprogram only",
+      "Returns a value from the subprogram to the caller",
+      "Cannot be changed inside the subprogram",
+      "Is optional and always NULL"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`OUT` parametr protsedura ichida hisoblangan qiymatni chaqiruvchiga qaytaradi. Chaqirishда unga o'zgaruvchi (l-value) uzatilishi kerak.",
+      "en": "An `OUT` parameter returns a value computed inside the subprogram back to the caller. The caller must pass a variable (an l-value) for it."
+    }
+  },
+  {
+    "id": "ps-04",
+    "topic": "subprograms",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "In a PACKAGE, what does the package SPECIFICATION contain?",
+    "options": [
+      "The full implementation (code body) of subprograms",
+      "The public declarations: subprogram signatures, public types and variables",
+      "Only private variables",
+      "Nothing — it is optional"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Paket SPETSIFIKATSIYASI ommaviy (public) interfeysni e'lon qiladi: protsedura/funksiya sarlavhalari, ommaviy tiplar va o'zgaruvchilar. Ularning kodi (tanasi) esa paket BODY'sida yoziladi.",
+      "en": "The package SPECIFICATION declares the public interface: subprogram headers, public types and variables. Their actual code (bodies) is written in the package BODY."
+    }
+  },
+  {
+    "id": "ps-05",
+    "topic": "subprograms",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "What is printed?\n\n```sql\nCREATE OR REPLACE FUNCTION add_tax(\n  p_amt NUMBER,\n  p_rate NUMBER DEFAULT 0.2\n) RETURN NUMBER IS\nBEGIN\n  RETURN p_amt + p_amt * p_rate;\nEND;\n/\nBEGIN\n  DBMS_OUTPUT.PUT_LINE(add_tax(100));\nEND;\n```",
+    "options": ["100", "120", "20", "error: missing argument"],
+    "correct": [1],
+    "explanation": {
+      "uz": "p_rate uchun standart qiymat 0.2 berilgan, shuning uchun add_tax(100) chaqirilganda 100 + 100*0.2 = 120 qaytadi.",
+      "en": "p_rate has a default value of 0.2, so add_tax(100) returns 100 + 100*0.2 = 120."
+    }
+  },
+  {
+    "id": "ps-06",
+    "topic": "subprograms",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which keyword combination lets you re-create a subprogram without dropping it first?",
+    "options": [
+      "CREATE NEW",
+      "CREATE OR REPLACE",
+      "ALTER CREATE",
+      "REPLACE ONLY"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`CREATE OR REPLACE PROCEDURE/FUNCTION/PACKAGE ...` mavjud obyektni oldin o'chirmasdan qayta yaratadi — grantlar va bog'liqliklar saqlanib qoladi.",
+      "en": "`CREATE OR REPLACE PROCEDURE/FUNCTION/PACKAGE ...` re-creates an existing object without dropping it first — grants and dependencies are preserved."
+    }
+  },
+  {
+    "id": "ps-07",
+    "topic": "subprograms",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "A stored function used inside a SQL query (e.g. SELECT add_tax(sal) FROM emp) should ideally:",
+    "options": [
+      "Return no value",
+      "Return a single value and avoid modifying database state",
+      "Always perform a COMMIT",
+      "Use only OUT parameters"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SQL so'rovida ishlatiladigan funksiya bitta qiymat qaytarishi va ma'lumotlar bazasi holatini o'zgartirmasligi (DML/COMMIT qilmasligi) kerak — aks holda xatolik yoki nomuvofiqliklar yuzaga keladi.",
+      "en": "A function used in a SQL query should return a single value and avoid changing database state (no DML/COMMIT) — otherwise errors or inconsistencies can occur."
+    }
+  }
+]

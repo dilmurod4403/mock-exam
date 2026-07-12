@@ -1,0 +1,118 @@
+[
+  {
+    "id": "pk-01",
+    "topic": "collections",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What kind of collection is this?\n\n```sql\nDECLARE\n  TYPE t_names IS TABLE OF VARCHAR2(50) INDEX BY PLS_INTEGER;\n  v_names t_names;\nBEGIN\n  v_names(1) := 'Ali';\n  DBMS_OUTPUT.PUT_LINE(v_names(1));\nEND;\n```",
+    "options": [
+      "A VARRAY",
+      "A nested table",
+      "An associative array (index-by table)",
+      "A record"
+    ],
+    "correct": [2],
+    "explanation": {
+      "uz": "`INDEX BY PLS_INTEGER` — bu assotsiativ massiv (index-by jadval). U kalit-qiymat juftliklarини saqlaydi, oldindan o'lchami belgilanmaydi va bazada saqlanmaydi (faqat PL/SQL ichida).",
+      "en": "`INDEX BY PLS_INTEGER` makes this an associative array (index-by table). It stores key-value pairs, needs no predefined size, and cannot be stored in the database (PL/SQL only)."
+    }
+  },
+  {
+    "id": "pk-02",
+    "topic": "collections",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which collection type has a fixed MAXIMUM size defined at declaration?",
+    "options": ["Associative array", "Nested table", "VARRAY", "Index-by table"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`VARRAY(n)` e'lon qilinganда maksimal element soni (n) belgilanadi va undan oshib bo'lmaydi. Nested table va associative array esa o'lchamsiz (cheksiz) o'sishi mumkin.",
+      "en": "A `VARRAY(n)` fixes its maximum number of elements (n) at declaration and can't exceed it. Nested tables and associative arrays can grow without a fixed bound."
+    }
+  },
+  {
+    "id": "pk-03",
+    "topic": "collections",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which method returns the number of elements in a collection?",
+    "options": ["SIZE", "LENGTH", "COUNT", "TOTAL"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`COUNT` kolleksiyadagi elementlar sonini qaytaradi. Boshqa foydali metodlar: FIRST, LAST, EXISTS, EXTEND, DELETE, NEXT, PRIOR.",
+      "en": "`COUNT` returns the number of elements in a collection. Other useful methods: FIRST, LAST, EXISTS, EXTEND, DELETE, NEXT, PRIOR."
+    }
+  },
+  {
+    "id": "pk-04",
+    "topic": "collections",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "For a nested table or VARRAY, what must you do before assigning to a new element?",
+    "options": [
+      "Nothing, they auto-grow",
+      "Call EXTEND to make room first",
+      "Call DELETE first",
+      "Open a cursor"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Nested table va VARRAY dastlab bo'sh (yoki NULL) bo'ladi. Yangi elementga joy ochish uchun avval `EXTEND` chaqirilishi kerak. (Assotsiativ massivda EXTEND kerak emas.)",
+      "en": "Nested tables and VARRAYs start empty (or NULL). You must call `EXTEND` to make room for a new element first. (Associative arrays don't need EXTEND.)"
+    }
+  },
+  {
+    "id": "pk-05",
+    "topic": "collections",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "What does BULK COLLECT do?\n\n```sql\nSELECT ename BULK COLLECT INTO v_names FROM emp;\n```",
+    "options": [
+      "Fetches rows one at a time in a loop",
+      "Fetches all rows into a collection in a single operation",
+      "Deletes rows in bulk",
+      "Locks the table"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`BULK COLLECT` bir amalda barcha satrlarni kolleksiyaga yuklaydi — satrma-satr FETCH qilishдан ancha tezroq (kontekst almashinuvlari kamayadi).",
+      "en": "`BULK COLLECT` loads all rows into a collection in one operation — much faster than fetching row by row (fewer context switches)."
+    }
+  },
+  {
+    "id": "pk-06",
+    "topic": "collections",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "What is FORALL used for?",
+    "options": [
+      "Looping through a collection to print values",
+      "Running a DML statement once per collection element with high performance",
+      "Declaring a collection type",
+      "Sorting a collection"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`FORALL` kolleksiya elementlari bo'yicha DML (INSERT/UPDATE/DELETE) ni yuqori unumdorlikда bajaradi — bu oddiy FOR sikldagi DML'дан tezroq. FORALL — sikl emas, bitta bulk amal.",
+      "en": "`FORALL` runs a DML statement (INSERT/UPDATE/DELETE) once per collection element with high performance — faster than DML inside a normal FOR loop. FORALL is not a loop; it's a single bulk operation."
+    }
+  },
+  {
+    "id": "pk-07",
+    "topic": "collections",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does this declare?\n\n```sql\nDECLARE\n  TYPE t_emp IS RECORD (\n    id   NUMBER,\n    name VARCHAR2(50)\n  );\n  v_emp t_emp;\nBEGIN\n  v_emp.id := 1;\n  v_emp.name := 'Ali';\nEND;\n```",
+    "options": [
+      "An array of employees",
+      "A user-defined RECORD type with named fields",
+      "A cursor",
+      "A VARRAY"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`TYPE ... IS RECORD` — bir nechta turli tipdagi maydonlarни birlashtiruvchi foydalanuvchi RECORD tipini e'lon qiladi. Maydonlarga nuqta orqali murojaat qilinadi: v_emp.id, v_emp.name.",
+      "en": "`TYPE ... IS RECORD` declares a user-defined RECORD type grouping several fields of different types. Fields are accessed with a dot: v_emp.id, v_emp.name."
+    }
+  }
+]

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "pt-01",
+    "topic": "triggers",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "When does this trigger fire?\n\n```sql\nCREATE OR REPLACE TRIGGER trg_bi\nBEFORE INSERT ON employees\nFOR EACH ROW\nBEGIN\n  :NEW.created_date := SYSDATE;\nEND;\n```",
+    "options": [
+      "Once, before the whole INSERT statement",
+      "Before each row is inserted",
+      "After all rows are inserted",
+      "Only on UPDATE"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`FOR EACH ROW` — bu satr darajasidagi (row-level) trigger. U INSERT paytida har bir satr uchun, satr yozilishidan OLDIN ishlaydi va :NEW orqali yangi qiymatlarni o'zgartirishi mumkin.",
+      "en": "`FOR EACH ROW` makes this a row-level trigger. It fires once for each row during the INSERT, BEFORE the row is written, and can modify the new values via :NEW."
+    }
+  },
+  {
+    "id": "pt-02",
+    "topic": "triggers",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "In a row-level trigger, what do :NEW and :OLD represent?",
+    "options": [
+      ":NEW = old value, :OLD = new value",
+      ":NEW = new value, :OLD = value before the change",
+      "Both hold the same value",
+      "They are cursor names"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`:NEW` — satrning yangi (o'zgartirilgandan keyingi) qiymatlari, `:OLD` — o'zgarishdan oldingi qiymatlari. INSERT'da :OLD NULL, DELETE'da :NEW NULL bo'ladi.",
+      "en": "`:NEW` holds the row's new (post-change) values, and `:OLD` holds the values before the change. In an INSERT, :OLD is NULL; in a DELETE, :NEW is NULL."
+    }
+  },
+  {
+    "id": "pt-03",
+    "topic": "triggers",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "A trigger WITHOUT the FOR EACH ROW clause is a:",
+    "options": [
+      "Row-level trigger",
+      "Statement-level trigger (fires once per statement)",
+      "INSTEAD OF trigger",
+      "Compound trigger"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`FOR EACH ROW` bo'lmasa, trigger statement darajasida bo'ladi — DML amali qancha satrga ta'sir qilishidan qat'i nazar, faqat BIR MARTA ishlaydi. Bunda :NEW/:OLD ishlatib bo'lmaydi.",
+      "en": "Without `FOR EACH ROW`, the trigger is statement-level — it fires only ONCE per DML statement regardless of how many rows are affected. :NEW/:OLD cannot be used there."
+    }
+  },
+  {
+    "id": "pt-04",
+    "topic": "triggers",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "Which conditional predicates detect the triggering DML event inside a trigger?",
+    "options": [
+      "IS_INSERT / IS_UPDATE / IS_DELETE",
+      "INSERTING / UPDATING / DELETING",
+      "ON_INSERT / ON_UPDATE / ON_DELETE",
+      "NEW / OLD / MERGE"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Trigger ichida `INSERTING`, `UPDATING`, `DELETING` mantiqiy predikatlari qaysi DML amali triggerni ishga tushirganini aniqlaydi. Masalan: IF INSERTING THEN ...",
+      "en": "Inside a trigger, the `INSERTING`, `UPDATING`, and `DELETING` boolean predicates identify which DML event fired the trigger. For example: IF INSERTING THEN ..."
+    }
+  },
+  {
+    "id": "pt-05",
+    "topic": "triggers",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "A \"mutating table\" error typically occurs when a row-level trigger:",
+    "options": [
+      "Modifies the value of :NEW",
+      "Queries or modifies the SAME table that the trigger is defined on",
+      "Uses DBMS_OUTPUT",
+      "Has no BEGIN block"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Mutating table xatosi (ORA-04091) satr darajasidagi trigger o'zi bog'langan jadvalни SELECT yoki DML bilan o'qishga/o'zgartirishga uringanда yuz beradi — chunki jadval hali o'zgarish jarayonida.",
+      "en": "A mutating table error (ORA-04091) occurs when a row-level trigger tries to query or modify the SAME table it is defined on — because that table is still in the middle of being changed."
+    }
+  },
+  {
+    "id": "pt-06",
+    "topic": "triggers",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "Which trigger type is required to make a non-updatable VIEW updatable?",
+    "options": [
+      "BEFORE trigger",
+      "AFTER trigger",
+      "INSTEAD OF trigger",
+      "Statement-level trigger"
+    ],
+    "correct": [2],
+    "explanation": {
+      "uz": "`INSTEAD OF` trigger view ustiga yoziladi va DML amali o'rniga ishlaydi — bu murakkab (masalan, join'li) view'larni yangilanadigan qilish imkonini beradi.",
+      "en": "An `INSTEAD OF` trigger is defined on a view and runs in place of the DML operation — this makes complex (e.g. join) views updatable."
+    }
+  }
+]

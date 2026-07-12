@@ -1,0 +1,108 @@
+[
+  {
+    "id": "pe-01",
+    "topic": "exceptions",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which exception is raised here?\n\n```sql\nDECLARE\n  v_name emp.ename%TYPE;\nBEGIN\n  SELECT ename INTO v_name FROM emp WHERE empno = -1;\nEND;\n```",
+    "options": ["TOO_MANY_ROWS", "NO_DATA_FOUND", "INVALID_NUMBER", "VALUE_ERROR"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`SELECT ... INTO` hech qanday satr qaytarmasa, `NO_DATA_FOUND` istisnosi yuz beradi. empno = -1 bo'yicha satr yo'q, shuning uchun shu istisno tashlanadi.",
+      "en": "When `SELECT ... INTO` returns no rows, the `NO_DATA_FOUND` exception is raised. There's no row for empno = -1, so that exception is thrown."
+    }
+  },
+  {
+    "id": "pe-02",
+    "topic": "exceptions",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which exception is raised when a SELECT INTO returns more than one row?",
+    "options": ["NO_DATA_FOUND", "TOO_MANY_ROWS", "CURSOR_ALREADY_OPEN", "ROWTYPE_MISMATCH"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`SELECT ... INTO` aynan bitta satr qaytarishi kerak. Agar bir nechta satr qaytsa, `TOO_MANY_ROWS` istisnosi yuz beradi.",
+      "en": "`SELECT ... INTO` must return exactly one row. If it returns more than one, the `TOO_MANY_ROWS` exception is raised."
+    }
+  },
+  {
+    "id": "pe-03",
+    "topic": "exceptions",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "In the EXCEPTION section, where must WHEN OTHERS appear?",
+    "options": [
+      "It can appear anywhere",
+      "It must be the FIRST handler",
+      "It must be the LAST handler",
+      "It cannot be used with named handlers"
+    ],
+    "correct": [2],
+    "explanation": {
+      "uz": "`WHEN OTHERS` barcha ushlanmagan istisnolarni tutadi, shuning uchun u oxirgi handler bo'lishi shart. Aks holda kompilyatsiya xatosi bo'ladi.",
+      "en": "`WHEN OTHERS` catches all otherwise-unhandled exceptions, so it must be the last handler. Otherwise a compilation error occurs."
+    }
+  },
+  {
+    "id": "pe-04",
+    "topic": "exceptions",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "What is the valid error number range for RAISE_APPLICATION_ERROR?",
+    "options": [
+      "-20000 to -20999",
+      "-1 to -9999",
+      "1 to 20000",
+      "-30000 to -40000"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`RAISE_APPLICATION_ERROR(error_number, message)` uchun ruxsat etilgan raqamlar -20000 dan -20999 gacha. Bu foydalanuvchi belgilagan xato xabarlarini qaytarish uchun ishlatiladi.",
+      "en": "`RAISE_APPLICATION_ERROR(error_number, message)` accepts numbers from -20000 to -20999. It is used to return custom, user-defined error messages."
+    }
+  },
+  {
+    "id": "pe-05",
+    "topic": "exceptions",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "How is a user-defined exception raised?\n\n```sql\nDECLARE\n  e_low EXCEPTION;\n  v_bal NUMBER := 50;\nBEGIN\n  IF v_bal < 100 THEN\n    ______ e_low;\n  END IF;\nEXCEPTION\n  WHEN e_low THEN\n    DBMS_OUTPUT.PUT_LINE('too low');\nEND;\n```",
+    "options": ["THROW", "RAISE", "SIGNAL", "EXIT"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Foydalanuvchi e'lon qilgan istisno `RAISE` bilan chaqiriladi: `RAISE e_low;`. So'ng boshqaruv mos WHEN handler'ga o'tadi va 'too low' chop etiladi.",
+      "en": "A user-defined exception is raised with `RAISE`: `RAISE e_low;`. Control then passes to the matching WHEN handler and 'too low' is printed."
+    }
+  },
+  {
+    "id": "pe-06",
+    "topic": "exceptions",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which predefined exception is raised when an INSERT/UPDATE violates a UNIQUE constraint?",
+    "options": ["DUP_VAL_ON_INDEX", "NO_DATA_FOUND", "INVALID_CURSOR", "ZERO_DIVIDE"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Noyob (UNIQUE yoki PRIMARY KEY) indeksga takroriy qiymat kiritilganda `DUP_VAL_ON_INDEX` istisnosi yuz beradi.",
+      "en": "Inserting a duplicate value into a UNIQUE (or PRIMARY KEY) index raises the `DUP_VAL_ON_INDEX` exception."
+    }
+  },
+  {
+    "id": "pe-07",
+    "topic": "exceptions",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "Inside WHEN OTHERS, which pair gives the error code and message?",
+    "options": [
+      "ERRCODE and ERRTEXT",
+      "SQLCODE and SQLERRM",
+      "ERROR_CODE and ERROR_MSG",
+      "CODE and MESSAGE"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`SQLCODE` xato raqamini, `SQLERRM` esa xato matnini qaytaradi. Ular ko'pincha WHEN OTHERS ichida xatoni jurnalga yozish uchun ishlatiladi.",
+      "en": "`SQLCODE` returns the error number and `SQLERRM` returns the error message. They are often used inside WHEN OTHERS to log the error."
+    }
+  }
+]
