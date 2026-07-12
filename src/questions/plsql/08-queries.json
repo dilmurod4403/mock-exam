@@ -1,0 +1,118 @@
+[
+  {
+    "id": "sq-01",
+    "topic": "queries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which query correctly finds employees whose commission_pct is NULL?",
+    "options": [
+      "SELECT * FROM employees WHERE commission_pct = NULL;",
+      "SELECT * FROM employees WHERE commission_pct IS NULL;",
+      "SELECT * FROM employees WHERE commission_pct == NULL;",
+      "SELECT * FROM employees WHERE commission_pct <> NULL;"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "NULL bilan taqqoslashда `IS NULL` / `IS NOT NULL` ishlatiladi. `= NULL` hech qachon TRUE bo'lmaydi, chunki NULL — noma'lum qiymat.",
+      "en": "To compare with NULL you use `IS NULL` / `IS NOT NULL`. `= NULL` is never TRUE because NULL is an unknown value."
+    }
+  },
+  {
+    "id": "sq-02",
+    "topic": "queries",
+    "difficulty": "easy",
+    "levels": ["1Z0-071"],
+    "question": "Which keyword removes duplicate rows from a result set?",
+    "options": ["UNIQUE", "DISTINCT", "ONLY", "REMOVE"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`SELECT DISTINCT ...` natijadagi takroriy satrlarni olib tashlaydi. Masalan: SELECT DISTINCT department_id FROM employees.",
+      "en": "`SELECT DISTINCT ...` removes duplicate rows from the result. For example: SELECT DISTINCT department_id FROM employees."
+    }
+  },
+  {
+    "id": "sq-03",
+    "topic": "queries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Does BETWEEN include the boundary values?\n\n```sql\nSELECT * FROM employees\nWHERE salary BETWEEN 1000 AND 2000;\n```",
+    "options": [
+      "No, it excludes 1000 and 2000",
+      "Yes, it includes both 1000 and 2000",
+      "It includes 1000 but not 2000",
+      "It only works with dates"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`BETWEEN a AND b` chegaralarni O'Z ICHIGA OLADI (inclusive) — bu `salary >= 1000 AND salary <= 2000` bilan bir xil.",
+      "en": "`BETWEEN a AND b` is INCLUSIVE of the boundaries — it's the same as `salary >= 1000 AND salary <= 2000`."
+    }
+  },
+  {
+    "id": "sq-04",
+    "topic": "queries",
+    "difficulty": "easy",
+    "levels": ["1Z0-071"],
+    "question": "What is the string concatenation operator in Oracle SQL?",
+    "options": ["+", "&", "||", "CONCAT only"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Oracle SQL'da satrlarni birlashtirish operatori `||`. Masalan: first_name || ' ' || last_name. (CONCAT funksiyasi ham bor, lekin faqat 2 argument oladi.)",
+      "en": "In Oracle SQL the string concatenation operator is `||`. For example: first_name || ' ' || last_name. (The CONCAT function also exists but takes only 2 arguments.)"
+    }
+  },
+  {
+    "id": "sq-05",
+    "topic": "queries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which values does this match?\n\n```sql\nSELECT * FROM employees\nWHERE first_name LIKE 'A_i%';\n```",
+    "options": [
+      "Names starting with 'A', any 2nd char, 'i' as 3rd, then anything",
+      "Names containing 'A_i'",
+      "Names exactly 'A_i'",
+      "Names ending in 'Ai'"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`_` — aynan bitta belgi, `%` — nol yoki ko'p belgi. 'A_i%' → 'A' bilan boshlanadi, 2-belgi ixtiyoriy, 3-belgi 'i', keyin ixtiyoriy (masalan 'Ali', 'Amir', 'Anita').",
+      "en": "`_` matches exactly one character, `%` matches zero or more. 'A_i%' → starts with 'A', any 2nd char, 'i' as the 3rd, then anything (e.g. 'Ali', 'Anita')."
+    }
+  },
+  {
+    "id": "sq-06",
+    "topic": "queries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What is the result of the arithmetic if commission_pct is NULL?\n\n```sql\nSELECT salary + commission_pct AS total\nFROM employees;\n```",
+    "options": [
+      "salary",
+      "NULL for those rows",
+      "0",
+      "an error"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "NULL bilan har qanday arifmetik amal NULL beradi. commission_pct NULL bo'lsa, salary + NULL = NULL. To'g'ri natija uchun NVL(commission_pct, 0) ishlatiladi.",
+      "en": "Any arithmetic with NULL yields NULL. If commission_pct is NULL, salary + NULL = NULL. Use NVL(commission_pct, 0) to get a correct result."
+    }
+  },
+  {
+    "id": "sq-07",
+    "topic": "queries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "By default, how are rows sorted by ORDER BY salary (without ASC/DESC)?",
+    "options": [
+      "Descending (largest first)",
+      "Ascending (smallest first)",
+      "Random order",
+      "By insertion order"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`ORDER BY` standart holatda ASC (o'sish tartibi) bo'yicha saralaydi — eng kichigidan boshlab. Kamayish uchun DESC yoziladi.",
+      "en": "`ORDER BY` sorts in ASC (ascending) order by default — smallest first. Use DESC for descending."
+    }
+  }
+]

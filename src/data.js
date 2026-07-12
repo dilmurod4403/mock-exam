@@ -36,8 +36,17 @@ export const PROG_LANGS = {
     },
   },
   plsql: {
-    label: "🗄️ PL/SQL",
+    label: "🗄️ Oracle SQL & PL/SQL",
     topics: {
+      // 1Z0-071 (SQL) mavzulari
+      queries: { uz: "So'rovlar (SELECT, WHERE, ORDER BY)", en: "Queries (SELECT, WHERE, ORDER BY)" },
+      functions: { uz: "Bir qatorli funksiyalar", en: "Single-row functions" },
+      aggregates: { uz: "Guruh funksiyalari (GROUP BY)", en: "Group functions (GROUP BY)" },
+      joins: { uz: "Jadvallarni birlashtirish (JOIN)", en: "Joins" },
+      subqueries: { uz: "Ichki so'rovlar, to'plam operatorlari", en: "Subqueries & set operators" },
+      dml: { uz: "Ma'lumot o'zgartirish (DML)", en: "Data manipulation (DML)" },
+      ddl: { uz: "DDL, cheklovlar, view", en: "DDL, constraints, views" },
+      // 1Z0-149 (PL/SQL) mavzulari
       blocks: { uz: "Blok tuzilishi va o'zgaruvchilar", en: "Block structure & variables" },
       control: { uz: "Boshqaruv (IF/CASE/LOOP)", en: "Control (IF/CASE/LOOP)" },
       cursors: { uz: "Kursorlar", en: "Cursors" },
