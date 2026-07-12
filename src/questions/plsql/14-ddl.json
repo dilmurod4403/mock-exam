@@ -1,0 +1,118 @@
+[
+  {
+    "id": "sl-01",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which two properties does a PRIMARY KEY enforce?",
+    "options": [
+      "Unique and allows NULL",
+      "Unique and NOT NULL",
+      "NOT NULL only",
+      "Unique only"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`PRIMARY KEY` bir vaqtda ikki cheklovni ta'minlaydi: qiymatlar NOYOB (unique) va NULL bo'lmasligi (NOT NULL) kerak. Jadvalда bitta primary key bo'ladi.",
+      "en": "A `PRIMARY KEY` enforces two constraints at once: values must be UNIQUE and NOT NULL. A table has only one primary key."
+    }
+  },
+  {
+    "id": "sl-02",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which constraint ensures a column's value exists in a parent table?",
+    "options": ["PRIMARY KEY", "FOREIGN KEY", "CHECK", "UNIQUE"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`FOREIGN KEY` ustun qiymati ota (parent) jadvaldagi kalitga mos kelishini talab qiladi — ma'lumotlar yaxlitligini (referential integrity) ta'minlaydi.",
+      "en": "A `FOREIGN KEY` requires the column's value to match a key in the parent table — it enforces referential integrity."
+    }
+  },
+  {
+    "id": "sl-03",
+    "topic": "ddl",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does this constraint do?\n\n```sql\nsalary NUMBER CHECK (salary > 0)\n```",
+    "options": [
+      "Makes salary the primary key",
+      "Rejects any row where salary is not greater than 0",
+      "Sets a default of 0",
+      "Allows only NULL"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`CHECK` cheklovi shart bajarilishini talab qiladi. salary > 0 bo'lmasa (masalan 0 yoki manfiy), satr rad etiladi.",
+      "en": "A `CHECK` constraint requires a condition to hold. If salary is not > 0 (e.g. 0 or negative), the row is rejected."
+    }
+  },
+  {
+    "id": "sl-04",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which statement adds a new column to an existing table?",
+    "options": [
+      "ALTER TABLE emp ADD (email VARCHAR2(100));",
+      "UPDATE TABLE emp ADD email;",
+      "MODIFY emp ADD email;",
+      "ALTER emp NEW COLUMN email;"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Mavjud jadvalga ustun qo'shish: `ALTER TABLE jadval ADD (ustun tip);`. Ustun tipini o'zgartirish uchun esa ALTER TABLE ... MODIFY ishlatiladi.",
+      "en": "To add a column to an existing table: `ALTER TABLE table ADD (column type);`. To change a column's type, use ALTER TABLE ... MODIFY."
+    }
+  },
+  {
+    "id": "sl-05",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What is the difference between VARCHAR2(10) and CHAR(10)?",
+    "options": [
+      "They are identical",
+      "VARCHAR2 is variable-length; CHAR is fixed-length (blank-padded)",
+      "CHAR is variable-length; VARCHAR2 is fixed",
+      "VARCHAR2 only stores numbers"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`VARCHAR2(n)` — o'zgaruvchan uzunlik: faqat kiritilgan belgilar saqlanadi. `CHAR(n)` — qat'iy uzunlik: qiymat qisqa bo'lsa, bo'sh joylar bilan to'ldiriladi (blank-padded).",
+      "en": "`VARCHAR2(n)` is variable-length: only the entered characters are stored. `CHAR(n)` is fixed-length: shorter values are blank-padded to n."
+    }
+  },
+  {
+    "id": "sl-06",
+    "topic": "ddl",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What is a VIEW in Oracle?",
+    "options": [
+      "A physical copy of table data",
+      "A stored query that acts as a virtual table and stores no data itself",
+      "A backup of a table",
+      "An index"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`VIEW` — saqlangan SELECT so'rovi; virtual jadval kabi ishlaydi, lekin o'zi ma'lumot saqlamaydi. Har murojaatда asosiy jadvallardan real vaqtда o'qiladi.",
+      "en": "A `VIEW` is a stored SELECT query; it acts as a virtual table but stores no data itself. Each access reads live from the underlying tables."
+    }
+  },
+  {
+    "id": "sl-07",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which constraint guarantees no two rows have the same value, but DOES allow one NULL?",
+    "options": ["PRIMARY KEY", "UNIQUE", "NOT NULL", "CHECK"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`UNIQUE` cheklovi qiymatlar takrorlanmasligini ta'minlaydi, lekin NULL'ga ruxsat beradi (bir nechta NULL ham bo'lishi mumkin). PRIMARY KEY esa NULL'ga ruxsat bermaydi.",
+      "en": "A `UNIQUE` constraint ensures values are not duplicated but allows NULLs (even several NULLs). A PRIMARY KEY, by contrast, disallows NULL."
+    }
+  }
+]

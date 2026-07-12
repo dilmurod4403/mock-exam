@@ -1,0 +1,105 @@
+[
+  {
+    "id": "sa-01",
+    "topic": "aggregates",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What is the difference between COUNT(*) and COUNT(commission_pct)?",
+    "options": [
+      "They are always equal",
+      "COUNT(*) counts all rows; COUNT(commission_pct) ignores NULLs",
+      "COUNT(*) ignores NULLs; COUNT(commission_pct) counts all",
+      "COUNT(*) is invalid"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`COUNT(*)` barcha satrlarni sanaydi (NULL bo'lsa ham). `COUNT(ustun)` esa faqat NULL bo'lmagan qiymatlarni sanaydi — NULL'larni e'tiborsiz qoldiradi.",
+      "en": "`COUNT(*)` counts all rows (including those with NULLs). `COUNT(column)` counts only non-NULL values — it ignores NULLs."
+    }
+  },
+  {
+    "id": "sa-02",
+    "topic": "aggregates",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which clause filters GROUPS (after aggregation)?",
+    "options": ["WHERE", "HAVING", "FILTER", "GROUP FILTER"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`HAVING` guruhlarni (agregatsiyadan keyin) filtrlaydi, `WHERE` esa satrlarni (guruhlashдан oldin). Masalan: HAVING COUNT(*) > 5.",
+      "en": "`HAVING` filters groups (after aggregation), while `WHERE` filters rows (before grouping). For example: HAVING COUNT(*) > 5."
+    }
+  },
+  {
+    "id": "sa-03",
+    "topic": "aggregates",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What happens?\n\n```sql\nSELECT department_id, first_name, COUNT(*)\nFROM employees\nGROUP BY department_id;\n```",
+    "options": [
+      "Runs fine",
+      "Error: first_name is not a GROUP BY expression",
+      "Returns one row per employee",
+      "Ignores first_name"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SELECT'dagi agregatlanmagan ustun (first_name) GROUP BY'да bo'lishi SHART. Aks holda ORA-00979 \"not a GROUP BY expression\" xatosi chiqadi.",
+      "en": "Any non-aggregated column in SELECT (first_name) MUST appear in GROUP BY. Otherwise you get ORA-00979 \"not a GROUP BY expression\"."
+    }
+  },
+  {
+    "id": "sa-04",
+    "topic": "aggregates",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Does AVG(salary) include rows where salary is NULL?",
+    "options": [
+      "Yes, it treats NULL as 0",
+      "No, aggregate functions ignore NULLs",
+      "It raises an error",
+      "It returns NULL for the whole query"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Agregat funksiyalar (AVG, SUM, MAX, MIN) NULL qiymatlarni e'tiborsiz qoldiradi. AVG NULL bo'lmagan qiymatlar bo'yicha o'rtachani hisoblaydi (NULL'larni 0 deb hisoblamaydi).",
+      "en": "Aggregate functions (AVG, SUM, MAX, MIN) ignore NULLs. AVG computes the average over non-NULL values (it does not treat NULL as 0)."
+    }
+  },
+  {
+    "id": "sa-05",
+    "topic": "aggregates",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Can you use an aggregate function (like MAX) directly in a WHERE clause?\n\n```sql\nSELECT * FROM employees WHERE salary = MAX(salary);\n```",
+    "options": [
+      "Yes, it works",
+      "No, it raises \"group function is not allowed here\"",
+      "Only with GROUP BY",
+      "Only for numbers"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "WHERE'да agregat funksiya ishlatib bo'lmaydi (ORA-00934 \"group function is not allowed here\"). Buning o'rniga ichki so'rov ishlatiladi: WHERE salary = (SELECT MAX(salary) FROM employees).",
+      "en": "You cannot use an aggregate function in WHERE (ORA-00934 \"group function is not allowed here\"). Use a subquery instead: WHERE salary = (SELECT MAX(salary) FROM employees)."
+    }
+  },
+  {
+    "id": "sa-06",
+    "topic": "aggregates",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does COUNT(DISTINCT department_id) return?",
+    "options": [
+      "The total number of rows",
+      "The number of unique, non-NULL department_id values",
+      "Always 1",
+      "The sum of department_ids"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`COUNT(DISTINCT ustun)` noyob (takrorlanmaydigan), NULL bo'lmagan qiymatlar sonini qaytaradi — nechta har xil bo'lim borligini bildiradi.",
+      "en": "`COUNT(DISTINCT column)` returns the number of unique, non-NULL values — i.e. how many distinct departments there are."
+    }
+  }
+]

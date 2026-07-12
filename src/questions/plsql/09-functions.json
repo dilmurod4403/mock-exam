@@ -1,0 +1,106 @@
+[
+  {
+    "id": "sf-01",
+    "topic": "functions",
+    "difficulty": "easy",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT UPPER('sql') FROM dual;\n```",
+    "options": ["'sql'", "'SQL'", "'Sql'", "NULL"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`UPPER` matnni katta harflarga o'giradi: 'sql' → 'SQL'. (`LOWER` — kichik, `INITCAP` — har so'z bosh harfi katta.)",
+      "en": "`UPPER` converts text to uppercase: 'sql' → 'SQL'. (`LOWER` for lowercase, `INITCAP` capitalizes each word.)"
+    }
+  },
+  {
+    "id": "sf-02",
+    "topic": "functions",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT SUBSTR('DATABASE', 1, 4) FROM dual;\n```",
+    "options": ["'DATA'", "'ATAB'", "'BASE'", "'DATAB'"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`SUBSTR(matn, boshlanish, uzunlik)` — Oracle'da indeks 1 dan boshlanadi. 1-pozitsiyadan 4 ta belgi: 'DATA'.",
+      "en": "`SUBSTR(text, start, length)` — in Oracle the index starts at 1. 4 characters from position 1: 'DATA'."
+    }
+  },
+  {
+    "id": "sf-03",
+    "topic": "functions",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT LENGTH('Oracle') FROM dual;\n```",
+    "options": ["5", "6", "7", "NULL"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`LENGTH` matndagi belgilar sonini qaytaradi. 'Oracle' — 6 ta belgi.",
+      "en": "`LENGTH` returns the number of characters in a string. 'Oracle' has 6 characters."
+    }
+  },
+  {
+    "id": "sf-04",
+    "topic": "functions",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT MOD(10, 3) FROM dual;\n```",
+    "options": ["3", "1", "0", "3.33"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`MOD(m, n)` — m ni n ga bo'lgandagi qoldiqni qaytaradi. 10 mod 3 = 1.",
+      "en": "`MOD(m, n)` returns the remainder of m divided by n. 10 mod 3 = 1."
+    }
+  },
+  {
+    "id": "sf-05",
+    "topic": "functions",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT NVL(NULL, 'N/A') FROM dual;\n```",
+    "options": ["NULL", "'N/A'", "''", "an error"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`NVL(a, b)` — a NULL bo'lsa b ni, aks holda a ni qaytaradi. Bu yerda a NULL, shuning uchun 'N/A' qaytadi.",
+      "en": "`NVL(a, b)` returns b if a is NULL, otherwise a. Here a is NULL, so it returns 'N/A'."
+    }
+  },
+  {
+    "id": "sf-06",
+    "topic": "functions",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT ROUND(45.926, 2) FROM dual;\n```",
+    "options": ["45.92", "45.93", "46", "45.9"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`ROUND(son, o'nlik)` — berilgan xona bo'yicha yaxlitlaydi. 45.926 ni 2 xonagacha yaxlitlasak, 3-xona (6) tufayli 45.93 bo'ladi.",
+      "en": "`ROUND(number, decimals)` rounds to the given decimal place. 45.926 rounded to 2 decimals becomes 45.93 (because of the 3rd digit, 6)."
+    }
+  },
+  {
+    "id": "sf-07",
+    "topic": "functions",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT INSTR('HELLO', 'L') FROM dual;\n```",
+    "options": ["2", "3", "4", "0"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`INSTR(matn, qidiruv)` — qidirilayotgan belgining BIRINCHI uchrash pozitsiyasini qaytaradi (1 dan). 'HELLO' da birinchi 'L' — 3-pozitsiyada.",
+      "en": "`INSTR(text, search)` returns the position of the FIRST occurrence (1-based). In 'HELLO' the first 'L' is at position 3."
+    }
+  },
+  {
+    "id": "sf-08",
+    "topic": "functions",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT TRUNC(45.926, 1) FROM dual;\n```",
+    "options": ["45.9", "46", "45.93", "45"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`TRUNC(son, o'nlik)` yaxlitlamasdan KESADI. 45.926 ni 1 xonagacha kessak, 45.9 (yaxlitlanmaydi — 45.93 bo'lmaydi).",
+      "en": "`TRUNC(number, decimals)` truncates (cuts) without rounding. 45.926 truncated to 1 decimal is 45.9 (no rounding, so not 45.93)."
+    }
+  }
+]

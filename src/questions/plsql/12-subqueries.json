@@ -1,0 +1,110 @@
+[
+  {
+    "id": "ss-01",
+    "topic": "subqueries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What happens?\n\n```sql\nSELECT * FROM employees\nWHERE salary = (SELECT salary FROM employees WHERE department_id = 50);\n```",
+    "options": [
+      "Runs fine always",
+      "Error if the subquery returns more than one row",
+      "Returns all employees",
+      "Returns no rows"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`=` bilan bir qatorli (single-row) ichki so'rov kutiladi. Agar ichki so'rov bir nechta satr qaytarsa, ORA-01427 \"single-row subquery returns more than one row\" xatosi chiqadi. Bunda `IN` ishlatish kerak.",
+      "en": "`=` expects a single-row subquery. If the subquery returns more than one row, you get ORA-01427 \"single-row subquery returns more than one row\". Use `IN` in that case."
+    }
+  },
+  {
+    "id": "ss-02",
+    "topic": "subqueries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does > ALL mean?\n\n```sql\nWHERE salary > ALL (SELECT salary FROM employees WHERE department_id = 30)\n```",
+    "options": [
+      "Greater than the MINIMUM of the subquery values",
+      "Greater than the MAXIMUM of the subquery values",
+      "Greater than the average",
+      "Equal to all values"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`> ALL` — barcha qiymatlardan katta, ya'ni ular ichidagi ENG KATTASIDAN ham katta bo'lishi kerak.",
+      "en": "`> ALL` means greater than every value, i.e. greater than the MAXIMUM of them."
+    }
+  },
+  {
+    "id": "ss-03",
+    "topic": "subqueries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does > ANY mean?\n\n```sql\nWHERE salary > ANY (SELECT salary FROM employees WHERE department_id = 30)\n```",
+    "options": [
+      "Greater than the MINIMUM of the subquery values",
+      "Greater than the MAXIMUM of the subquery values",
+      "Greater than all values",
+      "Equal to any value"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`> ANY` — qiymatlardan kamida bittasidan katta, ya'ni ular ichidagi ENG KICHIGIDAN katta bo'lsa yetarli.",
+      "en": "`> ANY` means greater than at least one of the values, i.e. greater than the MINIMUM of them."
+    }
+  },
+  {
+    "id": "ss-04",
+    "topic": "subqueries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What is the difference between UNION and UNION ALL?",
+    "options": [
+      "No difference",
+      "UNION removes duplicates (and sorts); UNION ALL keeps all rows",
+      "UNION keeps duplicates; UNION ALL removes them",
+      "UNION ALL only works with numbers"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`UNION` ikki natijani birlashtirib, takroriy satrlarni olib tashlaydi (va saralaydi). `UNION ALL` esa hamma satrni (takrorlar bilan) qaytaradi — tezroq, chunki dublikatlarni tekshirmaydi.",
+      "en": "`UNION` combines two results and removes duplicates (and sorts). `UNION ALL` keeps all rows (including duplicates) — faster because it doesn't check for duplicates."
+    }
+  },
+  {
+    "id": "ss-05",
+    "topic": "subqueries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does the MINUS operator return?\n\n```sql\nSELECT id FROM a\nMINUS\nSELECT id FROM b;\n```",
+    "options": [
+      "Rows in both a and b",
+      "Rows in a that are NOT in b",
+      "Rows in b that are not in a",
+      "All rows from a and b"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`MINUS` birinchi so'rovда bo'lgan, lekin ikkinchisida bo'lmagan satrlarni qaytaradi (a dan b ni ayirish). Takroriy satrlar ham olib tashlanadi.",
+      "en": "`MINUS` returns rows that are in the first query but NOT in the second (a minus b). Duplicates are also removed."
+    }
+  },
+  {
+    "id": "ss-06",
+    "topic": "subqueries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does EXISTS check in a correlated subquery?",
+    "options": [
+      "Whether the subquery returns at least one row",
+      "The exact count of rows",
+      "Whether a column is NULL",
+      "The maximum value"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`EXISTS` ichki so'rov kamida BITTA satr qaytaradimi yo'qmi shuni tekshiradi (TRUE/FALSE). Aniq qiymat yoki son muhim emas — faqat satr bor-yo'qligi.",
+      "en": "`EXISTS` checks whether the subquery returns AT LEAST one row (TRUE/FALSE). The actual values or counts don't matter — only whether any row exists."
+    }
+  }
+]

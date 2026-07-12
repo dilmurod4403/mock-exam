@@ -1,0 +1,105 @@
+[
+  {
+    "id": "sj-01",
+    "topic": "joins",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does an INNER JOIN return?",
+    "options": [
+      "All rows from both tables",
+      "Only rows that have matching values in both tables",
+      "All rows from the left table",
+      "Rows with no match"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`INNER JOIN` faqat ikkala jadvalда ham mos keladigan (join sharti bajarilgan) satrlarni qaytaradi. Mos kelmaganlar tushib qoladi.",
+      "en": "`INNER JOIN` returns only rows that have matching values in both tables (where the join condition is met). Non-matching rows are excluded."
+    }
+  },
+  {
+    "id": "sj-02",
+    "topic": "joins",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does a LEFT OUTER JOIN return?\n\n```sql\nSELECT e.first_name, d.department_name\nFROM employees e\nLEFT JOIN departments d ON e.department_id = d.department_id;\n```",
+    "options": [
+      "Only employees who have a department",
+      "All employees, with NULL department_name if they have no department",
+      "Only departments",
+      "The Cartesian product"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`LEFT [OUTER] JOIN` chap jadvaldagi (employees) BARCHA satrlarni qaytaradi. Mos keluvchi bo'lim bo'lmasa, o'ng tomon ustunlari (department_name) NULL bo'ladi.",
+      "en": "`LEFT [OUTER] JOIN` returns ALL rows from the left table (employees). If there's no matching department, the right-side columns (department_name) are NULL."
+    }
+  },
+  {
+    "id": "sj-03",
+    "topic": "joins",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "A CROSS JOIN between a table of 3 rows and a table of 4 rows returns how many rows?",
+    "options": ["3", "4", "7", "12"],
+    "correct": [3],
+    "explanation": {
+      "uz": "`CROSS JOIN` — Dekart ko'paytmasi: har satr ikkinchi jadvalning har satri bilan birlashtiriladi. 3 × 4 = 12 satr.",
+      "en": "`CROSS JOIN` is the Cartesian product: each row is combined with every row of the other table. 3 × 4 = 12 rows."
+    }
+  },
+  {
+    "id": "sj-04",
+    "topic": "joins",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "In Oracle's traditional (non-ANSI) syntax, which marks the outer-joined side?\n\n```sql\nSELECT e.first_name, d.department_name\nFROM employees e, departments d\nWHERE e.department_id = d.department_id(+);\n```",
+    "options": [
+      "The (+) marks a LEFT outer join keeping all employees",
+      "The (+) marks a RIGHT outer join keeping all departments",
+      "(+) means add the columns",
+      "It is a syntax error"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Oracle'ning eski sintaksisida `(+)` KAM ma'lumotli (mos kelmaydigan) tomonga qo'yiladi. Bu yerda (+) departments tomonida — demak employees BARCHASI saqlanadi (LEFT outer join'ga teng).",
+      "en": "In Oracle's legacy syntax, `(+)` is placed on the deficient (non-matching) side. Here (+) is on the departments side, so ALL employees are kept (equivalent to a LEFT outer join)."
+    }
+  },
+  {
+    "id": "sj-05",
+    "topic": "joins",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does the USING clause require?\n\n```sql\nSELECT first_name, department_name\nFROM employees JOIN departments USING (department_id);\n```",
+    "options": [
+      "Both tables must have a column named department_id",
+      "The tables must have different column names",
+      "A subquery",
+      "An ON condition as well"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`USING (ustun)` — ikkala jadvalда bir xil nomli ustun bo'lishini talab qiladi va shu ustun bo'yicha birlashtiradi. USING ustuniga jadval prefiksi qo'yilmaydi.",
+      "en": "`USING (column)` requires both tables to have a column with the same name and joins on it. You must not qualify the USING column with a table prefix."
+    }
+  },
+  {
+    "id": "sj-06",
+    "topic": "joins",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does a NATURAL JOIN do?",
+    "options": [
+      "Joins on ALL columns having the same name in both tables",
+      "Joins on the primary key only",
+      "Always produces a Cartesian product",
+      "Requires an explicit ON clause"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`NATURAL JOIN` ikkala jadvalda bir xil nomli BARCHA ustunlar bo'yicha avtomatik birlashtiradi. Ehtiyot bo'lish kerak — kutilmagan umumiy ustunlar natijani buzishi mumkin.",
+      "en": "`NATURAL JOIN` automatically joins on ALL columns that share the same name in both tables. Use with care — unexpected common columns can distort the result."
+    }
+  }
+]

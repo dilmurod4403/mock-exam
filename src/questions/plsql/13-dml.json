@@ -1,0 +1,110 @@
+[
+  {
+    "id": "sd-01",
+    "topic": "dml",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does this statement do?\n\n```sql\nUPDATE employees SET salary = salary * 1.1;\n```",
+    "options": [
+      "Updates only the first row",
+      "Updates ALL rows because there is no WHERE clause",
+      "Raises an error (WHERE required)",
+      "Updates nothing"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "WHERE bo'lmasa, UPDATE jadvaldagi BARCHA satrlarni o'zgartiradi. Faqat ma'lum satrlar uchun WHERE sharti qo'shilishi kerak.",
+      "en": "Without a WHERE clause, UPDATE changes ALL rows in the table. Add a WHERE condition to limit it to specific rows."
+    }
+  },
+  {
+    "id": "sd-02",
+    "topic": "dml",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "Which statement is TRUE about TRUNCATE vs DELETE?",
+    "options": [
+      "Both can be rolled back the same way",
+      "TRUNCATE is DDL, auto-commits and cannot be rolled back; DELETE is DML and can be",
+      "DELETE is faster than TRUNCATE",
+      "TRUNCATE can use a WHERE clause"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`TRUNCATE` — DDL amali: avtomatik commit qiladi, ROLLBACK qilib bo'lmaydi, WHERE ishlatilmaydi va tezroq. `DELETE` — DML: WHERE bilan ishlaydi va ROLLBACK qilinishi mumkin.",
+      "en": "`TRUNCATE` is DDL: it auto-commits, cannot be rolled back, allows no WHERE, and is faster. `DELETE` is DML: it supports WHERE and can be rolled back."
+    }
+  },
+  {
+    "id": "sd-03",
+    "topic": "dml",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does COMMIT do?",
+    "options": [
+      "Undoes all changes since the last commit",
+      "Makes all pending changes permanent and ends the transaction",
+      "Deletes the table",
+      "Locks the database"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`COMMIT` joriy tranzaksiyadagi barcha o'zgarishlarni doimiy (permanent) qiladi va tranzaksiyani yakunlaydi. Undan keyin ROLLBACK bilan qaytarib bo'lmaydi.",
+      "en": "`COMMIT` makes all changes in the current transaction permanent and ends the transaction. After it, they cannot be undone with ROLLBACK."
+    }
+  },
+  {
+    "id": "sd-04",
+    "topic": "dml",
+    "difficulty": "easy",
+    "levels": ["1Z0-071"],
+    "question": "Which is the correct INSERT syntax for one row?",
+    "options": [
+      "INSERT INTO dept VALUES (10, 'Sales');",
+      "INSERT dept SET id=10, name='Sales';",
+      "ADD INTO dept (10, 'Sales');",
+      "INSERT INTO dept (10, 'Sales');"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "To'g'ri sintaksis: `INSERT INTO jadval [(ustunlar)] VALUES (qiymatlar);`. `SET` uslubi (MySQL) Oracle'da ishlamaydi, VALUES kalit so'zi majburiy.",
+      "en": "Correct syntax: `INSERT INTO table [(columns)] VALUES (values);`. The `SET` style (MySQL) doesn't work in Oracle, and the VALUES keyword is required."
+    }
+  },
+  {
+    "id": "sd-05",
+    "topic": "dml",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "You ran DELETE FROM emp; but did NOT commit. How do you undo it?",
+    "options": [
+      "You cannot undo a DELETE",
+      "ROLLBACK",
+      "TRUNCATE",
+      "COMMIT"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "DELETE — DML amali, commit qilinmaguncha `ROLLBACK` bilan bekor qilinadi. (Agar TRUNCATE ishlatilganда edi, u avtomatik commit qilgani uchun qaytarib bo'lmasdi.)",
+      "en": "DELETE is DML; until it's committed, `ROLLBACK` undoes it. (Had you used TRUNCATE, it auto-commits and could not be undone.)"
+    }
+  },
+  {
+    "id": "sd-06",
+    "topic": "dml",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does SAVEPOINT allow?",
+    "options": [
+      "Permanently saving data",
+      "Rolling back to a specific point within a transaction",
+      "Creating a backup table",
+      "Committing only some rows"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`SAVEPOINT nom;` tranzaksiya ichida belgi qo'yadi. Keyin `ROLLBACK TO nom;` faqat o'sha nuqtadan keyingi o'zgarishlarni bekor qiladi (butun tranzaksiyani emas).",
+      "en": "`SAVEPOINT name;` marks a point within a transaction. Then `ROLLBACK TO name;` undoes only the changes made after that point (not the whole transaction)."
+    }
+  }
+]
