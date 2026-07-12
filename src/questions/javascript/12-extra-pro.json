@@ -1,0 +1,158 @@
+[
+  {
+    "id": "oop-11",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass A {\n  #x = 5;\n  getX() { return this.#x; }\n}\nconsole.log(new A().getX());\n```",
+    "options": ["5", "undefined", "SyntaxError", "TypeError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`#x` — private (yashirin) maydon. Unga faqat klass ichidan murojaat qilish mumkin. getX() metodi this.#x ni to'g'ri qaytaradi → 5.",
+      "en": "`#x` is a private field. It can be accessed only from inside the class. The getX() method correctly returns this.#x → 5."
+    }
+  },
+  {
+    "id": "oop-12",
+    "topic": "oop",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst o = { x: 1 };\nconst o2 = Object.assign({}, o, { y: 2 });\nconsole.log(o2.x, o2.y);\n```",
+    "options": ["1 2", "undefined 2", "1 undefined", "TypeError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`Object.assign(target, ...sources)` manba obyektlarning xossalarini target ga ko'chiradi. o2 da x (1) va y (2) birlashadi → 1 2.",
+      "en": "`Object.assign(target, ...sources)` copies properties from source objects into target. o2 combines x (1) and y (2) → 1 2."
+    }
+  },
+  {
+    "id": "oop-13",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconsole.log([1, 2, 3].__proto__ === Array.prototype);\n```",
+    "options": ["true", "false", "undefined", "TypeError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Massivning prototipi Array.prototype. Har massiv undan map, filter, push kabi metodlarni meros oladi. Shuning uchun taqqoslash true.",
+      "en": "An array's prototype is Array.prototype. Every array inherits methods like map, filter, push from it. So the comparison is true."
+    }
+  },
+  {
+    "id": "oop-14",
+    "topic": "oop",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass A {}\nclass B extends A {\n  constructor() {\n    super();\n    this.v = 1;\n  }\n}\nconsole.log(new B().v);\n```",
+    "options": ["1", "undefined", "ReferenceError", "0"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Meros olgan klass konstruktorida `this` dan foydalanishdan OLDIN `super()` chaqirilishi shart. Bu yerda to'g'ri qilingan → new B().v = 1.",
+      "en": "In a derived class constructor, `super()` must be called BEFORE using `this`. Here it's done correctly → new B().v = 1."
+    }
+  },
+  {
+    "id": "as-11",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nasync function f() {\n  return await 5;\n}\nf().then(v => console.log(v));\n```",
+    "options": ["5", "Promise", "undefined", "Error"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`await` oddiy qiymatni (5) ham qabul qiladi — u shunchaki hal bo'lgan qiymat sifatida qaytadi. f() Promise qaytaradi, .then → 5.",
+      "en": "`await` also accepts a plain value (5) — it just resolves to that value. f() returns a Promise, .then → 5."
+    }
+  },
+  {
+    "id": "as-12",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output order?\n\n```js\nPromise.resolve().then(() => console.log(1));\nconsole.log(2);\n```",
+    "options": ["1 2", "2 1", "1", "2"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Sinxron kod avval ishlaydi: 2. `.then` callback esa mikrovazifa — joriy sinxron kod tugagach ishlaydi: 1. Tartib: 2, 1.",
+      "en": "Synchronous code runs first: 2. The `.then` callback is a microtask — it runs after the current synchronous code finishes: 1. Order: 2, 1."
+    }
+  },
+  {
+    "id": "as-13",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst p = new Promise((resolve) => resolve(10));\np.then(v => console.log(v * 2));\n```",
+    "options": ["10", "20", "Promise", "undefined"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Promise resolve(10) bilan hal bo'ladi. .then callback'iga 10 keladi va 10 * 2 = 20 chop etiladi.",
+      "en": "The Promise resolves with 10. The .then callback receives 10 and prints 10 * 2 = 20."
+    }
+  },
+  {
+    "id": "as-14",
+    "topic": "async",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nasync function f() {\n  throw new Error(\"x\");\n}\nf().catch(e => console.log(e.message));\n```",
+    "options": ["x", "undefined", "unhandled error", "TypeError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`async` funksiya ichida tashlangan xato — rad etilgan (rejected) Promise ga aylanadi. Uni .catch ushlaydi → \"x\".",
+      "en": "An error thrown inside an `async` function becomes a rejected Promise. .catch handles it → \"x\"."
+    }
+  },
+  {
+    "id": "adv-11",
+    "topic": "advanced",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst { a, ...rest } = { a: 1, b: 2, c: 3 };\nconsole.log(rest);\n```",
+    "options": ["{a: 1}", "{b: 2, c: 3}", "[2, 3]", "{a:1, b:2, c:3}"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Obyekt destrukturizatsiyasida `...rest` ajratilganidan tashqari qolgan barcha xossalarni yangi obyektga yig'adi: a olindi, rest = {b: 2, c: 3}.",
+      "en": "In object destructuring, `...rest` collects all remaining properties into a new object: a is extracted, rest = {b: 2, c: 3}."
+    }
+  },
+  {
+    "id": "adv-12",
+    "topic": "advanced",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconsole.log([...\"abc\"]);\n```",
+    "options": ["[\"abc\"]", "[\"a\", \"b\", \"c\"]", "\"abc\"", "[a, b, c]"],
+    "correct": [1],
+    "explanation": {
+      "uz": "String iteratsiya qilinadi, shuning uchun spread `...` uni belgilarga yoyadi: [\"a\", \"b\", \"c\"].",
+      "en": "Strings are iterable, so the spread `...` expands it into characters: [\"a\", \"b\", \"c\"]."
+    }
+  },
+  {
+    "id": "adv-13",
+    "topic": "advanced",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst arr = [1, 2, 3];\nconst [, , third] = arr;\nconsole.log(third);\n```",
+    "options": ["1", "3", "undefined", "[3]"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Destrukturizatsiyada vergullar bilan elementlarni o'tkazib yuborish mumkin. Ikki bo'sh o'rin birinchi ikkitasini tashlaydi, third = arr[2] = 3.",
+      "en": "In destructuring you can skip elements with commas. Two empty slots skip the first two, so third = arr[2] = 3."
+    }
+  },
+  {
+    "id": "adv-14",
+    "topic": "advanced",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst obj = { a: 1 };\nconst copy = { ...obj, b: 2 };\nconsole.log(copy);\n```",
+    "options": ["{a: 1}", "{a: 1, b: 2}", "{b: 2}", "{...obj, b: 2}"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Obyekt spread `...obj` mavjud xossalarni yangi obyektga ko'chiradi, so'ng b: 2 qo'shiladi → {a: 1, b: 2}.",
+      "en": "The object spread `...obj` copies existing properties into a new object, then b: 2 is added → {a: 1, b: 2}."
+    }
+  }
+]

@@ -1,0 +1,234 @@
+[
+  {
+    "id": "sq-08",
+    "topic": "queries",
+    "difficulty": "easy",
+    "levels": ["1Z0-071"],
+    "question": "What does this WHERE clause match?\n\n```sql\nWHERE department_id IN (10, 20, 30)\n```",
+    "options": [
+      "Rows where department_id is 10, 20, or 30",
+      "Rows where department_id is between 10 and 30",
+      "Rows where department_id equals all three",
+      "Only department_id = 10"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`IN (ro'yxat)` ustun qiymati ro'yxatdagi qiymatlardan biriga teng bo'lsa mos keladi — bu bir nechta OR shartining qisqartmasi.",
+      "en": "`IN (list)` matches when the column equals ANY value in the list — it's shorthand for several OR conditions."
+    }
+  },
+  {
+    "id": "sq-09",
+    "topic": "queries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "By default in Oracle, where do NULL values appear with ORDER BY salary ASC?",
+    "options": ["First (NULLS FIRST)", "Last (NULLS LAST)", "They are excluded", "Random"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oracle'da ASC saralashда NULL'lar standart holatda OXIRIDA (NULLS LAST) turadi. DESC da esa birinchi (NULLS FIRST). Buni NULLS FIRST/LAST bilan boshqarish mumkin.",
+      "en": "In Oracle, with ASC sorting NULLs come LAST by default (NULLS LAST). With DESC they come first (NULLS FIRST). You can override with NULLS FIRST/LAST."
+    }
+  },
+  {
+    "id": "sf-09",
+    "topic": "functions",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does NVL2 return when the first argument is NOT null?\n\n```sql\nNVL2(commission_pct, 'Yes', 'No')\n```",
+    "options": [
+      "'No' (the third argument)",
+      "'Yes' (the second argument)",
+      "NULL",
+      "the first argument"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`NVL2(expr, a, b)` — expr NULL bo'lmasa a ni, NULL bo'lsa b ni qaytaradi. commission_pct NULL bo'lmasa → 'Yes'.",
+      "en": "`NVL2(expr, a, b)` returns a if expr is NOT null, and b if it is null. If commission_pct is not null → 'Yes'."
+    }
+  },
+  {
+    "id": "sf-10",
+    "topic": "functions",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT COALESCE(NULL, NULL, 'X', 'Y') FROM dual;\n```",
+    "options": ["NULL", "'X'", "'Y'", "'XY'"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`COALESCE` argumentlar ichidan BIRINCHI NULL bo'lmagan qiymatni qaytaradi. Bu yerda 'X' birinchi NULL emas → 'X'.",
+      "en": "`COALESCE` returns the FIRST non-NULL value among its arguments. Here 'X' is the first non-NULL → 'X'."
+    }
+  },
+  {
+    "id": "sa-07",
+    "topic": "aggregates",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does this query return?\n\n```sql\nSELECT department_id, COUNT(*)\nFROM employees\nGROUP BY department_id\nHAVING COUNT(*) > 5;\n```",
+    "options": [
+      "All departments and their counts",
+      "Only departments with more than 5 employees",
+      "The 5 largest departments",
+      "An error"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Avval department_id bo'yicha guruhlanadi, keyin `HAVING COUNT(*) > 5` faqat 5 dan ko'p xodimi bor guruhlarni qoldiradi.",
+      "en": "It first groups by department_id, then `HAVING COUNT(*) > 5` keeps only groups with more than 5 employees."
+    }
+  },
+  {
+    "id": "sa-08",
+    "topic": "aggregates",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "Which is the correct clause order in a SELECT statement?",
+    "options": [
+      "SELECT, FROM, GROUP BY, WHERE, HAVING, ORDER BY",
+      "SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY",
+      "FROM, SELECT, WHERE, HAVING, GROUP BY, ORDER BY",
+      "SELECT, WHERE, FROM, GROUP BY, ORDER BY, HAVING"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "To'g'ri yozilish tartibi: SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY. WHERE guruhlashdan oldin, HAVING keyin keladi.",
+      "en": "The correct written order is: SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY. WHERE comes before grouping, HAVING after."
+    }
+  },
+  {
+    "id": "sj-07",
+    "topic": "joins",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "To show each employee together with their manager's name (both in the same employees table), you use a:",
+    "options": ["CROSS JOIN", "Self join", "NATURAL JOIN", "UNION"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Jadvalни o'ziga birlashtirish — self join. Jadvalga ikki xil alias beriladi (masalan e va m) va e.manager_id = m.employee_id sharti qo'yiladi.",
+      "en": "Joining a table to itself is a self join. You give the table two aliases (e.g. e and m) and use a condition like e.manager_id = m.employee_id."
+    }
+  },
+  {
+    "id": "sj-08",
+    "topic": "joins",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does a FULL OUTER JOIN return?",
+    "options": [
+      "Only matching rows",
+      "All rows from both tables, matched where possible, NULLs elsewhere",
+      "Only rows from the left table",
+      "The Cartesian product"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`FULL OUTER JOIN` ikkala jadvalning BARCHA satrlarini qaytaradi: mos kelganlar birlashtiriladi, mos kelmagan tomonlar NULL bilan to'ldiriladi.",
+      "en": "`FULL OUTER JOIN` returns ALL rows from both tables: matching rows are joined, and where there's no match the missing side is NULL."
+    }
+  },
+  {
+    "id": "ss-07",
+    "topic": "subqueries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "A subquery that references a column from the OUTER query is called:",
+    "options": [
+      "A single-row subquery",
+      "A correlated subquery",
+      "An inline view",
+      "A scalar subquery"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Tashqi so'rov ustuniga murojaat qiladigan ichki so'rov — bog'langan (correlated) subquery. U tashqi so'rovning har satri uchun qayta bajariladi.",
+      "en": "A subquery that references a column from the outer query is a correlated subquery. It is re-evaluated for each row of the outer query."
+    }
+  },
+  {
+    "id": "ss-08",
+    "topic": "subqueries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What is the risk with NOT IN if the subquery can return NULL?\n\n```sql\nWHERE department_id NOT IN (SELECT department_id FROM departments)\n```",
+    "options": [
+      "It runs faster",
+      "If any value from the subquery is NULL, the whole condition returns no rows",
+      "It automatically ignores NULLs",
+      "It raises an error"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`NOT IN` ro'yxatida NULL bo'lsa, taqqoslash UNKNOWN bo'lib qoladi va NATIJA BO'SH bo'ladi — kutilmagan xatolik manbai. NOT EXISTS ishlatish xavfsizroq.",
+      "en": "If the `NOT IN` list contains a NULL, the comparison becomes UNKNOWN and the result is EMPTY — a common gotcha. Using NOT EXISTS is safer."
+    }
+  },
+  {
+    "id": "sd-07",
+    "topic": "dml",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What is the MERGE statement used for?",
+    "options": [
+      "Joining two tables",
+      "Insert-or-update in a single statement (upsert)",
+      "Merging two databases",
+      "Deleting duplicates"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`MERGE` bitta amalда shart bo'yicha satrni yangilaydi (UPDATE) yoki yo'q bo'lsa qo'shadi (INSERT) — 'upsert' operatsiyasi.",
+      "en": "`MERGE` updates a row if it matches a condition or inserts it if not — all in one statement (an 'upsert' operation)."
+    }
+  },
+  {
+    "id": "sd-08",
+    "topic": "dml",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "How many rows remain?\n\n```sql\nINSERT INTO t (id) VALUES (1);\nINSERT INTO t (id) VALUES (2);\nROLLBACK;\n```\n(t was empty and nothing was committed before)",
+    "options": ["2", "1", "0", "error"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Ikkala INSERT ham commit qilinmagan. `ROLLBACK` ularni bekor qiladi → jadval yana bo'sh (0 satr).",
+      "en": "Neither INSERT was committed. `ROLLBACK` undoes both → the table is empty again (0 rows)."
+    }
+  },
+  {
+    "id": "sl-08",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What is the difference between DROP TABLE and TRUNCATE TABLE?",
+    "options": [
+      "They are identical",
+      "DROP removes the table structure entirely; TRUNCATE removes only the rows",
+      "TRUNCATE removes the structure; DROP removes rows",
+      "DROP keeps the data"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`DROP TABLE` jadvalни to'liq (tuzilishi bilan) o'chiradi. `TRUNCATE TABLE` esa faqat barcha satrlarni o'chiradi, jadval tuzilishi qoladi.",
+      "en": "`DROP TABLE` removes the entire table (including its structure). `TRUNCATE TABLE` removes only all rows, keeping the table structure."
+    }
+  },
+  {
+    "id": "sl-09",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "When is a column's DEFAULT value used?\n\n```sql\nqty NUMBER DEFAULT 0\n```",
+    "options": [
+      "Always, overriding inserted values",
+      "When an INSERT does not provide a value for that column",
+      "Only during UPDATE",
+      "Never"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`DEFAULT` qiymat INSERT'да ustunga qiymat berilmaganда ishlatiladi. Agar qiymat kiritilsa, default e'tiborsiz qoladi.",
+      "en": "A `DEFAULT` value is used when an INSERT does not provide a value for that column. If a value is given, the default is ignored."
+    }
+  }
+]

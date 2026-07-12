@@ -1,0 +1,242 @@
+[
+  {
+    "id": "intro-16",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "In which document is the ECMAScript standard published?",
+    "options": ["RFC-262", "ECMA-262", "ISO-9001", "W3C-JS"],
+    "correct": [1],
+    "explanation": {
+      "uz": "ECMAScript standarti ECMA-262 hujjatida chop etiladi. JavaScript shu standartning amaliy tatbig'idir.",
+      "en": "The ECMAScript standard is published in the ECMA-262 document. JavaScript is a practical implementation of that standard."
+    }
+  },
+  {
+    "id": "intro-17",
+    "topic": "intro",
+    "difficulty": "medium",
+    "question": "Which of the following is NOT a primitive type in JavaScript?",
+    "options": ["string", "number", "object", "boolean"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Primitiv tiplar: string, number, boolean, undefined, null, symbol, bigint. `object` esa primitiv emas — u murakkab (reference) tip.",
+      "en": "Primitive types are: string, number, boolean, undefined, null, symbol, bigint. `object` is not primitive — it's a reference (complex) type."
+    }
+  },
+  {
+    "id": "intro-18",
+    "topic": "intro",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(typeof typeof 1);\n```",
+    "options": ["\"number\"", "\"string\"", "1", "\"undefined\""],
+    "correct": [1],
+    "explanation": {
+      "uz": "Ichkaridan hisoblanadi: typeof 1 → \"number\" (string). Keyin typeof \"number\" → \"string\". Har doim typeof natijasi string bo'ladi.",
+      "en": "Evaluated inside-out: typeof 1 → \"number\" (a string). Then typeof \"number\" → \"string\". The result of typeof is always a string."
+    }
+  },
+  {
+    "id": "vars-24",
+    "topic": "variables",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet x = 5;\nlet y = x;\ny = 10;\nconsole.log(x);\n```",
+    "options": ["5", "10", "undefined", "NaN"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Primitiv qiymatlar QIYMAT bo'yicha nusxalanadi. y = x da x ning nusxasi olinadi; y ni o'zgartirish x ga ta'sir qilmaydi → x = 5.",
+      "en": "Primitive values are copied BY VALUE. y = x copies x's value; changing y doesn't affect x → x = 5."
+    }
+  },
+  {
+    "id": "vars-25",
+    "topic": "variables",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconst arr = [1, 2];\narr.push(3);\nconsole.log(arr);\n```",
+    "options": ["[1, 2]", "[1, 2, 3]", "TypeError", "error"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`const` faqat qayta BOG'LASHNI (reassignment) taqiqlaydi, obyekt/massiv ICHINI o'zgartirishga ruxsat beradi. push ishlaydi → [1, 2, 3]. (arr = [] esa xato bo'lardi.)",
+      "en": "`const` only prevents REASSIGNMENT, not mutation of the object/array contents. push works → [1, 2, 3]. (arr = [] would throw.)"
+    }
+  },
+  {
+    "id": "vars-26",
+    "topic": "variables",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(10 + \"5\" - 3);\n```",
+    "options": ["12", "102", "\"1053\"", "NaN"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Chapdan o'ngga: 10 + \"5\" → \"105\" (konkatenatsiya). Keyin \"105\" - 3 → 102 (`-` stringni songa aylantiradi).",
+      "en": "Left to right: 10 + \"5\" → \"105\" (concatenation). Then \"105\" - 3 → 102 (`-` converts the string to a number)."
+    }
+  },
+  {
+    "id": "op-21",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(2 + 2 + \"2\");\n```",
+    "options": ["\"222\"", "\"42\"", "6", "\"6\""],
+    "correct": [1],
+    "explanation": {
+      "uz": "Chapdan o'ngga: 2 + 2 = 4 (son), keyin 4 + \"2\" → \"42\" (string). Birinchi ikki son qo'shiladi, keyin string bilan birlashadi.",
+      "en": "Left to right: 2 + 2 = 4 (number), then 4 + \"2\" → \"42\" (string). The first two numbers add, then concatenation kicks in."
+    }
+  },
+  {
+    "id": "op-22",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(\"2\" + 2 + 2);\n```",
+    "options": ["\"222\"", "\"42\"", "6", "\"6\""],
+    "correct": [0],
+    "explanation": {
+      "uz": "Birinchi operand string bo'lgani uchun butun ifoda konkatenatsiya bo'ladi: \"2\" + 2 → \"22\", keyin \"22\" + 2 → \"222\".",
+      "en": "Since the first operand is a string, the whole expression concatenates: \"2\" + 2 → \"22\", then \"22\" + 2 → \"222\"."
+    }
+  },
+  {
+    "id": "op-23",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(10 % 4 + 2 * 3);\n```",
+    "options": ["8", "18", "12", "0"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`%` va `*` `+` dan ustun: 10 % 4 = 2, 2 * 3 = 6. Keyin 2 + 6 = 8.",
+      "en": "`%` and `*` have higher precedence than `+`: 10 % 4 = 2, 2 * 3 = 6. Then 2 + 6 = 8."
+    }
+  },
+  {
+    "id": "cf-21",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet x = 5;\nconsole.log(x > 0 ? (x < 10 ? \"a\" : \"b\") : \"c\");\n```",
+    "options": ["a", "b", "c", "5"],
+    "correct": [0],
+    "explanation": {
+      "uz": "x > 0 rost → ichki ternarga o'tadi: x < 10 (5 < 10) rost → \"a\".",
+      "en": "x > 0 is true → goes to the inner ternary: x < 10 (5 < 10) is true → \"a\"."
+    }
+  },
+  {
+    "id": "cf-22",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfor (let i = 0; i < 3; i++) {\n  for (let j = 0; j < 3; j++) {\n    if (j === 1) break;\n    console.log(i);\n  }\n}\n```",
+    "options": ["0 1 2", "0 0 0", "0 1 2 0 1 2", "nothing"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Ichki sikl j===1 da break qiladi, shuning uchun faqat j=0 da console.log ishlaydi. Tashqi sikl har aylanishida i bir marta chiqadi: 0, 1, 2.",
+      "en": "The inner loop breaks at j===1, so console.log runs only for j=0. Each outer iteration prints i once: 0, 1, 2."
+    }
+  },
+  {
+    "id": "cf-23",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet sum = 0;\nfor (let i = 0; i <= 3; i++) {\n  if (i % 2 === 0) continue;\n  sum += i;\n}\nconsole.log(sum);\n```",
+    "options": ["6", "4", "3", "1"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Juft i (0, 2) da continue — o'tkazib yuboriladi. Faqat toq i (1, 3) qo'shiladi: 1 + 3 = 4.",
+      "en": "For even i (0, 2) continue skips. Only odd i (1, 3) are added: 1 + 3 = 4."
+    }
+  },
+  {
+    "id": "col-21",
+    "topic": "collections",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log([1, 2, 3].map(x => x + 1).filter(x => x > 2));\n```",
+    "options": ["[2, 3, 4]", "[3, 4]", "[2, 3]", "[1, 2, 3]"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Avval map: [2, 3, 4]. Keyin filter (x > 2): 3 va 4 qoladi → [3, 4]. Metodlar zanjiri chapdan o'ngga bajariladi.",
+      "en": "First map: [2, 3, 4]. Then filter (x > 2): keeps 3 and 4 → [3, 4]. Chained methods run left to right."
+    }
+  },
+  {
+    "id": "col-22",
+    "topic": "collections",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconst o = { a: 1 };\nconsole.log(\"a\" in o, \"b\" in o);\n```",
+    "options": ["true false", "false true", "true true", "1 undefined"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`in` operatori obyektда xossa mavjudligini tekshiradi. \"a\" bor → true, \"b\" yo'q → false.",
+      "en": "The `in` operator checks whether a property exists in an object. \"a\" exists → true, \"b\" doesn't → false."
+    }
+  },
+  {
+    "id": "col-23",
+    "topic": "collections",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log([1, 2, 3].some(x => x > 2), [1, 2, 3].every(x => x > 2));\n```",
+    "options": ["true true", "false false", "true false", "false true"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`some` — kamida bittasi shartga mos kelsa true (3 > 2 → true). `every` — HAMMASI mos kelsagina true (1 va 2 mos emas → false).",
+      "en": "`some` is true if at least one matches (3 > 2 → true). `every` is true only if ALL match (1 and 2 don't → false)."
+    }
+  },
+  {
+    "id": "fn-21",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log([1, 2, 3].reduce((a, b) => a + b));\n```",
+    "options": ["6", "0", "[1,2,3]", "undefined"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Boshlang'ich qiymat berilmasa, reduce birinchi elementni akkumulyator qilib oladi va ikkinchidan boshlaydi: 1+2+3 = 6.",
+      "en": "Without an initial value, reduce uses the first element as the accumulator and starts from the second: 1+2+3 = 6."
+    }
+  },
+  {
+    "id": "fn-22",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction f() {\n  return;\n  5;\n}\nconsole.log(f());\n```",
+    "options": ["5", "undefined", "null", "SyntaxError"],
+    "correct": [1],
+    "explanation": {
+      "uz": "ASI (avtomatik nuqta-vergul) `return` dan keyin darhol `;` qo'yadi. Shuning uchun funksiya undefined qaytaradi, `5;` esa hech qachon bajarilmaydi.",
+      "en": "ASI (automatic semicolon insertion) puts a `;` right after `return`. So the function returns undefined, and `5;` is never reached."
+    }
+  },
+  {
+    "id": "fn-23",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconst arr = [1, 2, 3];\narr.forEach(x => x * 2);\nconsole.log(arr);\n```",
+    "options": ["[2, 4, 6]", "[1, 2, 3]", "undefined", "6"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`forEach` hech narsa qaytarmaydi va asl massivni o'zgartirmaydi. x * 2 natijasi hech qayerga saqlanmaydi → massiv [1, 2, 3] bo'lib qoladi. O'zgartirish uchun map() kerak.",
+      "en": "`forEach` returns nothing and doesn't modify the original array. The x * 2 result is discarded → the array stays [1, 2, 3]. Use map() to transform."
+    }
+  },
+  {
+    "id": "err-16",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(typeof undeclaredVar);\n```",
+    "options": ["ReferenceError", "\"undefined\"", "\"function\"", "null"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`typeof` — e'lon qilinmagan o'zgaruvchiga ishlatilганda ham xato TASHLAMAYDI, \"undefined\" qaytaradi. Bu typeof ning maxsus xususiyati.",
+      "en": "`typeof` does NOT throw even for an undeclared variable — it returns \"undefined\". This is a special feature of typeof."
+    }
+  },
+  {
+    "id": "err-17",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What type of error occurs?\n\n```js\nconst x = 5;\nx();\n```",
+    "options": ["ReferenceError", "TypeError", "SyntaxError", "no error"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Son funksiya emas, shuning uchun uni chaqirishga urinish `TypeError` (\"x is not a function\") tashlaydi.",
+      "en": "A number is not a function, so trying to call it throws a `TypeError` (\"x is not a function\")."
+    }
+  }
+]

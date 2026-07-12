@@ -60,12 +60,6 @@ export const PROG_LANGS = {
       "1Z0-149": { label: "1Z0-149 — PL/SQL Developer", pass: 65, filter: (q) => q.levels?.includes("1Z0-149") },
     },
   },
-  python: {
-    label: "🐍 Python",
-    comingSoon: true,
-    topics: {},
-    levels: {},
-  },
 };
 
 // ---------- Yuklash ----------

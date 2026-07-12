@@ -5,7 +5,7 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 
 ## Oqim (foydalanuvchi tajribasi)
 
-`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript / PL/SQL; Python tez orada) → **sertifikat darajasi** → **rejim** (imtihon / test / mavzu) → savollar.
+`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript / Oracle SQL & PL/SQL) → **sertifikat darajasi** → **rejim** (imtihon / test / mavzu) → savollar.
 
 ## Imkoniyatlar
 
@@ -13,7 +13,6 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 - Ko'p dasturlash tili — har biri o'z mavzulari va sertifikat darajalariga ega:
   - **JavaScript:** JSE (Entry) · JSA (Associate) · JSP (Professional — OOP, async, closure/ES6+)
   - **Oracle SQL & PL/SQL:** 1Z0-071 (Oracle SQL) · 1Z0-149 (PL/SQL Developer)
-  - **Python:** tez orada
 - `/exam` — to'liq mock imtihon (40 savolgacha, 70% o'tish balli)
 - `/quiz` — tezkor mashq (10 savol)
 - `/topic` — mavzu bo'yicha mashq

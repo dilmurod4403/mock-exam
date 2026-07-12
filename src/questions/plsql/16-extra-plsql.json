@@ -1,0 +1,239 @@
+[
+  {
+    "id": "pb-08",
+    "topic": "blocks",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Can an inner (nested) block access a variable declared in the enclosing outer block?",
+    "options": [
+      "No, blocks are fully isolated",
+      "Yes, the inner block can see the outer block's variables",
+      "Only if declared GLOBAL",
+      "Only constants"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Ichki blok tashqi blokda e'lon qilingan o'zgaruvchilarni ko'radi (leksik ko'rinish). Lekin tashqi blok ichki blok o'zgaruvchilarini ko'ra olmaydi.",
+      "en": "An inner block can see variables declared in the enclosing outer block (lexical scope). But the outer block cannot see the inner block's variables."
+    }
+  },
+  {
+    "id": "pb-09",
+    "topic": "blocks",
+    "difficulty": "easy",
+    "levels": ["1Z0-149"],
+    "question": "Which is a valid single-line comment in PL/SQL?",
+    "options": ["# comment", "-- comment", "// comment", "<!-- comment -->"],
+    "correct": [1],
+    "explanation": {
+      "uz": "PL/SQL'da bir qatorli izoh `--` bilan, ko'p qatorli izoh esa `/* ... */` bilan yoziladi. `#` va `//` PL/SQL'да izoh emas.",
+      "en": "In PL/SQL a single-line comment uses `--`, and a multi-line comment uses `/* ... */`. `#` and `//` are not comments in PL/SQL."
+    }
+  },
+  {
+    "id": "pc-08",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "How does a searched CASE statement end?\n\n```sql\nCASE\n  WHEN sal > 5000 THEN v := 'high';\n  ELSE v := 'low';\n____\n```",
+    "options": ["END", "END CASE", "END IF", "END SWITCH"],
+    "correct": [1],
+    "explanation": {
+      "uz": "CASE STATEMENT `END CASE;` bilan yakunlanadi. (Farqi: CASE IFODASI esa faqat `END` bilan tugaydi va qiymat qaytaradi.)",
+      "en": "A CASE STATEMENT ends with `END CASE;`. (In contrast, a CASE EXPRESSION ends with just `END` and returns a value.)"
+    }
+  },
+  {
+    "id": "pc-09",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does the CONTINUE statement do inside a loop?",
+    "options": [
+      "Exits the loop entirely",
+      "Skips the rest of the current iteration and moves to the next",
+      "Restarts the loop from the beginning",
+      "Pauses execution"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`CONTINUE` (11g dan) joriy iteratsiyaning qolgan qismini o'tkazib yuboradi va keyingi aylanishga o'tadi. `EXIT` esa siklni butunlay to'xtatadi.",
+      "en": "`CONTINUE` (since 11g) skips the rest of the current iteration and moves to the next. `EXIT` instead stops the loop entirely."
+    }
+  },
+  {
+    "id": "pcu-07",
+    "topic": "cursors",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does cur%ROWTYPE declare?\n\n```sql\nCURSOR cur IS SELECT employee_id, salary FROM emp;\nv_row cur%ROWTYPE;\n```",
+    "options": [
+      "A single number",
+      "A record whose fields match the cursor's selected columns",
+      "A copy of the cursor",
+      "A collection of all rows"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`cursor%ROWTYPE` kursor SELECT'idagi ustunlarga mos maydonlarga ega RECORD e'lon qiladi. FETCH cur INTO v_row; bilan ishlatiladi.",
+      "en": "`cursor%ROWTYPE` declares a RECORD with fields matching the cursor's selected columns. It's used with FETCH cur INTO v_row;."
+    }
+  },
+  {
+    "id": "pcu-08",
+    "topic": "cursors",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does the %ISOPEN cursor attribute return?",
+    "options": [
+      "The number of rows",
+      "TRUE if the cursor is currently open",
+      "TRUE if the last fetch found a row",
+      "The cursor's name"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`cursor%ISOPEN` kursor ochiq bo'lsa TRUE, aks holda FALSE qaytaradi. Kursorni ikki marta ochib yubormaslik uchun tekshirishда foydali.",
+      "en": "`cursor%ISOPEN` returns TRUE if the cursor is currently open, otherwise FALSE. Useful to avoid opening an already-open cursor."
+    }
+  },
+  {
+    "id": "pe-08",
+    "topic": "exceptions",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "What does PRAGMA EXCEPTION_INIT do?",
+    "options": [
+      "Creates a new table",
+      "Associates a named exception with a specific Oracle error number",
+      "Raises an exception immediately",
+      "Disables all exceptions"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`PRAGMA EXCEPTION_INIT(exc_name, -error_no)` foydalanuvchi e'lon qilgan istisnoni ma'lum Oracle xato raqamiga bog'laydi. Shundan so'ng o'sha xatoni nom bilan ushlash mumkin.",
+      "en": "`PRAGMA EXCEPTION_INIT(exc_name, -error_no)` associates a user-declared exception with a specific Oracle error number. Then that error can be caught by name."
+    }
+  },
+  {
+    "id": "pe-09",
+    "topic": "exceptions",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which predefined exception is raised on division by zero?",
+    "options": ["VALUE_ERROR", "ZERO_DIVIDE", "NO_DATA_FOUND", "INVALID_NUMBER"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Songa 0 ga bo'lishга urinilganда `ZERO_DIVIDE` istisnosi yuz beradi (ORA-01476).",
+      "en": "Attempting to divide a number by zero raises the `ZERO_DIVIDE` exception (ORA-01476)."
+    }
+  },
+  {
+    "id": "ps-08",
+    "topic": "subprograms",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "How can a PROCEDURE return values to the caller?",
+    "options": [
+      "Only with a RETURN clause",
+      "Through OUT or IN OUT parameters",
+      "It cannot return anything",
+      "Only via global variables"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Protsedura qiymatni `OUT` yoki `IN OUT` parametrlari orqali qaytaradi (funksiya kabi RETURN qiymati yo'q).",
+      "en": "A procedure returns values through `OUT` or `IN OUT` parameters (it has no RETURN value like a function)."
+    }
+  },
+  {
+    "id": "ps-09",
+    "topic": "subprograms",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "A package containing two subprograms with the SAME name but different parameter lists uses:",
+    "options": [
+      "Recursion",
+      "Overloading",
+      "Inheritance",
+      "A trigger"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Bir xil nomli, lekin parametrlari farqli protsedura/funksiyalar — overloading (yuklama). Oracle argumentlar soni/tipiga qarab qaysi birini chaqirishni aniqlaydi.",
+      "en": "Subprograms with the same name but different parameter lists use overloading. Oracle picks which one to call based on the number/types of arguments."
+    }
+  },
+  {
+    "id": "pt-07",
+    "topic": "triggers",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "What does the WHEN clause do in a trigger?\n\n```sql\nBEFORE UPDATE ON emp FOR EACH ROW\nWHEN (NEW.salary > 1000)\n```",
+    "options": [
+      "Defines the trigger body",
+      "Restricts the trigger to fire only when the condition is TRUE",
+      "Declares variables",
+      "Handles exceptions"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Trigger `WHEN (shart)` faqat shart bajarilgan satrlar uchun ishlaydi. Bu yerda trigger faqat yangi maosh 1000 dan katta bo'lganda ishga tushadi.",
+      "en": "A trigger's `WHEN (condition)` restricts it to fire only for rows where the condition is TRUE. Here the trigger fires only when the new salary exceeds 1000."
+    }
+  },
+  {
+    "id": "pt-08",
+    "topic": "triggers",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "How do you temporarily turn off a trigger without dropping it?",
+    "options": [
+      "DROP TRIGGER trg;",
+      "ALTER TRIGGER trg DISABLE;",
+      "DELETE TRIGGER trg;",
+      "STOP TRIGGER trg;"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`ALTER TRIGGER trg DISABLE;` triggerni o'chirmasdan vaqtincha o'chirib qo'yadi. Qayta yoqish uchun `ALTER TRIGGER trg ENABLE;`.",
+      "en": "`ALTER TRIGGER trg DISABLE;` temporarily turns off a trigger without dropping it. Re-enable with `ALTER TRIGGER trg ENABLE;`."
+    }
+  },
+  {
+    "id": "pk-08",
+    "topic": "collections",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "What does the DELETE method do on a collection?\n\n```sql\nv_arr.DELETE(2);\n```",
+    "options": [
+      "Deletes the whole collection type",
+      "Removes the element at index 2",
+      "Deletes 2 elements from the end",
+      "Sets element 2 to 0"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`collection.DELETE(n)` n-indeksdagi elementni o'chiradi. `DELETE` (argumentsiz) esa barcha elementlarni tozalaydi. Shundan so'ng COUNT kamayadi.",
+      "en": "`collection.DELETE(n)` removes the element at index n. `DELETE` (no argument) clears all elements. Afterwards COUNT decreases."
+    }
+  },
+  {
+    "id": "pk-09",
+    "topic": "collections",
+    "difficulty": "hard",
+    "levels": ["1Z0-149"],
+    "question": "Which collection types CAN be stored in a database table column?",
+    "options": [
+      "Associative arrays only",
+      "Nested tables and VARRAYs (not associative arrays)",
+      "All three types",
+      "None of them"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Nested table va VARRAY ma'lumotlar bazasi ustunida saqlanishi mumkin. Assotsiativ massiv (INDEX BY) esa faqat PL/SQL xotirasida yashaydi — bazada saqlanmaydi.",
+      "en": "Nested tables and VARRAYs can be stored in a database column. An associative array (INDEX BY) lives only in PL/SQL memory — it cannot be stored in the database."
+    }
+  }
+]
