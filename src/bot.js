@@ -334,7 +334,10 @@ bot.action("result", async (ctx) => {
   if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(resultText(session, lang), { parse_mode: "HTML" });
+  await ctx.reply(resultText(session, lang), {
+    parse_mode: "HTML",
+    ...menuKeyboard(lang),
+  });
   endSession(ctx.from.id);
 });
 
