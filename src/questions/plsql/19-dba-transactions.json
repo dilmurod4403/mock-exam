@@ -1,0 +1,177 @@
+[
+  {
+    "id": "tx-01",
+    "topic": "transactions",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "When does a transaction implicitly BEGIN in Oracle?",
+    "options": [
+      "When the session connects",
+      "With the first executable DML statement after connect or after a previous COMMIT/ROLLBACK",
+      "Only when you type BEGIN",
+      "When you run a SELECT"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oracle'da tranzaksiya oshkormas boshlanadi — ulanishdan yoki oldingi COMMIT/ROLLBACK dan keyingi birinchi DML (INSERT/UPDATE/DELETE) bilan. Alohida BEGIN kerak emas.",
+      "en": "A transaction starts implicitly with the first executable DML after connect or after a prior COMMIT/ROLLBACK. No explicit BEGIN is needed."
+    }
+  },
+  {
+    "id": "tx-02",
+    "topic": "transactions",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which of these ENDS the current transaction?",
+    "options": [
+      "A SELECT statement",
+      "COMMIT, ROLLBACK, or any DDL (which causes an implicit commit)",
+      "Opening a cursor",
+      "Declaring a variable"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Tranzaksiya COMMIT yoki ROLLBACK bilan tugaydi. Har qanday DDL (CREATE/ALTER/DROP/TRUNCATE) esa oshkormas COMMIT qiladi — ochiq tranzaksiyani ham saqlaydi.",
+      "en": "A transaction ends with COMMIT or ROLLBACK. Any DDL (CREATE/ALTER/DROP/TRUNCATE) issues an implicit commit, ending the open transaction too."
+    }
+  },
+  {
+    "id": "tx-03",
+    "topic": "transactions",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Where does Oracle keep the OLD values of uncommitted changes (for rollback and read consistency)?",
+    "options": [
+      "Redo log",
+      "Undo tablespace (undo segments)",
+      "Temp tablespace",
+      "Only in the buffer cache"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "O'zgartirishdan oldingi qiymatlar UNDO segmentlarida (undo tablespace) saqlanadi — ROLLBACK va boshqa sessiyalarga o'qish izchilligi (read consistency) uchun. Redo esa qayta bajarish uchun.",
+      "en": "Pre-change values are stored in UNDO segments (undo tablespace) — used for ROLLBACK and for read consistency to other sessions. Redo is for re-applying changes."
+    }
+  },
+  {
+    "id": "tx-04",
+    "topic": "transactions",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Can another session see your UNCOMMITTED changes?",
+    "options": [
+      "Yes, immediately",
+      "No — until you COMMIT, other sessions see the last committed (read-consistent) data",
+      "Only if it is the same user",
+      "Only under READ UNCOMMITTED"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Yo'q. COMMIT qilinmaguncha boshqa sessiyalar UNDO orqali oxirgi COMMIT qilingan (izchil) ma'lumotni ko'radi. Oracle'da 'dirty read' yo'q.",
+      "en": "No. Until you COMMIT, other sessions see the last committed (consistent) data via UNDO. Oracle has no dirty reads."
+    }
+  },
+  {
+    "id": "tx-05",
+    "topic": "transactions",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What does ROLLBACK TO SAVEPOINT sp_name do?",
+    "options": [
+      "Ends the whole transaction",
+      "Undoes changes made after the savepoint, keeping earlier changes and the transaction still open",
+      "Commits everything up to the savepoint",
+      "Nothing"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SAVEPOINT'gacha ROLLBACK faqat savepoint'dan keyingi o'zgarishlarni bekor qiladi; undan oldingilari saqlanadi va tranzaksiya ochiq qoladi. Yakuniy COMMIT/ROLLBACK hali kerak.",
+      "en": "ROLLBACK TO SAVEPOINT undoes only changes after the savepoint; earlier changes stay and the transaction remains open. A final COMMIT/ROLLBACK is still needed."
+    }
+  },
+  {
+    "id": "tx-06",
+    "topic": "transactions",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "A session terminates abnormally (lost connection) with an uncommitted transaction. What happens?",
+    "options": [
+      "It is committed",
+      "It is rolled back (PMON cleans it up)",
+      "It stays pending forever",
+      "The instance crashes"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Sessiya g'ayritabiiy uzilsa, COMMIT qilinmagan tranzaksiya ROLLBACK qilinadi — buni PMON background jarayoni tozalaydi (loklarni bo'shatadi, undo qo'llaydi).",
+      "en": "On abnormal disconnect, the uncommitted transaction is rolled back — PMON cleans it up (releases locks, applies undo)."
+    }
+  },
+  {
+    "id": "tx-07",
+    "topic": "transactions",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Which isolation level gives a transaction a consistent snapshot for its whole duration, preventing non-repeatable reads and phantoms?",
+    "options": [
+      "READ COMMITTED",
+      "SERIALIZABLE",
+      "READ UNCOMMITTED",
+      "None can do this"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SERIALIZABLE tranzaksiya boshlangan paytdagi izchil snapshot'ni butun davomida ko'radi — non-repeatable read va phantom'lar bo'lmaydi. READ COMMITTED esa har so'rovda yangi snapshot oladi.",
+      "en": "SERIALIZABLE sees a consistent snapshot as of the transaction start for its whole duration — no non-repeatable reads or phantoms. READ COMMITTED takes a fresh snapshot per statement."
+    }
+  },
+  {
+    "id": "tx-08",
+    "topic": "transactions",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is Oracle's DEFAULT transaction isolation level?",
+    "options": ["SERIALIZABLE", "READ COMMITTED", "READ UNCOMMITTED", "REPEATABLE READ"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oracle'ning standart izolyatsiya darajasi — READ COMMITTED: har SELECT so'rovi so'rov boshlangan paytdagi izchil ma'lumotni ko'radi.",
+      "en": "Oracle's default is READ COMMITTED: each query sees data consistent as of the moment that statement began."
+    }
+  },
+  {
+    "id": "tx-09",
+    "topic": "transactions",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is an AUTONOMOUS transaction?",
+    "options": [
+      "A transaction that auto-commits every statement",
+      "An independent child transaction (PRAGMA AUTONOMOUS_TRANSACTION) that commits or rolls back separately from the main transaction",
+      "A transaction that cannot be rolled back",
+      "A distributed transaction across databases"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Autonomous transaction — PRAGMA AUTONOMOUS_TRANSACTION bilan e'lon qilinadigan mustaqil bola tranzaksiya. U asosiy tranzaksiyadan alohida COMMIT/ROLLBACK qiladi (masalan, xato bo'lsa ham log yozib qo'yish uchun).",
+      "en": "An autonomous transaction (declared with PRAGMA AUTONOMOUS_TRANSACTION) commits/rolls back independently of the main transaction — e.g. to write a log even if the caller rolls back."
+    }
+  },
+  {
+    "id": "tx-10",
+    "topic": "transactions",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "How many transactions can a single session run over its lifetime?",
+    "options": [
+      "Exactly one",
+      "Many, one after another (only one active at a time)",
+      "Many simultaneously active",
+      "None — sessions don't run transactions"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Bitta sessiya umri davomida ko'p tranzaksiya bajaradi — biri COMMIT/ROLLBACK bilan tugagach, keyingisi boshlanadi. Bir vaqtda faqat bitta faol tranzaksiya bo'ladi.",
+      "en": "A session runs many transactions sequentially over its life — each ends with COMMIT/ROLLBACK, then the next begins. Only one is active at a time."
+    }
+  }
+]

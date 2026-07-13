@@ -1,0 +1,182 @@
+[
+  {
+    "id": "cc-01",
+    "topic": "concurrency",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Session 1 updates a row but has NOT committed. Session 2 tries to update the SAME row. What happens to session 2?",
+    "options": [
+      "It gets an immediate error",
+      "It overwrites the value right away",
+      "It waits (is blocked) until session 1 commits or rolls back",
+      "It reads the old value and proceeds"
+    ],
+    "correct": [2],
+    "explanation": {
+      "uz": "2-sessiya bloklanadi va kutadi: 1-sessiya qatorga exclusive (X) row lock qo'ygan. 1-sessiya COMMIT yoki ROLLBACK qilgach, 2-sessiya davom etadi.",
+      "en": "Session 2 blocks and waits: session 1 holds an exclusive (X) row lock. Once session 1 commits or rolls back, session 2 proceeds."
+    }
+  },
+  {
+    "id": "cc-02",
+    "topic": "concurrency",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is 'blocking'?",
+    "options": [
+      "Two sessions permanently stuck waiting on each other",
+      "One session waiting for a lock currently held by another session",
+      "A network firewall rule",
+      "A dropped table"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Blocking — bir sessiya boshqa sessiya ushlab turgan lockni kutishi. Bloklovchi sessiya COMMIT/ROLLBACK qilsa, kutuvchi davom etadi. (Deadlock esa o'zaro kutish.)",
+      "en": "Blocking is one session waiting for a lock held by another. When the blocker commits/rolls back, the waiter proceeds. (A deadlock is mutual waiting.)"
+    }
+  },
+  {
+    "id": "cc-03",
+    "topic": "concurrency",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is a DEADLOCK?",
+    "options": [
+      "One session waiting for another to commit",
+      "Two or more sessions each holding a lock the other needs, so none can proceed",
+      "A table-level lock during DDL",
+      "A slow full table scan"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Deadlock — ikki (yoki undan ko'p) sessiya bir-biri kutayotgan lockni ushlab turadi, natijada hech biri davom eta olmaydi (o'zaro bloklash).",
+      "en": "A deadlock is two or more sessions each holding a lock the other is waiting for, so neither can proceed (mutual blocking)."
+    }
+  },
+  {
+    "id": "cc-04",
+    "topic": "concurrency",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "How does Oracle handle a deadlock?",
+    "options": [
+      "It waits forever",
+      "It automatically detects it and rolls back one statement (ORA-00060) to break the cycle",
+      "It crashes the instance",
+      "It commits both transactions"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oracle deadlock'ni avtomatik aniqlaydi va tsiklni uzish uchun bitta sessiyaning statement'ini rollback qiladi (ORA-00060 xatosi). Tranzaksiya to'liq bekor bo'lmaydi — dastur qaror qabul qilishi kerak.",
+      "en": "Oracle automatically detects the deadlock and rolls back one statement (ORA-00060) to break the cycle. The whole transaction isn't undone — the app must decide what to do."
+    }
+  },
+  {
+    "id": "cc-05",
+    "topic": "concurrency",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "When a session updates a row, what lock does it acquire on that row?",
+    "options": [
+      "An exclusive (X) row-level lock",
+      "A shared (S) lock",
+      "No lock at all",
+      "A lock on the whole tablespace"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "DML qatorga exclusive (X) row lock oladi (va jadvalga shared TM lock). Shu sabab boshqa sessiya o'sha qatorni o'zgartira olmay kutadi, lekin boshqa qatorlar erkin.",
+      "en": "DML takes an exclusive (X) row lock (plus a shared TM lock on the table). That's why another session can't modify that row until commit, while other rows stay free."
+    }
+  },
+  {
+    "id": "cc-06",
+    "topic": "concurrency",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "In Oracle, does a reader (SELECT) block a writer (UPDATE) on the same rows, or vice versa?",
+    "options": [
+      "Yes, readers and writers block each other",
+      "No — readers don't block writers and writers don't block readers (multiversion read consistency)",
+      "Only under SERIALIZABLE",
+      "Readers always wait for writers"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oracle'ning asosiy tamoyili: o'quvchi yozuvchini, yozuvchi o'quvchini bloklamaydi. O'quvchi UNDO orqali oxirgi izchil versiyani ko'radi (multiversion read consistency).",
+      "en": "A core Oracle principle: readers don't block writers and writers don't block readers. A reader sees the last consistent version via UNDO (multiversion read consistency)."
+    }
+  },
+  {
+    "id": "cc-07",
+    "topic": "concurrency",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between a shared (S) lock and an exclusive (X) lock?",
+    "options": [
+      "S allows others to read concurrently; X prevents others from modifying the resource until released",
+      "They are identical",
+      "S is only for DDL",
+      "X allows unlimited concurrent updates"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Shared (S) lock bir vaqtda ko'p o'qishga ruxsat beradi. Exclusive (X) lock esa resursni faqat bitta sessiyaga beradi — boshqalar o'zgartira olmaydi (COMMIT/ROLLBACK gacha).",
+      "en": "A shared (S) lock allows concurrent reads. An exclusive (X) lock grants the resource to one session — others can't modify it until it is released (commit/rollback)."
+    }
+  },
+  {
+    "id": "cc-08",
+    "topic": "concurrency",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is a common application-design way to AVOID deadlocks?",
+    "options": [
+      "Always access tables/rows in the same consistent order across all sessions",
+      "Never commit",
+      "Add more indexes",
+      "Increase the SGA size"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Deadlock'ning oldini olishning oddiy yo'li — barcha sessiyalarda jadval/qatorlarga bir xil tartibda murojaat qilish. Shunda o'zaro kutish tsikli hosil bo'lmaydi.",
+      "en": "A simple way to avoid deadlocks is to access tables/rows in the same consistent order in every session, so no waiting cycle can form."
+    }
+  },
+  {
+    "id": "cc-09",
+    "topic": "concurrency",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What does SELECT ... FOR UPDATE do?",
+    "options": [
+      "Nothing special — same as a normal SELECT",
+      "Locks the selected rows so other sessions can't update/delete them until you commit or roll back",
+      "Immediately commits the rows",
+      "Deletes the selected rows"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SELECT ... FOR UPDATE tanlangan qatorlarga lock qo'yadi — boshqa sessiyalar ularni COMMIT/ROLLBACK gacha o'zgartira/o'chira olmaydi. 'O'qib, keyin yangilash' stsenariylarida ishlatiladi.",
+      "en": "SELECT ... FOR UPDATE locks the selected rows so other sessions can't update/delete them until you commit/rollback. Used for read-then-update scenarios."
+    }
+  },
+  {
+    "id": "cc-10",
+    "topic": "concurrency",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Session 1 has an uncommitted UPDATE on a row. Session 2 runs SELECT on that same row. What does session 2 see?",
+    "options": [
+      "It waits until session 1 commits",
+      "The last committed version (via UNDO) — it does NOT wait",
+      "An error",
+      "Session 1's uncommitted new value"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "2-sessiya kutmaydi — u UNDO orqali oxirgi COMMIT qilingan versiyani ko'radi. Yozuvchi o'quvchini bloklamaydi.",
+      "en": "Session 2 does not wait — it sees the last committed version via UNDO. A writer does not block a reader."
+    }
+  }
+]

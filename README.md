@@ -12,7 +12,7 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 - Ikki tilli interfeys va tushuntirishlar (uz / en)
 - Ko'p dasturlash tili — har biri o'z mavzulari va sertifikat darajalariga ega:
   - **JavaScript:** JSE (Entry) · JSA (Associate) · JSP (Professional — OOP, async, closure/ES6+)
-  - **Oracle SQL & PL/SQL:** 1Z0-071 (Oracle SQL) · 1Z0-149 (PL/SQL Developer)
+  - **Oracle SQL & PL/SQL:** 1Z0-071 (Oracle SQL) · 1Z0-149 (PL/SQL Developer) · 🔥 Oracle DBA / Interview (tranzaksiya, lock/deadlock, arxitektura/xotira, optimizatsiya)
 - `/exam` — to'liq mock imtihon (40 savolgacha, 70% o'tish balli)
 - `/quiz` — tezkor mashq (10 savol)
 - `/learn` — **mini-dars** ("avval o'rgan"): mavzu bo'yicha qisqa ikki tilli konspekt +

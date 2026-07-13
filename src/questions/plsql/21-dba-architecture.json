@@ -1,0 +1,172 @@
+[
+  {
+    "id": "ar-01",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the SGA?",
+    "options": [
+      "Private memory for one session",
+      "System Global Area — shared memory used by all sessions (buffer cache, shared pool, redo log buffer, ...)",
+      "A disk data file",
+      "The network listener"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SGA (System Global Area) — instance'ning umumiy (shared) xotirasi: barcha sessiyalar foydalanadi. Ichida buffer cache, shared pool, redo log buffer va boshqalar bor.",
+      "en": "The SGA (System Global Area) is the instance's shared memory used by all sessions — it holds the buffer cache, shared pool, redo log buffer, and more."
+    }
+  },
+  {
+    "id": "ar-02",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the PGA?",
+    "options": [
+      "Shared memory for all sessions",
+      "Program (Process) Global Area — private memory of one server process (sort area, session variables)",
+      "A tablespace",
+      "A background process"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "PGA (Program/Process Global Area) — bitta server jarayonining xususiy (private) xotirasi: sort maydoni, sessiya o'zgaruvchilari, kursor holati. Boshqa sessiyalar unga kira olmaydi.",
+      "en": "The PGA (Program/Process Global Area) is the private memory of a single server process — sort area, session variables, cursor state. It is not shared with other sessions."
+    }
+  },
+  {
+    "id": "ar-03",
+    "topic": "architecture",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "The UGA holds session state. In a SHARED server configuration, where does the UGA reside?",
+    "options": [
+      "In the PGA",
+      "In the SGA (large pool / shared pool)",
+      "In the redo log",
+      "In the temp tablespace"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "UGA (User Global Area) sessiya holatini saqlaydi. Dedicated server'da u PGA ichida, shared server'da esa SGA ichida (large pool) joylashadi — chunki jarayonlar sessiyalar orasida ulashiladi.",
+      "en": "The UGA (User Global Area) holds session state. In a dedicated server it lives in the PGA; in a shared server it moves into the SGA (large pool), because processes are shared across sessions."
+    }
+  },
+  {
+    "id": "ar-04",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which background process performs instance (crash) recovery on startup and cleans up temporary segments?",
+    "options": ["PMON", "SMON", "DBWn", "LGWR"],
+    "correct": [1],
+    "explanation": {
+      "uz": "SMON (System Monitor) — instance qayta ishga tushganda crash recovery bajaradi va vaqtinchalik segmentlarni tozalaydi, bo'sh joylarni birlashtiradi.",
+      "en": "SMON (System Monitor) performs instance/crash recovery at startup, cleans up temporary segments, and coalesces free space."
+    }
+  },
+  {
+    "id": "ar-05",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which background process cleans up after a failed user process (releases its locks and rolls back its work)?",
+    "options": ["SMON", "PMON", "CKPT", "ARCn"],
+    "correct": [1],
+    "explanation": {
+      "uz": "PMON (Process Monitor) muvaffaqiyatsiz foydalanuvchi jarayonini tozalaydi: uning loklarini bo'shatadi, tugallanmagan tranzaksiyasini rollback qiladi, resurslarni qaytaradi.",
+      "en": "PMON (Process Monitor) cleans up after a failed user process: releases its locks, rolls back its uncommitted transaction, and frees resources."
+    }
+  },
+  {
+    "id": "ar-06",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the Oracle Listener?",
+    "options": [
+      "A background process inside the instance",
+      "A separate network process that receives client connection requests and hands them to a server process",
+      "A shared memory area",
+      "A type of tablespace"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Listener — instance'dan alohida tarmoq jarayoni. U klient ulanish so'rovlarini qabul qiladi va ularni server jarayoniga topshiradi. Ulanish o'rnatilgach, klient bevosita server jarayoni bilan ishlaydi.",
+      "en": "The Listener is a separate network process that receives client connection requests and hands each off to a server process. After the handoff the client talks to the server process directly."
+    }
+  },
+  {
+    "id": "ar-07",
+    "topic": "architecture",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Order these storage units from LARGEST to smallest.",
+    "options": [
+      "Block > Extent > Segment > Tablespace",
+      "Tablespace > Segment > Extent > Block",
+      "Segment > Tablespace > Extent > Block",
+      "Extent > Segment > Block > Tablespace"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Kattadan kichikka: Tablespace > Segment (masalan jadval) > Extent (uzluksiz bloklar guruhi) > Oracle block (eng kichik I/O birligi). Tablespace bir yoki bir nechta datafile'da yashaydi.",
+      "en": "Largest to smallest: Tablespace > Segment (e.g. a table) > Extent (a set of contiguous blocks) > Oracle block (smallest I/O unit). A tablespace lives in one or more datafiles."
+    }
+  },
+  {
+    "id": "ar-08",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between a DEDICATED and a SHARED server?",
+    "options": [
+      "There is no difference",
+      "Dedicated: one server process per client connection; Shared: a pool of server processes serves many clients via dispatchers",
+      "Shared server is only for DDL",
+      "Dedicated server has no PGA"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Dedicated server'da har klient ulanishiga alohida server jarayoni ajratiladi. Shared server'da esa dispatcher'lar orqali server jarayonlari to'plami ko'p klientga xizmat qiladi — ko'p ulanishda xotira tejaladi.",
+      "en": "With a dedicated server, each client gets its own server process. With a shared server, a pool of server processes serves many clients through dispatchers — saving memory under many connections."
+    }
+  },
+  {
+    "id": "ar-09",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which SGA structure caches data blocks read from disk so they can be reused?",
+    "options": [
+      "Shared pool",
+      "Database buffer cache",
+      "Redo log buffer",
+      "PGA sort area"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Database buffer cache (SGA ichida) diskdan o'qilgan ma'lumot bloklarini keshlaydi — keyingi murojaatlar diskga bormasdan tez ishlaydi. DBWn 'dirty' bloklarni diskka yozadi.",
+      "en": "The database buffer cache (in the SGA) caches data blocks read from disk so later accesses avoid disk I/O. DBWn writes dirty blocks back to disk."
+    }
+  },
+  {
+    "id": "ar-10",
+    "topic": "architecture",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Which SGA component caches parsed SQL and execution plans, enabling soft parses?",
+    "options": [
+      "Database buffer cache",
+      "Shared pool (library cache)",
+      "Redo log buffer",
+      "Temp tablespace"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Shared pool ichidagi library cache tahlil qilingan SQL va bajarish rejalarini saqlaydi. Bir xil SQL qayta kelsa, soft parse bo'ladi (reja qayta ishlatiladi) — hard parse'dan ancha arzon.",
+      "en": "The library cache (in the shared pool) stores parsed SQL and execution plans. If the same SQL returns, it's a soft parse (the plan is reused) — far cheaper than a hard parse."
+    }
+  }
+]

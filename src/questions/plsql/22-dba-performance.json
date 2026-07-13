@@ -1,0 +1,182 @@
+[
+  {
+    "id": "pf-01",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between a HARD parse and a SOFT parse?",
+    "options": [
+      "There is no difference",
+      "A hard parse builds the plan from scratch (expensive); a soft parse reuses a cached plan from the shared pool (cheap)",
+      "A soft parse is always slower",
+      "A hard parse skips optimization"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Hard parse — SQL'ni noldan tahlil qilib, optimizer reja tuzadi (qimmat). Soft parse — shared pool'dagi tayyor rejani qayta ishlatadi (arzon). Bind o'zgaruvchilar soft parse'ni ko'paytiradi.",
+      "en": "A hard parse builds the plan from scratch via the optimizer (expensive). A soft parse reuses a plan already cached in the shared pool (cheap). Bind variables increase soft parses."
+    }
+  },
+  {
+    "id": "pf-02",
+    "topic": "performance",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What most effectively reduces hard parsing of similar queries?",
+    "options": [
+      "Using literal values everywhere",
+      "Using bind variables so the same SQL text is reused",
+      "Dropping indexes",
+      "Enlarging the redo log"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Bind o'zgaruvchilar (masalan :id) SQL matnini bir xil qiladi — shuning uchun reja qayta ishlatiladi (soft parse). Literal qiymatlar har safar yangi SQL yaratib, hard parse'ni ko'paytiradi.",
+      "en": "Bind variables (e.g. :id) keep the SQL text identical, so the plan is reused (soft parse). Literals create new SQL each time, causing more hard parses."
+    }
+  },
+  {
+    "id": "pf-03",
+    "topic": "performance",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What does the Cost-Based Optimizer (CBO) rely on to choose an execution plan?",
+    "options": [
+      "A random choice",
+      "Object statistics (row counts, data distribution, index selectivity) in the data dictionary",
+      "The order of tables in the FROM clause",
+      "Alphabetical table order"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "CBO obyekt statistikasiga tayanadi: qatorlar soni, ustun qiymatlari taqsimoti, indeks selektivligi. Shular asosida eng kam 'xarajatli' rejani tanlaydi.",
+      "en": "The CBO relies on object statistics — row counts, column value distribution, index selectivity — to pick the lowest-cost plan."
+    }
+  },
+  {
+    "id": "pf-04",
+    "topic": "performance",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Why is it important to gather/refresh optimizer statistics?",
+    "options": [
+      "To free disk space",
+      "So the CBO has accurate data to choose good plans — stale stats can cause bad plans and slow queries",
+      "To commit open transactions",
+      "To rebuild the redo logs"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Statistika CBO uchun 'ko'z'. Eskirgan statistika (masalan jadval ancha o'sgan, lekin stats eski) noto'g'ri reja tanlashga olib keladi — so'rov sekinlashadi. Shuning uchun DBMS_STATS bilan yangilanadi.",
+      "en": "Statistics are the CBO's eyes. Stale stats (e.g. the table grew but stats are old) lead to poor plans and slow queries, so they're refreshed with DBMS_STATS."
+    }
+  },
+  {
+    "id": "pf-05",
+    "topic": "performance",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Where can you check whether a table's optimizer statistics are current (when it was last analyzed)?",
+    "options": [
+      "V$SESSION",
+      "DBA_TAB_STATISTICS / ALL_TAB_STATISTICS (or LAST_ANALYZED in *_TABLES)",
+      "V$SGA",
+      "The DUAL table"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Statistika yangimi yoki eskimi ekanini DBA_TAB_STATISTICS / ALL_TAB_STATISTICS (yoki *_TABLES dagi LAST_ANALYZED ustuni) orqali ko'rasiz.",
+      "en": "You check statistics freshness in DBA_TAB_STATISTICS / ALL_TAB_STATISTICS (or the LAST_ANALYZED column of *_TABLES)."
+    }
+  },
+  {
+    "id": "pf-06",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "A NESTED LOOP join is generally most efficient when...",
+    "options": [
+      "Both tables are very large",
+      "One row source is small and the join column on the other is indexed (few driving rows, indexed lookups)",
+      "There are no indexes at all",
+      "It is always the best choice"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Nested loop join — bitta tomon kichik (kam qator) va ikkinchi tomonning join ustuni indekslangan bo'lganda samarali: har qator uchun indeksdan tez qidiriladi.",
+      "en": "A nested loop join is efficient when one row source is small and the other's join column is indexed — each driving row does a fast indexed lookup."
+    }
+  },
+  {
+    "id": "pf-07",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "A HASH join is generally the best choice when...",
+    "options": [
+      "Joining large data sets on an equality (=) condition",
+      "Joining tiny lookup tables",
+      "The join uses only range (<, >) conditions",
+      "It is never useful"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Hash join katta ma'lumot to'plamlarini tenglik (=) sharti bo'yicha birlashtirishda eng yaxshi: kichik tomondan xesh-jadval quriladi, kattasi bo'ylab bir marta o'tiladi. Faqat equijoin uchun ishlaydi.",
+      "en": "A hash join is best for joining large data sets on an equality (=) condition: it builds a hash table from the smaller side and scans the larger once. It works only for equijoins."
+    }
+  },
+  {
+    "id": "pf-08",
+    "topic": "performance",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "A table has few rows, but a full-table SELECT is slow because of many empty blocks below the high-water mark. What fixes it?",
+    "options": [
+      "Add more columns",
+      "Shrink the table or MOVE it to reset the high-water mark",
+      "Drop the table",
+      "Increase the SGA"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Ko'p DELETE'dan keyin bloklar bo'shab qoladi, lekin HWM (high-water mark) baland turadi — full scan bo'sh bloklarni ham o'qiydi. ALTER TABLE ... SHRINK SPACE yoki MOVE HWM'ni tushiradi.",
+      "en": "After many deletes, blocks empty out but the high-water mark stays high — a full scan reads those empty blocks too. ALTER TABLE ... SHRINK SPACE or MOVE lowers the HWM."
+    }
+  },
+  {
+    "id": "pf-09",
+    "topic": "performance",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which tool shows HOW Oracle will run a query (access paths, join methods, order)?",
+    "options": [
+      "The execution plan (EXPLAIN PLAN / DBMS_XPLAN / autotrace)",
+      "V$SGA",
+      "The listener log",
+      "DBMS_OUTPUT"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Execution plan (EXPLAIN PLAN, DBMS_XPLAN.DISPLAY yoki autotrace) so'rov qanday bajarilishini ko'rsatadi: qaysi indeks/full scan, join usuli (nested loop/hash/merge), tartib va xarajat.",
+      "en": "The execution plan (EXPLAIN PLAN, DBMS_XPLAN.DISPLAY, or autotrace) shows how the query runs: index vs full scan, join method (nested loop/hash/merge), order, and cost."
+    }
+  },
+  {
+    "id": "pf-10",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "You must reorganize/move a large table on a BUSY production system with minimal downtime. Best approach?",
+    "options": [
+      "ALTER TABLE ... MOVE (it locks the table for DML)",
+      "Online redefinition (DBMS_REDEFINITION) / MOVE ONLINE, which allows concurrent DML",
+      "DROP and recreate the table",
+      "TRUNCATE the table"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oddiy ALTER TABLE ... MOVE jadvalni bloklaydi (DML to'xtaydi). Prod'da minimal downtime uchun online redefinition (DBMS_REDEFINITION) yoki MOVE ONLINE ishlatiladi — parallel DML davom etadi.",
+      "en": "A plain ALTER TABLE ... MOVE locks the table (blocks DML). For minimal downtime on production, use online redefinition (DBMS_REDEFINITION) or MOVE ONLINE, which allow concurrent DML."
+    }
+  }
+]

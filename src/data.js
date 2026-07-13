@@ -54,10 +54,16 @@ export const PROG_LANGS = {
       subprograms: { uz: "Procedure / Function / Package", en: "Procedure / Function / Package" },
       triggers: { uz: "Triggerlar", en: "Triggers" },
       collections: { uz: "Records va kolleksiyalar", en: "Records & collections" },
+      // Oracle DBA / Interview mavzulari (ORA-DBA darajasi)
+      transactions: { uz: "Tranzaksiyalar (commit/rollback/isolation)", en: "Transactions (commit/rollback/isolation)" },
+      concurrency: { uz: "Konkurentlik (lock, deadlock)", en: "Concurrency (locks, deadlock)" },
+      architecture: { uz: "Arxitektura va xotira (SGA/PGA)", en: "Architecture & memory (SGA/PGA)" },
+      performance: { uz: "Optimizatsiya (optimizer, parse, plan)", en: "Performance (optimizer, parse, plan)" },
     },
     levels: {
       "1Z0-071": { label: "1Z0-071 — Oracle SQL", pass: 63, filter: (q) => q.levels?.includes("1Z0-071") },
       "1Z0-149": { label: "1Z0-149 — PL/SQL Developer", pass: 65, filter: (q) => q.levels?.includes("1Z0-149") },
+      "ORA-DBA": { label: "🔥 Oracle DBA / Interview", pass: 60, filter: (q) => q.levels?.includes("ORA-DBA") },
     },
   },
 };
