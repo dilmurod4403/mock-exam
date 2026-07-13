@@ -2,12 +2,15 @@
 const sessions = new Map(); // userId -> faol imtihon
 
 // ---------- Imtihon sessiyasi ----------
-export function startSession(userId, { mode, questions, plang, level }) {
+export function startSession(userId, { mode, questions, plang, level, target, pool, grading }) {
   const session = {
-    mode, // 'exam' | 'quiz' | 'topic'
+    mode, // 'exam' | 'quiz' | 'topic' | 'review' | 'grade'
     questions,
     plang, // dasturlash tili (javascript / plsql ...)
     level, // sertifikat darajasi
+    target: target ?? null, // grade uchun mo'ljallangan savollar soni (adaptiv)
+    pool: pool ?? null, // grade uchun tanlanadigan savollar to'plami
+    grading: grading ?? null, // grade holati (theta, statistika)
     index: 0,
     selected: new Set(),
     answers: [],
@@ -48,8 +51,10 @@ export function submitAnswer(session) {
   return isCorrect;
 }
 
+// grade rejimida savollar dinamik qo'shiladi — target bo'yicha tugaydi
 export function isFinished(session) {
-  return session.index >= session.questions.length;
+  const total = session.target ?? session.questions.length;
+  return session.index >= total;
 }
 
 export function score(session) {

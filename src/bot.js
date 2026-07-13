@@ -11,6 +11,15 @@ import {
 } from "./data.js";
 import { t, LANGS } from "./i18n.js";
 import {
+  GRADE_TARGET,
+  initGradingState,
+  pickGradeQuestion,
+  markAsked,
+  applyGradeAnswer,
+  gradeFor,
+  nextGrade,
+} from "./grading.js";
+import {
   getPrefs,
   setPref,
   getLang,
@@ -105,6 +114,7 @@ function menuKeyboard(lang) {
     [Markup.button.callback(t(lang, "btn_quiz"), "mode:quiz")],
     [Markup.button.callback(t(lang, "btn_topic"), "mode:topic")],
     [Markup.button.callback(t(lang, "btn_review"), "mode:review")],
+    [Markup.button.callback(t(lang, "btn_grade"), "mode:grade")],
     [Markup.button.callback(t(lang, "btn_change"), "settings")],
   ]);
 }
@@ -112,7 +122,8 @@ function menuKeyboard(lang) {
 // ---------- Savol ko'rsatish ----------
 function questionBody(session, lang) {
   const q = currentQuestion(session);
-  const header = t(lang, "question_header", session.index + 1, session.questions.length, isMulti(q));
+  const total = session.target ?? session.questions.length;
+  const header = t(lang, "question_header", session.index + 1, total, isMulti(q));
   const body = renderText(q.question);
   const opts = q.options.map((o, i) => `${LETTERS[i]}) ${renderText(o)}`).join("\n");
   return `${header}\n\n${body}\n\n${opts}`;
@@ -231,6 +242,42 @@ async function sendBlocks(ctx, blocks, sep = "\n\n──────────
   if (buf) await ctx.reply(buf, { parse_mode: "HTML" });
 }
 
+// grade rejimi natija kartasi: daraja + qiyinlik/mavzu tahlili + keyingi qadam
+function gradeCardText(session, lang) {
+  const st = session.grading;
+  const band = gradeFor(st.theta);
+  const trackLabel = PROG_LANGS[session.plang]?.label || session.plang;
+
+  let out =
+    `${t(lang, "grade_title")}\n\n` +
+    `${t(lang, "grade_level", band.emoji, band.name)}\n` +
+    `${t(lang, "grade_track", trackLabel)}\n\n` +
+    `${t(lang, "grade_by_diff")}\n`;
+  for (const d of ["easy", "medium", "hard"]) {
+    const s = st.byDifficulty[d];
+    if (s) out += `• ${t(lang, "diff_label", d)}: ${s.c}/${s.t}\n`;
+  }
+
+  const topics = PROG_LANGS[session.plang]?.topics || {};
+  const entries = Object.entries(st.byTopic).map(([code, s]) => ({
+    name: topics[code]?.[lang] || code,
+    pct: Math.round((s.c / s.t) * 100),
+  }));
+  const strong = entries.filter((e) => e.pct >= 70).map((e) => e.name);
+  const weak = entries.filter((e) => e.pct < 50).map((e) => e.name);
+  if (strong.length) out += `\n${t(lang, "grade_strong", strong.join(", "))}`;
+  if (weak.length) out += `\n${t(lang, "grade_weak", weak.join(", "))}`;
+
+  const next = nextGrade(band);
+  const focusList = weak.length
+    ? weak
+    : [...entries].sort((a, b) => a.pct - b.pct).slice(0, 2).map((e) => e.name);
+  const focus = focusList.slice(0, 3).join(", ");
+  out += `\n\n${next ? t(lang, "grade_next", next.name, focus) : t(lang, "grade_top", band.name)}`;
+  out += `\n\n${t(lang, "grade_note")}`;
+  return out;
+}
+
 // ---------- Buyruqlar ----------
 bot.start((ctx) =>
   ctx.reply(t(langOf(ctx), "welcome", ctx.from.first_name), {
@@ -286,6 +333,38 @@ async function beginReview(ctx) {
 }
 
 bot.command("review", (ctx) => beginReview(ctx));
+
+// Daraja baholash: butun til bo'yicha (sertifikat darajasidan qat'iy nazar) adaptiv test
+async function beginGrade(ctx) {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang) return ctx.reply(t(lang, "need_start"));
+  const { plang, level } = prefs;
+
+  const pool = getPool({ plang }); // butun til — barcha qiyinliklar
+  if (pool.length < 5) return ctx.reply(t(lang, "no_questions"));
+
+  const target = Math.min(GRADE_TARGET, pool.length);
+  const grading = initGradingState();
+  const session = startSession(ctx.from.id, {
+    mode: "grade",
+    questions: [],
+    plang,
+    level,
+    target,
+    pool,
+    grading,
+  });
+
+  const first = pickGradeQuestion(pool, grading);
+  markAsked(grading, first);
+  session.questions.push(first);
+
+  await ctx.reply(t(lang, "grade_intro", target), { parse_mode: "HTML" });
+  await sendQuestion(ctx, session, lang);
+}
+
+bot.command("grade", (ctx) => beginGrade(ctx));
 
 function sendTopicMenu(ctx) {
   const lang = langOf(ctx);
@@ -376,6 +455,11 @@ bot.action("mode:review", async (ctx) => {
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await beginReview(ctx);
 });
+bot.action("mode:grade", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await beginGrade(ctx);
+});
 
 bot.action(/^topic:(.+)$/, async (ctx) => {
   await ctx.answerCbQuery();
@@ -406,6 +490,21 @@ async function handleSubmit(ctx) {
     topic: q.topic,
     isCorrect,
   });
+
+  // grade: θ ni yangilab, keyingi savolni adaptiv tanlaymiz
+  if (session.mode === "grade" && session.grading) {
+    applyGradeAnswer(session.grading, q, isCorrect);
+    if (!isFinished(session)) {
+      const nextQ = pickGradeQuestion(session.pool, session.grading);
+      if (nextQ) {
+        markAsked(session.grading, nextQ);
+        session.questions.push(nextQ);
+      } else {
+        session.target = session.index; // savollar tugadi — hozir yakunlaymiz
+      }
+    }
+  }
+
   await ctx.answerCbQuery(isCorrect ? t(lang, "correct_toast") : t(lang, "wrong_toast"));
   await afterAnswer(ctx, session, q, picked, isCorrect, lang);
 }
@@ -441,7 +540,11 @@ bot.action("result", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
 
-  await ctx.reply(resultText(session, lang), { parse_mode: "HTML" });
+  const headline =
+    session.mode === "grade" && session.grading
+      ? gradeCardText(session, lang)
+      : resultText(session, lang);
+  await ctx.reply(headline, { parse_mode: "HTML" });
 
   const blocks = mistakeBlocks(session, lang);
   if (blocks.length) {
@@ -461,6 +564,7 @@ const COMMANDS = {
     { command: "quiz", description: "Tezkor test (10 savol)" },
     { command: "topic", description: "Mavzu bo'yicha mashq" },
     { command: "review", description: "Xatolar ustida ishlash" },
+    { command: "grade", description: "Darajamni aniqlash (adaptiv test)" },
     { command: "stop", description: "Joriy imtihonni to'xtatish" },
   ],
   en: [
@@ -469,6 +573,7 @@ const COMMANDS = {
     { command: "quiz", description: "Quick quiz (10 questions)" },
     { command: "topic", description: "Practice by topic" },
     { command: "review", description: "Review your mistakes" },
+    { command: "grade", description: "Assess my level (adaptive test)" },
     { command: "stop", description: "Stop the current exam" },
   ],
 };

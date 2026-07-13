@@ -18,6 +18,7 @@ const S = {
     btn_quiz: "⚡ Tezkor test",
     btn_topic: "📚 Mavzu bo'yicha",
     btn_review: "🔁 Xatolar ustida ishlash",
+    btn_grade: "🎓 Darajamni aniqlash",
     btn_change: "⚙️ Sozlamalar (til/daraja)",
     welcome: (name) =>
       `👋 Salom, ${name}!\n\nBu — dasturlash sertifikatlariga tayyorgarlik uchun mock imtihon boti.\n\nBoshlash uchun quyidan tanlang 👇`,
@@ -28,6 +29,19 @@ const S = {
     topic_label: (t) => `Mavzu: ${t}`,
     no_review:
       "🎉 Ajoyib — takrorlash uchun xato yo'q! Avval /exam yoki /quiz bilan mashq qiling.",
+    grade_intro: (n) =>
+      `🎓 <b>Daraja baholash</b> boshlandi — ${n} ta savol.\nHar savol javobingizga qarab qiyinlashadi yoki osonlashadi. Rostini yeching — natija shunga bog'liq. Omad!`,
+    grade_title: "🎓 <b>Baholash yakunlandi</b>",
+    grade_level: (emoji, name) => `Sizning darajangiz: <b>${emoji} ${name}</b>`,
+    grade_track: (label) => `Yo'nalish: ${label}`,
+    grade_by_diff: "📈 <b>Qiyinlik bo'yicha:</b>",
+    diff_label: (d) => ({ easy: "Oson", medium: "O'rta", hard: "Qiyin" }[d] || d),
+    grade_strong: (topics) => `✅ Kuchli: ${topics}`,
+    grade_weak: (topics) => `⚠️ Ustida ishlash: ${topics}`,
+    grade_next: (name, topics) =>
+      `➡️ <b>${name}</b> darajasiga chiqish uchun: ${topics} ustida ishlang va qiyinroq savollarni yeching. /review yordam beradi.`,
+    grade_top: (name) => `🏆 Siz eng yuqori darajadasiz: <b>${name}</b>! Zo'r natija.`,
+    grade_note: "ℹ️ Baho taxminiy — ko'proq yechsangiz, aniqroq bo'ladi.",
     started: (label, n) => `📝 <b>${label}</b> boshlandi — ${n} ta savol. Omad!`,
     no_questions: "Bu tanlov bo'yicha hozircha savol yo'q.",
     choose_topic: "Qaysi mavzu bo'yicha mashq qilamiz?",
@@ -72,6 +86,7 @@ const S = {
     btn_quiz: "⚡ Quick quiz",
     btn_topic: "📚 By topic",
     btn_review: "🔁 Review mistakes",
+    btn_grade: "🎓 Assess my level",
     btn_change: "⚙️ Settings (language/level)",
     welcome: (name) =>
       `👋 Hi, ${name}!\n\nThis is a mock exam bot to prepare for programming certifications.\n\nChoose below to get started 👇`,
@@ -82,6 +97,19 @@ const S = {
     topic_label: (t) => `Topic: ${t}`,
     no_review:
       "🎉 Nice — no mistakes to review! Practice with /exam or /quiz first.",
+    grade_intro: (n) =>
+      `🎓 <b>Level assessment</b> started — ${n} questions.\nEach question adapts to your answers (harder or easier). Answer honestly — your result depends on it. Good luck!`,
+    grade_title: "🎓 <b>Assessment complete</b>",
+    grade_level: (emoji, name) => `Your level: <b>${emoji} ${name}</b>`,
+    grade_track: (label) => `Track: ${label}`,
+    grade_by_diff: "📈 <b>By difficulty:</b>",
+    diff_label: (d) => ({ easy: "Easy", medium: "Medium", hard: "Hard" }[d] || d),
+    grade_strong: (topics) => `✅ Strong: ${topics}`,
+    grade_weak: (topics) => `⚠️ Needs work: ${topics}`,
+    grade_next: (name, topics) =>
+      `➡️ To reach <b>${name}</b>: work on ${topics} and tackle harder questions. /review will help.`,
+    grade_top: (name) => `🏆 You're at the top level: <b>${name}</b>! Excellent.`,
+    grade_note: "ℹ️ This is an estimate — the more you answer, the more accurate it gets.",
     started: (label, n) => `📝 <b>${label}</b> started — ${n} questions. Good luck!`,
     no_questions: "No questions available for this selection yet.",
     choose_topic: "Which topic do you want to practice?",

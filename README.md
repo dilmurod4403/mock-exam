@@ -5,7 +5,7 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 
 ## Oqim (foydalanuvchi tajribasi)
 
-`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript / Oracle SQL & PL/SQL) → **sertifikat darajasi** → **rejim** (imtihon / test / mavzu / xatolar ustida ishlash) → savollar.
+`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript / Oracle SQL & PL/SQL) → **sertifikat darajasi** → **rejim** (imtihon / test / mavzu / xatolar ustida ishlash / daraja baholash) → savollar.
 
 ## Imkoniyatlar
 
@@ -18,6 +18,10 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 - `/topic` — mavzu bo'yicha mashq
 - `/review` — **xatolar ustida ishlash**: avval noto'g'ri yechilgan savollarni qayta beradi
   (to'g'ri qayta yechilgan savol ro'yxatdan chiqadi)
+- `/grade` — **daraja baholash** (adaptiv): savol qiyinligi javobingizga moslashadi va
+  sizni kompetensiya narvoniga joylashtiradi — 🌱 Trainee → 🟢 Junior → Strong Junior →
+  🔵 Middle → Middle+ → 🟣 Senior → Senior+/Lead. Yakunda daraja kartasi: daraja,
+  qiyinlik bo'yicha natija, kuchli/zaif mavzular va keyingi darajaga yo'l
 - Har javobdan keyin tanlangan tildagi izoh
 - Yakunda natija: ball, foiz, o'tdi/o'tmadi, vaqt, **mavzu bo'yicha aniqlik** va
   **xatolar tahlili** (har xato savol + to'g'ri javob + izoh)
