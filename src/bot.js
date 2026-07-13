@@ -1,11 +1,24 @@
 import "dotenv/config";
 import { Telegraf, Markup } from "telegraf";
-import { PROG_LANGS, pickQuestions, getPool, topicCounts, levelPass } from "./data.js";
+import {
+  PROG_LANGS,
+  ALL_QUESTIONS,
+  shuffle,
+  pickQuestions,
+  getPool,
+  topicCounts,
+  levelPass,
+} from "./data.js";
 import { t, LANGS } from "./i18n.js";
 import {
   getPrefs,
   setPref,
   getLang,
+  recordAnswer,
+  getWrongQuestionIds,
+  flush,
+} from "./store.js";
+import {
   startSession,
   getSession,
   endSession,
@@ -27,6 +40,7 @@ if (!TOKEN) {
 // Imtihon sozlamalari
 const EXAM_SIZE = 40;
 const QUIZ_SIZE = 10;
+const REVIEW_SIZE = 20;
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 const bot = new Telegraf(TOKEN);
@@ -90,6 +104,7 @@ function menuKeyboard(lang) {
     [Markup.button.callback(t(lang, "btn_exam"), "mode:exam")],
     [Markup.button.callback(t(lang, "btn_quiz"), "mode:quiz")],
     [Markup.button.callback(t(lang, "btn_topic"), "mode:topic")],
+    [Markup.button.callback(t(lang, "btn_review"), "mode:review")],
     [Markup.button.callback(t(lang, "btn_change"), "settings")],
   ]);
 }
@@ -144,19 +159,76 @@ async function afterAnswer(ctx, session, q, picked, isCorrect, lang) {
   });
 }
 
+// Joriy sessiya bo'yicha mavzu aniqligi: { topic: { c, total } }
+function sessionTopicBreakdown(session) {
+  const map = {};
+  session.questions.forEach((q, i) => {
+    const a = session.answers[i];
+    if (!a) return;
+    const s = map[q.topic] || { c: 0, total: 0 };
+    s.total += 1;
+    if (a.isCorrect) s.c += 1;
+    map[q.topic] = s;
+  });
+  return map;
+}
+
 function resultText(session, lang) {
   const { total, correct, percent } = score(session);
   const pass = levelPass(session.plang, session.level);
   const passed = percent >= pass;
   const minutes = Math.max(1, Math.round((Date.now() - session.startTime) / 60000));
-  return (
+  let out =
     `${t(lang, "result_title")}\n\n` +
     `${t(lang, "result_correct", correct, total)}\n` +
     `${t(lang, "result_percent", percent, pass)}\n` +
     `${t(lang, "result_time", minutes)}\n\n` +
-    `${passed ? t(lang, "passed") : t(lang, "failed")}\n\n` +
-    `${t(lang, "retry")}`
-  );
+    `${passed ? t(lang, "passed") : t(lang, "failed")}`;
+
+  const breakdown = sessionTopicBreakdown(session);
+  const topics = PROG_LANGS[session.plang]?.topics || {};
+  const lines = Object.entries(breakdown).map(([code, s]) => {
+    const name = topics[code]?.[lang] || code;
+    const pct = Math.round((s.c / s.total) * 100);
+    return t(lang, "topic_line", name, s.c, s.total, pct);
+  });
+  if (lines.length) out += `\n\n${t(lang, "by_topic")}\n${lines.join("\n")}`;
+  return out;
+}
+
+// Xato javob berilgan har savol uchun tahlil bloki (savol + to'g'ri javob + izoh)
+function mistakeBlocks(session, lang) {
+  const blocks = [];
+  session.questions.forEach((q, i) => {
+    const a = session.answers[i];
+    if (!a || a.isCorrect) return;
+    const correctLetters = q.correct.map((idx) => LETTERS[idx]).join(", ");
+    const correctText = q.correct
+      .map((idx) => `${LETTERS[idx]}) ${renderText(q.options[idx])}`)
+      .join("\n");
+    const yourLetters = a.picked.length ? a.picked.map((idx) => LETTERS[idx]).join(", ") : "—";
+    blocks.push(
+      `${t(lang, "mistake_head", i + 1)}\n` +
+        `${renderText(q.question)}\n\n` +
+        `${t(lang, "your_answer", yourLetters)}\n` +
+        `${t(lang, "correct_answer", correctLetters)}\n${correctText}\n\n` +
+        `${t(lang, "explanation_label")} ${esc(explanationOf(q, lang))}`
+    );
+  });
+  return blocks;
+}
+
+// HTML bloklarni Telegram limitiga sig'diradigan qismlarga bo'lib yuboradi
+async function sendBlocks(ctx, blocks, sep = "\n\n──────────\n\n", limit = 3500) {
+  let buf = "";
+  for (const b of blocks) {
+    if (buf && buf.length + sep.length + b.length > limit) {
+      await ctx.reply(buf, { parse_mode: "HTML" });
+      buf = "";
+    }
+    buf = buf ? buf + sep + b : b;
+  }
+  if (buf) await ctx.reply(buf, { parse_mode: "HTML" });
 }
 
 // ---------- Buyruqlar ----------
@@ -192,6 +264,28 @@ async function beginExam(ctx, { mode, size, topic }) {
 
 bot.command("exam", (ctx) => beginExam(ctx, { mode: "exam", size: EXAM_SIZE, topic: null }));
 bot.command("quiz", (ctx) => beginExam(ctx, { mode: "quiz", size: QUIZ_SIZE, topic: null }));
+
+// Xatolar ustida ishlash: avval noto'g'ri javob berilgan savollarni qayta beradi
+async function beginReview(ctx) {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  const { plang, level } = prefs;
+
+  const wrongIds = getWrongQuestionIds(ctx.from.id, { plang, level });
+  const byId = new Map(ALL_QUESTIONS.map((q) => [q.id, q]));
+  const pool = wrongIds.map((id) => byId.get(id)).filter(Boolean);
+  if (pool.length === 0) return ctx.reply(t(lang, "no_review"));
+
+  const questions = shuffle(pool).slice(0, REVIEW_SIZE);
+  const session = startSession(ctx.from.id, { mode: "review", questions, plang, level });
+  await ctx.reply(t(lang, "started", t(lang, "review_label"), questions.length), {
+    parse_mode: "HTML",
+  });
+  await sendQuestion(ctx, session, lang);
+}
+
+bot.command("review", (ctx) => beginReview(ctx));
 
 function sendTopicMenu(ctx) {
   const lang = langOf(ctx);
@@ -277,6 +371,11 @@ bot.action("mode:topic", async (ctx) => {
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await sendTopicMenu(ctx);
 });
+bot.action("mode:review", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await beginReview(ctx);
+});
 
 bot.action(/^topic:(.+)$/, async (ctx) => {
   await ctx.answerCbQuery();
@@ -300,6 +399,13 @@ async function handleSubmit(ctx) {
   const q = currentQuestion(session);
   const picked = [...session.selected].sort((a, b) => a - b);
   const isCorrect = submitAnswer(session);
+  recordAnswer(ctx.from.id, {
+    questionId: q.id,
+    plang: session.plang,
+    level: session.level,
+    topic: q.topic,
+    isCorrect,
+  });
   await ctx.answerCbQuery(isCorrect ? t(lang, "correct_toast") : t(lang, "wrong_toast"));
   await afterAnswer(ctx, session, q, picked, isCorrect, lang);
 }
@@ -334,11 +440,47 @@ bot.action("result", async (ctx) => {
   if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(resultText(session, lang), {
-    parse_mode: "HTML",
-    ...menuKeyboard(lang),
-  });
+
+  await ctx.reply(resultText(session, lang), { parse_mode: "HTML" });
+
+  const blocks = mistakeBlocks(session, lang);
+  if (blocks.length) {
+    await ctx.reply(t(lang, "mistakes_title", blocks.length), { parse_mode: "HTML" });
+    await sendBlocks(ctx, blocks);
+  }
+
+  await ctx.reply(t(lang, "retry"), { parse_mode: "HTML", ...menuKeyboard(lang) });
   endSession(ctx.from.id);
+});
+
+// ---------- Telegram buyruqlar menyusi ----------
+const COMMANDS = {
+  uz: [
+    { command: "start", description: "Qaytadan sozlash (til/daraja)" },
+    { command: "exam", description: "To'liq mock imtihon" },
+    { command: "quiz", description: "Tezkor test (10 savol)" },
+    { command: "topic", description: "Mavzu bo'yicha mashq" },
+    { command: "review", description: "Xatolar ustida ishlash" },
+    { command: "stop", description: "Joriy imtihonni to'xtatish" },
+  ],
+  en: [
+    { command: "start", description: "Reconfigure (language/level)" },
+    { command: "exam", description: "Full mock exam" },
+    { command: "quiz", description: "Quick quiz (10 questions)" },
+    { command: "topic", description: "Practice by topic" },
+    { command: "review", description: "Review your mistakes" },
+    { command: "stop", description: "Stop the current exam" },
+  ],
+};
+
+async function registerCommands() {
+  await bot.telegram.setMyCommands(COMMANDS.uz);
+  await bot.telegram.setMyCommands(COMMANDS.en, { language_code: "en" });
+}
+
+// ---------- Xatoliklarni ushlash ----------
+bot.catch((err, ctx) => {
+  console.error(`⚠️ Handler xatosi (${ctx?.updateType}):`, err);
 });
 
 // ---------- Ishga tushirish ----------
@@ -347,7 +489,14 @@ bot.launch({ dropPendingUpdates: true }).catch((err) => {
   console.error("❌ Bot ishga tushmadi:", err);
   process.exit(1);
 });
+registerCommands().catch((err) =>
+  console.error("⚠️ Buyruqlar menyusini o'rnatib bo'lmadi:", err.message)
+);
 console.log("✅ Bot ishladi. Telegram'da /start bosing.");
 
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+function shutdown(signal) {
+  flush();
+  bot.stop(signal);
+}
+process.once("SIGINT", () => shutdown("SIGINT"));
+process.once("SIGTERM", () => shutdown("SIGTERM"));

@@ -5,7 +5,7 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 
 ## Oqim (foydalanuvchi tajribasi)
 
-`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript / Oracle SQL & PL/SQL) → **sertifikat darajasi** → **rejim** (imtihon / test / mavzu) → savollar.
+`/start` → **til** (🇺🇿 O'zbek / 🇬🇧 English) → **dasturlash tili** (JavaScript / Oracle SQL & PL/SQL) → **sertifikat darajasi** → **rejim** (imtihon / test / mavzu / xatolar ustida ishlash) → savollar.
 
 ## Imkoniyatlar
 
@@ -16,8 +16,13 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
 - `/exam` — to'liq mock imtihon (40 savolgacha, 70% o'tish balli)
 - `/quiz` — tezkor mashq (10 savol)
 - `/topic` — mavzu bo'yicha mashq
+- `/review` — **xatolar ustida ishlash**: avval noto'g'ri yechilgan savollarni qayta beradi
+  (to'g'ri qayta yechilgan savol ro'yxatdan chiqadi)
 - Har javobdan keyin tanlangan tildagi izoh
-- Yakunda natija: ball, foiz, o'tdi/o'tmadi, sarflangan vaqt
+- Yakunda natija: ball, foiz, o'tdi/o'tmadi, vaqt, **mavzu bo'yicha aniqlik** va
+  **xatolar tahlili** (har xato savol + to'g'ri javob + izoh)
+- Foydalanuvchi sozlamalari va javob tarixi **saqlanadi** (deploy'dan keyin ham) —
+  `DATA_DIR` papkasidagi JSON faylda
 - Bir nechta to'g'ri javobli savollarni qo'llab-quvvatlaydi
 
 ## O'rnatish
@@ -100,6 +105,17 @@ railway init            # yangi proyekt yaratadi
 railway variables set TELEGRAM_BOT_TOKEN=SIZNING_TOKEN
 railway up              # kodni yuklaydi va deploy qiladi
 ```
+
+### Ma'lumot saqlash (Volume) 💾
+
+Sozlamalar va javob tarixi `DATA_DIR` (standart `./data`) ichidagi `store.json` da saqlanadi.
+Railway konteyner fayl tizimi **o'tkinchi** — har deploy'da o'chadi. Saqlanib qolishi uchun:
+
+1. Railway'da xizmatga **Volume** ulang (masalan mount yo'li `/data`)
+2. **Variables** ga qo'shing: `DATA_DIR=/data`
+
+Volumesiz ham bot ishlaydi, lekin har deploy'da foydalanuvchilar qaytadan sozlanadi va
+xatolar tarixi yo'qoladi.
 
 ### Muhim eslatmalar
 

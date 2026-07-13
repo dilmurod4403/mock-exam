@@ -1,22 +1,5 @@
-// Foydalanuvchi sozlamalari (til, daraja) va faol imtihon holatini xotirada saqlaydi
+// Faol imtihon holatini xotirada saqlaydi (o'tkinchi — sozlamalar/tarix store.js da).
 const sessions = new Map(); // userId -> faol imtihon
-const prefs = new Map(); // userId -> { lang, level }
-
-// ---------- Sozlamalar ----------
-export function getPrefs(userId) {
-  return prefs.get(userId);
-}
-
-export function setPref(userId, key, value) {
-  const p = prefs.get(userId) || {};
-  p[key] = value;
-  prefs.set(userId, p);
-  return p;
-}
-
-export function getLang(userId) {
-  return prefs.get(userId)?.lang || "uz";
-}
 
 // ---------- Imtihon sessiyasi ----------
 export function startSession(userId, { mode, questions, plang, level }) {
