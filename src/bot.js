@@ -35,6 +35,9 @@ import {
   getDueCount,
   recordGrade,
   getLastGrade,
+  touchUser,
+  getUsersOverview,
+  getGlobalStats,
   flush,
 } from "./store.js";
 import {
@@ -71,6 +74,76 @@ const SWEEP_EVERY = 30 * 60 * 1000; // 30 daqiqada bir
 const bot = new Telegraf(TOKEN);
 
 const langOf = (ctx) => getLang(ctx.from.id);
+
+// ---------- Admin (boshqaruv) ----------
+// ADMIN_IDS — vergul bilan ajratilgan Telegram ID'lar (env). /myid bilan ID olinadi.
+const ADMIN_IDS = new Set(
+  (process.env.ADMIN_IDS || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+);
+const isAdmin = (id) => ADMIN_IDS.has(String(id));
+
+// Har interaksiyada foydalanuvchi kimligini (ism/username/oxirgi faollik) yozib boramiz
+bot.use((ctx, next) => {
+  const f = ctx.from;
+  if (f && !f.is_bot) {
+    touchUser(f.id, {
+      name: [f.first_name, f.last_name].filter(Boolean).join(" ") || null,
+      username: f.username || null,
+    });
+  }
+  return next();
+});
+
+function fmtAgo(ts) {
+  if (!ts) return "—";
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return "hozir";
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m} daq oldin`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} soat oldin`;
+  return `${Math.floor(h / 24)} kun oldin`;
+}
+
+// Uzun matnni Telegram limitiga bo'lib yuboradi
+async function sendChunked(ctx, text) {
+  const LIMIT = 3800;
+  for (let i = 0; i < text.length; i += LIMIT) {
+    await ctx.reply(text.slice(i, i + LIMIT), { parse_mode: "HTML" });
+  }
+}
+
+// Har kim o'z Telegram ID'sini bilib olishi uchun (admin sozlash uchun kerak)
+bot.command("myid", (ctx) =>
+  ctx.reply(`🆔 Telegram ID: <code>${ctx.from.id}</code>`, { parse_mode: "HTML" })
+);
+
+// Admin panel — faqat ADMIN_IDS dagilar uchun
+bot.command("admin", async (ctx) => {
+  if (!isAdmin(ctx.from.id)) return; // admin bo'lmasa — jimgina e'tiborsiz
+  const g = getGlobalStats();
+  const users = getUsersOverview();
+  let out =
+    `👑 <b>Admin panel</b>\n\n` +
+    `👥 Jami foydalanuvchi: <b>${g.totalUsers}</b>\n` +
+    `🟢 So'nggi 24 soat faol: <b>${g.active24}</b>\n` +
+    `📅 So'nggi 7 kun faol: <b>${g.active7}</b>\n` +
+    `📝 Jami javoblar: <b>${g.totalAnswers}</b>\n\n` +
+    `<b>Foydalanuvchilar</b> (oxirgi faollik bo'yicha):\n`;
+  const TOP = 40;
+  users.slice(0, TOP).forEach((u, i) => {
+    const who = u.name ? esc(u.name) : `id${u.id}`;
+    const uname = u.username ? ` @${esc(u.username)}` : "";
+    const track = u.plang ? `${u.plang}/${u.level || "?"}` : "—";
+    const acc = u.accuracy === null ? "—" : `${u.accuracy}%`;
+    out += `${i + 1}. ${who}${uname} · ${track} · ${u.answers} javob · ${acc} · ${fmtAgo(u.lastSeen)}\n`;
+  });
+  if (users.length > TOP) out += `\n… va yana ${users.length - TOP} ta foydalanuvchi`;
+  await sendChunked(ctx, out);
+});
 
 // ---------- Matn formatlash (Telegram HTML) ----------
 function esc(s) {

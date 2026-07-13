@@ -11,13 +11,15 @@ const FILE = join(DATA_DIR, "store.json");
 // answers: [ {u,q,plang,level,topic,c,t} ]
 // srs:     { [userId]: { [questionId]: { box, due, plang, level, topic } } }  (Leitner)
 // grades:  { [userId]: [ {plang, bandKey, bandName, theta, t} ] }  (baholash tarixi)
-let db = { prefs: {}, answers: [], srs: {}, grades: {} };
+// users:   { [userId]: { name, username, firstSeen, lastSeen } }  (admin uchun kimlik)
+let db = { prefs: {}, answers: [], srs: {}, grades: {}, users: {} };
 try {
   const loaded = JSON.parse(readFileSync(FILE, "utf8"));
   db.prefs = loaded.prefs || {};
   db.answers = loaded.answers || [];
   db.srs = loaded.srs || {};
   db.grades = loaded.grades || {};
+  db.users = loaded.users || {};
 } catch {
   // fayl yo'q yoki buzuq — bo'sh baza bilan boshlaymiz
 }
@@ -224,4 +226,65 @@ export function getLastGrade(userId, plang) {
     if (list[i].plang === plang) return list[i];
   }
   return null;
+}
+
+// ---------- Foydalanuvchi kimligi (admin uchun) ----------
+// Har interaksiyada chaqiriladi: ism/username/oxirgi faollikni yangilaydi.
+export function touchUser(userId, { name, username } = {}) {
+  const u = db.users[userId] || { firstSeen: Date.now() };
+  if (name) u.name = name;
+  if (username !== undefined) u.username = username || null;
+  u.lastSeen = Date.now();
+  db.users[userId] = u;
+  schedule();
+}
+
+// Har foydalanuvchi bo'yicha umumlashtirilgan ma'lumot (oxirgi faollik bo'yicha saralanган)
+export function getUsersOverview() {
+  const agg = {}; // userId -> { total, correct, last }
+  for (const a of db.answers) {
+    const s = agg[a.u] || { total: 0, correct: 0, last: 0 };
+    s.total += 1;
+    if (a.c) s.correct += 1;
+    if (a.t > s.last) s.last = a.t;
+    agg[a.u] = s;
+  }
+  const ids = new Set([
+    ...Object.keys(db.users),
+    ...Object.keys(db.prefs),
+    ...Object.keys(agg),
+  ]);
+  const list = [];
+  for (const id of ids) {
+    const u = db.users[id] || {};
+    const p = db.prefs[id] || {};
+    const a = agg[id] || { total: 0, correct: 0, last: 0 };
+    list.push({
+      id,
+      name: u.name || null,
+      username: u.username || null,
+      lang: p.lang || null,
+      plang: p.plang || null,
+      level: p.level || null,
+      answers: a.total,
+      accuracy: a.total ? Math.round((a.correct / a.total) * 100) : null,
+      lastSeen: u.lastSeen || a.last || null,
+      firstSeen: u.firstSeen || null,
+    });
+  }
+  list.sort((x, y) => (y.lastSeen || 0) - (x.lastSeen || 0));
+  return list;
+}
+
+// Umumiy statistika (admin paneli sarlavhasi uchun)
+export function getGlobalStats() {
+  const users = getUsersOverview();
+  const now = Date.now();
+  const DAY = 86400000;
+  return {
+    totalUsers: users.length,
+    active24: users.filter((u) => u.lastSeen && now - u.lastSeen < DAY).length,
+    active7: users.filter((u) => u.lastSeen && now - u.lastSeen < 7 * DAY).length,
+    totalAnswers: db.answers.length,
+  };
 }
