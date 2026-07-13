@@ -121,8 +121,8 @@
     ],
     "correct": [0],
     "explanation": {
-      "uz": "Shared (S) lock bir vaqtda ko'p o'qishga ruxsat beradi. Exclusive (X) lock esa resursni faqat bitta sessiyaga beradi — boshqalar o'zgartira olmaydi (COMMIT/ROLLBACK gacha).",
-      "en": "A shared (S) lock allows concurrent reads. An exclusive (X) lock grants the resource to one session — others can't modify it until it is released (commit/rollback)."
+      "uz": "Shared (S) lock bir vaqtda ko'p o'qishga ruxsat beradi. Exclusive (X) lock esa resursni faqat bitta sessiyaga beradi — boshqalar o'zgartira olmaydi (COMMIT/ROLLBACK gacha). Eslatma: Oracle'da QATOR darajasidagi lock har doim exclusive — DML uchun 'shared row lock' yo'q; shared locklar jadval darajasida uchraydi (masalan LOCK TABLE ... IN SHARE MODE).",
+      "en": "A shared (S) lock allows concurrent reads. An exclusive (X) lock grants the resource to one session — others can't modify it until it is released (commit/rollback). Note: in Oracle a ROW-level lock is always exclusive — there is no 'shared row lock' for DML; shared locks occur at the table level (e.g. LOCK TABLE ... IN SHARE MODE)."
     }
   },
   {

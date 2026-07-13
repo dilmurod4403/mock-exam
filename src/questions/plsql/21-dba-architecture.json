@@ -62,8 +62,8 @@
     "options": ["PMON", "SMON", "DBWn", "LGWR"],
     "correct": [1],
     "explanation": {
-      "uz": "SMON (System Monitor) — instance qayta ishga tushganda crash recovery bajaradi va vaqtinchalik segmentlarni tozalaydi, bo'sh joylarni birlashtiradi.",
-      "en": "SMON (System Monitor) performs instance/crash recovery at startup, cleans up temporary segments, and coalesces free space."
+      "uz": "SMON (System Monitor) — instance qayta ishga tushganda crash recovery bajaradi va vaqtinchalik segmentlarni tozalaydi, bo'sh joylarni birlashtiradi. Eslatma: bo'sh joyni birlashtirish (coalescing) asosan dictionary-managed tablespace'larга tegishli; hozirgi standart locally-managed tablespace'larда bu kamroq dolzarb.",
+      "en": "SMON (System Monitor) performs instance/crash recovery at startup, cleans up temporary segments, and coalesces free space. Note: free-space coalescing mainly applies to dictionary-managed tablespaces; with today's default locally-managed tablespaces it is far less relevant."
     }
   },
   {
