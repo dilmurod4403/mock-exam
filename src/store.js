@@ -7,12 +7,15 @@ import { join } from "node:path";
 const DATA_DIR = process.env.DATA_DIR || "./data";
 const FILE = join(DATA_DIR, "store.json");
 
-// { prefs: { [userId]: { lang, plang, level } }, answers: [ {u,q,plang,level,topic,c,t} ] }
-let db = { prefs: {}, answers: [] };
+// prefs:   { [userId]: { lang, plang, level } }
+// answers: [ {u,q,plang,level,topic,c,t} ]
+// srs:     { [userId]: { [questionId]: { box, due, plang, level, topic } } }  (Leitner)
+let db = { prefs: {}, answers: [], srs: {} };
 try {
   const loaded = JSON.parse(readFileSync(FILE, "utf8"));
   db.prefs = loaded.prefs || {};
   db.answers = loaded.answers || [];
+  db.srs = loaded.srs || {};
 } catch {
   // fayl yo'q yoki buzuq — bo'sh baza bilan boshlaymiz
 }
@@ -154,4 +157,53 @@ export function getStats(userId, opts = {}) {
     byTopic,
     streak: currentStreak(days),
   };
+}
+
+// ---------- Spaced repetition (Leitner) ----------
+const DAY_MS = 86400000;
+// box (1–5) → keyingi takrorlashgacha interval. To'g'ri javob box'ni oshiradi,
+// xato box'ni 1 ga tushiradi (savol tez qaytadi).
+const SRS_INTERVALS = {
+  1: 8 * 3600 * 1000, // ~8 soat (o'sha kuni qaytadi, lekin darhol emas)
+  2: 1 * DAY_MS,
+  3: 3 * DAY_MS,
+  4: 7 * DAY_MS,
+  5: 14 * DAY_MS,
+};
+
+export function recordSrs(userId, { questionId, plang, level, topic, isCorrect }) {
+  const userSrs = (db.srs[userId] ||= {});
+  const prevBox = userSrs[questionId]?.box || 1;
+  const box = isCorrect ? Math.min(5, prevBox + 1) : 1;
+  userSrs[questionId] = {
+    box,
+    due: Date.now() + SRS_INTERVALS[box],
+    plang,
+    level,
+    topic,
+  };
+  schedule();
+}
+
+// Muddati kelgan (due) savol id-lari — eng kechikkani birinchi
+export function getDueQuestionIds(userId, { plang, level } = {}) {
+  const userSrs = db.srs[userId] || {};
+  const now = Date.now();
+  const due = [];
+  for (const [qid, s] of Object.entries(userSrs)) {
+    if (plang && s.plang !== plang) continue;
+    if (level && s.level !== level) continue;
+    if (s.due <= now) due.push({ qid, due: s.due });
+  }
+  due.sort((a, b) => a.due - b.due);
+  return due.map((d) => d.qid);
+}
+
+export function getDueCount(userId, opts = {}) {
+  return getDueQuestionIds(userId, opts).length;
+}
+
+// Foydalanuvchi allaqachon ko'rgan (SRS holati bor) barcha savol id-lari
+export function getSeenIds(userId) {
+  return new Set(Object.keys(db.srs[userId] || {}));
 }

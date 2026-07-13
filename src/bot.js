@@ -26,6 +26,10 @@ import {
   recordAnswer,
   getWrongQuestionIds,
   getStats,
+  recordSrs,
+  getDueQuestionIds,
+  getSeenIds,
+  getDueCount,
   flush,
 } from "./store.js";
 import {
@@ -52,6 +56,7 @@ if (!TOKEN) {
 const EXAM_SIZE = 40;
 const QUIZ_SIZE = 10;
 const REVIEW_SIZE = 20;
+const PRACTICE_SIZE = 10;
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 // Tashlab ketilgan sessiyalarni tozalash
@@ -120,6 +125,7 @@ function menuKeyboard(lang) {
     [Markup.button.callback(t(lang, "btn_quiz"), "mode:quiz")],
     [Markup.button.callback(t(lang, "btn_topic"), "mode:topic")],
     [Markup.button.callback(t(lang, "btn_review"), "mode:review")],
+    [Markup.button.callback(t(lang, "btn_practice"), "mode:practice")],
     [Markup.button.callback(t(lang, "btn_grade"), "mode:grade")],
     [Markup.button.callback(t(lang, "btn_stats"), "mode:stats")],
     [Markup.button.callback(t(lang, "btn_change"), "settings")],
@@ -311,6 +317,9 @@ function statsText(userId, lang) {
     `${ready ? t(lang, "stats_ready") : t(lang, "stats_notready", pass - stats.percent)}\n` +
     `${t(lang, "stats_streak", stats.streak)}`;
 
+  const due = getDueCount(userId, { plang, level });
+  if (due > 0) out += `\n${t(lang, "stats_due", due)}`;
+
   const topics = PROG_LANGS[plang]?.topics || {};
   const rows = Object.entries(stats.byTopic)
     .map(([code, s]) => ({
@@ -384,6 +393,40 @@ async function beginReview(ctx) {
 }
 
 bot.command("review", (ctx) => beginReview(ctx));
+
+// Kunlik mashq (SRS): muddati kelgan savollar + navbat to'lmasa yangi savollar
+async function beginPractice(ctx) {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  const { plang, level } = prefs;
+
+  const byId = new Map(ALL_QUESTIONS.map((q) => [q.id, q]));
+  const questions = getDueQuestionIds(ctx.from.id, { plang, level })
+    .map((id) => byId.get(id))
+    .filter(Boolean)
+    .slice(0, PRACTICE_SIZE);
+
+  // navbat to'lmasa — hali ko'rilmagan yangi savollar bilan to'ldiramiz
+  if (questions.length < PRACTICE_SIZE) {
+    const seen = getSeenIds(ctx.from.id);
+    const chosen = new Set(questions.map((q) => q.id));
+    const fresh = shuffle(
+      getPool({ plang, level }).filter((q) => !seen.has(q.id) && !chosen.has(q.id))
+    );
+    questions.push(...fresh.slice(0, PRACTICE_SIZE - questions.length));
+  }
+
+  if (questions.length === 0) return ctx.reply(t(lang, "practice_done"));
+
+  const session = startSession(ctx.from.id, { mode: "practice", questions, plang, level });
+  await ctx.reply(t(lang, "started", t(lang, "practice_label"), questions.length), {
+    parse_mode: "HTML",
+  });
+  await sendQuestion(ctx, session, lang);
+}
+
+bot.command("practice", (ctx) => beginPractice(ctx));
 
 // Daraja baholash: butun til bo'yicha (sertifikat darajasidan qat'iy nazar) adaptiv test
 async function beginGrade(ctx) {
@@ -515,6 +558,11 @@ bot.action("mode:review", async (ctx) => {
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await beginReview(ctx);
 });
+bot.action("mode:practice", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await beginPractice(ctx);
+});
 bot.action("mode:grade", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
@@ -554,13 +602,15 @@ async function handleSubmit(ctx) {
   const q = currentQuestion(session);
   const picked = [...session.selected].sort((a, b) => a - b);
   const isCorrect = submitAnswer(session);
-  recordAnswer(ctx.from.id, {
+  const answerInfo = {
     questionId: q.id,
     plang: session.plang,
     level: session.level,
     topic: q.topic,
     isCorrect,
-  });
+  };
+  recordAnswer(ctx.from.id, answerInfo);
+  recordSrs(ctx.from.id, answerInfo); // Leitner holatini yangilaydi (barcha rejimlar)
 
   // grade: θ ni yangilab, keyingi savolni adaptiv tanlaymiz
   if (session.mode === "grade" && session.grading) {
@@ -638,6 +688,7 @@ const COMMANDS = {
     { command: "quiz", description: "Tezkor test (10 savol)" },
     { command: "topic", description: "Mavzu bo'yicha mashq" },
     { command: "review", description: "Xatolar ustida ishlash" },
+    { command: "practice", description: "Kunlik mashq (spaced repetition)" },
     { command: "grade", description: "Darajamni aniqlash (adaptiv test)" },
     { command: "stats", description: "Statistikam va rivojim" },
     { command: "stop", description: "Joriy imtihonni to'xtatish" },
@@ -648,6 +699,7 @@ const COMMANDS = {
     { command: "quiz", description: "Quick quiz (10 questions)" },
     { command: "topic", description: "Practice by topic" },
     { command: "review", description: "Review your mistakes" },
+    { command: "practice", description: "Daily practice (spaced repetition)" },
     { command: "grade", description: "Assess my level (adaptive test)" },
     { command: "stats", description: "My stats and progress" },
     { command: "stop", description: "Stop the current exam" },

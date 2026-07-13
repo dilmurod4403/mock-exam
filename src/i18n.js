@@ -18,6 +18,7 @@ const S = {
     btn_quiz: "⚡ Tezkor test",
     btn_topic: "📚 Mavzu bo'yicha",
     btn_review: "🔁 Xatolar ustida ishlash",
+    btn_practice: "🧠 Kunlik mashq (SRS)",
     btn_grade: "🎓 Darajamni aniqlash",
     btn_stats: "🏆 Statistikam",
     btn_change: "⚙️ Sozlamalar (til/daraja)",
@@ -27,9 +28,12 @@ const S = {
     exam_label: "To'liq imtihon",
     quiz_label: "Tezkor test",
     review_label: "Xatolar takrori",
+    practice_label: "Kunlik mashq",
     topic_label: (t) => `Mavzu: ${t}`,
     no_review:
       "🎉 Ajoyib — takrorlash uchun xato yo'q! Avval /exam yoki /quiz bilan mashq qiling.",
+    practice_done:
+      "🎉 Bugun uchun hammasi takrorlandi! Ertaga qaytib keling yoki /quiz bilan davom eting.",
     grade_intro: (n) =>
       `🎓 <b>Daraja baholash</b> boshlandi — ${n} ta savol.\nHar savol javobingizga qarab qiyinlashadi yoki osonlashadi. Rostini yeching — natija shunga bog'liq. Omad!`,
     grade_title: "🎓 <b>Baholash yakunlandi</b>",
@@ -51,6 +55,7 @@ const S = {
     stats_ready: "✅ Tayyor ko'rinasiz — imtihonni sinab ko'ring!",
     stats_notready: (gap) => `📚 O'tish balliga <b>${gap}%</b> qoldi — davom eting!`,
     stats_streak: (d) => `🔥 Streak: <b>${d}</b> kun`,
+    stats_due: (n) => `🧠 Bugun takrorlash: <b>${n}</b> ta (/practice)`,
     stats_by_topic: "📊 <b>Mavzu bo'yicha</b> (zaifdan kuchligacha):",
     stats_topic_line: (bar, name, c, total, pct) => `${bar} ${name} — ${c}/${total} (${pct}%)`,
     started: (label, n) => `📝 <b>${label}</b> boshlandi — ${n} ta savol. Omad!`,
@@ -98,6 +103,7 @@ const S = {
     btn_quiz: "⚡ Quick quiz",
     btn_topic: "📚 By topic",
     btn_review: "🔁 Review mistakes",
+    btn_practice: "🧠 Daily practice (SRS)",
     btn_grade: "🎓 Assess my level",
     btn_stats: "🏆 My stats",
     btn_change: "⚙️ Settings (language/level)",
@@ -107,9 +113,12 @@ const S = {
     exam_label: "Full exam",
     quiz_label: "Quick quiz",
     review_label: "Mistake review",
+    practice_label: "Daily practice",
     topic_label: (t) => `Topic: ${t}`,
     no_review:
       "🎉 Nice — no mistakes to review! Practice with /exam or /quiz first.",
+    practice_done:
+      "🎉 All caught up for today! Come back tomorrow or continue with /quiz.",
     grade_intro: (n) =>
       `🎓 <b>Level assessment</b> started — ${n} questions.\nEach question adapts to your answers (harder or easier). Answer honestly — your result depends on it. Good luck!`,
     grade_title: "🎓 <b>Assessment complete</b>",
@@ -131,6 +140,7 @@ const S = {
     stats_ready: "✅ You look ready — try a full exam!",
     stats_notready: (gap) => `📚 <b>${gap}%</b> to go until the pass mark — keep going!`,
     stats_streak: (d) => `🔥 Streak: <b>${d}</b> day(s)`,
+    stats_due: (n) => `🧠 Due today: <b>${n}</b> (/practice)`,
     stats_by_topic: "📊 <b>By topic</b> (weakest first):",
     stats_topic_line: (bar, name, c, total, pct) => `${bar} ${name} — ${c}/${total} (${pct}%)`,
     started: (label, n) => `📝 <b>${label}</b> started — ${n} questions. Good luck!`,
