@@ -970,11 +970,37 @@ bot.catch((err, ctx) => {
 });
 
 // ---------- Ishga tushirish ----------
+// 409 Conflict (redeploy paytida eski nusxa hali token'ni polling qilyapti) — crash
+// o'rniga biroz kutib qayta uramiz. Boshqa xatolar jarayonni to'xtatadi (Railway restart qiladi).
+const LAUNCH_RETRY_MS = 6000;
+const LAUNCH_MAX_RETRIES = 20;
+async function launchWithRetry() {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      await bot.launch({ dropPendingUpdates: true });
+      return; // faqat bot to'xtaganda (normal shutdown) shu yerga yetadi
+    } catch (err) {
+      if (err?.response?.error_code === 409 && attempt <= LAUNCH_MAX_RETRIES) {
+        console.warn(
+          `⚠️ 409 Conflict — boshqa nusxa hali polling qilyapti. ` +
+            `${LAUNCH_RETRY_MS / 1000}s kutib qayta uraman [${attempt}/${LAUNCH_MAX_RETRIES}]...`
+        );
+        try {
+          bot.stop();
+        } catch {
+          /* polling hali boshlanmagan bo'lishi mumkin — e'tiborsiz */
+        }
+        await new Promise((r) => setTimeout(r, LAUNCH_RETRY_MS));
+        continue;
+      }
+      console.error("❌ Bot ishga tushmadi:", err);
+      process.exit(1);
+    }
+  }
+}
+
 console.log("⏳ Bot ishga tushmoqda...");
-bot.launch({ dropPendingUpdates: true }).catch((err) => {
-  console.error("❌ Bot ishga tushmadi:", err);
-  process.exit(1);
-});
+launchWithRetry();
 registerCommands().catch((err) =>
   console.error("⚠️ Buyruqlar menyusini o'rnatib bo'lmadi:", err.message)
 );
