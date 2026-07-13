@@ -140,7 +140,10 @@ function menuKeyboard(lang) {
     [Markup.button.callback(t(lang, "btn_practice"), "mode:practice")],
     [Markup.button.callback(t(lang, "btn_grade"), "mode:grade")],
     [Markup.button.callback(t(lang, "btn_stats"), "mode:stats")],
-    [Markup.button.callback(t(lang, "btn_change"), "settings")],
+    [
+      Markup.button.callback(t(lang, "btn_back"), "back:level"),
+      Markup.button.callback(t(lang, "btn_change"), "settings"),
+    ],
   ]);
 }
 
@@ -632,6 +635,14 @@ bot.action("back:plang", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await ctx.reply(t(lang, "choose_proglang"), proglangKeyboard(lang));
+});
+bot.action("back:level", async (ctx) => {
+  const lang = langOf(ctx);
+  const plang = getPrefs(ctx.from.id)?.plang;
+  if (!plang) return ctx.answerCbQuery(t(lang, "need_start"), { show_alert: true });
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "choose_level"), levelKeyboard(plang, lang));
 });
 
 // ---------- Rejim tanlash ----------
