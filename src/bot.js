@@ -101,25 +101,31 @@ function explanationOf(q, lang) {
 }
 
 // ---------- Onboarding klaviaturalar ----------
-const languageKeyboard = () =>
-  Markup.inlineKeyboard([
+// menuLang berilsa (sozlamalar konteksti) — "asosiy menyu" tugmasi qo'shiladi
+const languageKeyboard = (menuLang) => {
+  const rows = [
     [Markup.button.callback(LANGS.uz, "lang:uz")],
     [Markup.button.callback(LANGS.en, "lang:en")],
+  ];
+  if (menuLang) rows.push([Markup.button.callback(t(menuLang, "btn_menu"), "menu")]);
+  return Markup.inlineKeyboard(rows);
+};
+
+const proglangKeyboard = (lang) =>
+  Markup.inlineKeyboard([
+    ...Object.entries(PROG_LANGS).map(([code, cfg]) => [
+      Markup.button.callback(cfg.comingSoon ? `${cfg.label} 🔜` : cfg.label, `plang:${code}`),
+    ]),
+    [Markup.button.callback(t(lang, "btn_back"), "back:lang")],
   ]);
 
-const proglangKeyboard = () =>
-  Markup.inlineKeyboard(
-    Object.entries(PROG_LANGS).map(([code, cfg]) => [
-      Markup.button.callback(cfg.comingSoon ? `${cfg.label} 🔜` : cfg.label, `plang:${code}`),
-    ])
-  );
-
-const levelKeyboard = (plang) =>
-  Markup.inlineKeyboard(
-    Object.entries(PROG_LANGS[plang].levels).map(([code, { label }]) => [
+const levelKeyboard = (plang, lang) =>
+  Markup.inlineKeyboard([
+    ...Object.entries(PROG_LANGS[plang].levels).map(([code, { label }]) => [
       Markup.button.callback(label, `level:${code}`),
-    ])
-  );
+    ]),
+    [Markup.button.callback(t(lang, "btn_back"), "back:plang")],
+  ]);
 
 function menuKeyboard(lang) {
   return Markup.inlineKeyboard([
@@ -485,7 +491,10 @@ function sendStats(ctx) {
   const lang = langOf(ctx);
   const prefs = getPrefs(ctx.from.id);
   if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
-  return ctx.reply(statsText(ctx.from.id, lang), { parse_mode: "HTML" });
+  return ctx.reply(statsText(ctx.from.id, lang), {
+    parse_mode: "HTML",
+    ...Markup.inlineKeyboard([[Markup.button.callback(t(lang, "btn_menu"), "menu")]]),
+  });
 }
 
 bot.command("stats", (ctx) => sendStats(ctx));
@@ -502,6 +511,7 @@ function sendTopicMenu(ctx) {
       Markup.button.callback(`${names[lang]} (${counts[code]})`, `topic:${code}`),
     ]);
   if (rows.length === 0) return ctx.reply(t(lang, "no_questions"));
+  rows.push([Markup.button.callback(t(lang, "btn_menu"), "menu")]);
   return ctx.reply(t(lang, "choose_topic"), Markup.inlineKeyboard(rows));
 }
 
@@ -518,6 +528,7 @@ function sendLearnMenu(ctx) {
   const rows = topics.map((code) => [
     Markup.button.callback(PROG_LANGS[plang].topics[code][lang], `learn:${code}`),
   ]);
+  rows.push([Markup.button.callback(t(lang, "btn_menu"), "menu")]);
   return ctx.reply(t(lang, "choose_lesson"), Markup.inlineKeyboard(rows));
 }
 
@@ -534,7 +545,7 @@ bot.action(/^lang:(uz|en)$/, async (ctx) => {
   setPref(ctx.from.id, "lang", lang);
   await ctx.answerCbQuery(t(lang, "language_set"));
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(t(lang, "choose_proglang"), proglangKeyboard());
+  await ctx.reply(t(lang, "choose_proglang"), proglangKeyboard(lang));
 });
 
 bot.action(/^plang:(.+)$/, async (ctx) => {
@@ -547,7 +558,7 @@ bot.action(/^plang:(.+)$/, async (ctx) => {
   setPref(ctx.from.id, "plang", code);
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(t(lang, "choose_level"), levelKeyboard(code));
+  await ctx.reply(t(lang, "choose_level"), levelKeyboard(code, lang));
 });
 
 bot.action(/^level:(.+)$/, async (ctx) => {
@@ -569,9 +580,40 @@ bot.action(/^level:(.+)$/, async (ctx) => {
 });
 
 bot.action("settings", async (ctx) => {
+  const lang = langOf(ctx);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "choose_language"), languageKeyboard(lang));
+});
+
+// Asosiy menyuga qaytish (istalgan bo'limdan)
+function mainMenu(ctx) {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  return ctx.reply(t(lang, "menu_title", PROG_LANGS[prefs.plang].levels[prefs.level].label), {
+    parse_mode: "HTML",
+    ...menuKeyboard(lang),
+  });
+}
+
+bot.action("menu", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await mainMenu(ctx);
+});
+
+// Onboarding'da bir qadam ortga
+bot.action("back:lang", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await ctx.reply(t(langOf(ctx), "choose_language"), languageKeyboard());
+});
+bot.action("back:plang", async (ctx) => {
+  const lang = langOf(ctx);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "choose_proglang"), proglangKeyboard(lang));
 });
 
 // ---------- Rejim tanlash ----------
@@ -612,7 +654,10 @@ bot.action(/^learn:(.+)$/, async (ctx) => {
     parse_mode: "HTML",
     ...Markup.inlineKeyboard([
       [Markup.button.callback(t(lang, "btn_practice_topic"), `learntopic:${topic}`)],
-      [Markup.button.callback(t(lang, "btn_more_lessons"), "mode:learn")],
+      [
+        Markup.button.callback(t(lang, "btn_more_lessons"), "mode:learn"),
+        Markup.button.callback(t(lang, "btn_menu"), "menu"),
+      ],
     ]),
   });
 });

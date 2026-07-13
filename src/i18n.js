@@ -65,6 +65,8 @@ const S = {
     choose_lesson: "📖 Qaysi mavzuni o'rganamiz?",
     btn_practice_topic: "📝 Shu mavzuni mashq qilish",
     btn_more_lessons: "📖 Boshqa mavzu",
+    btn_menu: "⬅️ Asosiy menyu",
+    btn_back: "⬅️ Orqaga",
     choose_topic: "Qaysi mavzu bo'yicha mashq qilamiz?",
     question_header: (num, total, multi) =>
       `<b>Savol ${num}/${total}</b>${multi ? "  <i>(bir nechta to'g'ri javob)</i>" : ""}`,
@@ -159,6 +161,8 @@ const S = {
     choose_lesson: "📖 Which topic do you want to learn?",
     btn_practice_topic: "📝 Practice this topic",
     btn_more_lessons: "📖 Another topic",
+    btn_menu: "⬅️ Main menu",
+    btn_back: "⬅️ Back",
     choose_topic: "Which topic do you want to practice?",
     question_header: (num, total, multi) =>
       `<b>Question ${num}/${total}</b>${multi ? "  <i>(multiple correct answers)</i>" : ""}`,
