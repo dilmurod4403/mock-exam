@@ -15,6 +15,8 @@ Savol matni ingliz tilida (haqiqiy imtihon kabi), tushuntirishlar **o'zbekcha yo
   - **Oracle SQL & PL/SQL:** 1Z0-071 (Oracle SQL) · 1Z0-149 (PL/SQL Developer)
 - `/exam` — to'liq mock imtihon (40 savolgacha, 70% o'tish balli)
 - `/quiz` — tezkor mashq (10 savol)
+- `/learn` — **mini-dars** ("avval o'rgan"): mavzu bo'yicha qisqa ikki tilli konspekt +
+  kod misoli, so'ng "shu mavzuni mashq qilish" tugmasi (hozircha JavaScript)
 - `/topic` — mavzu bo'yicha mashq
 - `/review` — **xatolar ustida ishlash**: avval noto'g'ri yechilgan savollarni qayta beradi
   (to'g'ri qayta yechilgan savol ro'yxatdan chiqadi)

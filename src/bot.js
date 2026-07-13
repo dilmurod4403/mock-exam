@@ -11,6 +11,7 @@ import {
   levelPass,
 } from "./data.js";
 import { t, LANGS } from "./i18n.js";
+import { getLesson, lessonTopics } from "./lessons.js";
 import {
   GRADE_TARGET,
   initGradingState,
@@ -124,6 +125,7 @@ function menuKeyboard(lang) {
   return Markup.inlineKeyboard([
     [Markup.button.callback(t(lang, "btn_exam"), "mode:exam")],
     [Markup.button.callback(t(lang, "btn_quiz"), "mode:quiz")],
+    [Markup.button.callback(t(lang, "btn_learn"), "mode:learn")],
     [Markup.button.callback(t(lang, "btn_topic"), "mode:topic")],
     [Markup.button.callback(t(lang, "btn_review"), "mode:review")],
     [Markup.button.callback(t(lang, "btn_practice"), "mode:practice")],
@@ -505,6 +507,22 @@ function sendTopicMenu(ctx) {
 
 bot.command("topic", (ctx) => sendTopicMenu(ctx));
 
+// O'rganish: darsli mavzular menyusi
+function sendLearnMenu(ctx) {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  const { plang } = prefs;
+  const topics = lessonTopics(plang);
+  if (topics.length === 0) return ctx.reply(t(lang, "no_lessons"));
+  const rows = topics.map((code) => [
+    Markup.button.callback(PROG_LANGS[plang].topics[code][lang], `learn:${code}`),
+  ]);
+  return ctx.reply(t(lang, "choose_lesson"), Markup.inlineKeyboard(rows));
+}
+
+bot.command("learn", (ctx) => sendLearnMenu(ctx));
+
 bot.command("stop", (ctx) => {
   endSession(ctx.from.id);
   return ctx.reply(t(langOf(ctx), "stopped"));
@@ -571,6 +589,39 @@ bot.action("mode:topic", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await sendTopicMenu(ctx);
+});
+bot.action("mode:learn", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await sendLearnMenu(ctx);
+});
+
+// Mavzu darsini ko'rsatadi + "shu mavzuni mashq qilish" tugmasi
+bot.action(/^learn:(.+)$/, async (ctx) => {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang) return ctx.answerCbQuery(t(lang, "need_start"), { show_alert: true });
+  const topic = ctx.match[1];
+  const lesson = getLesson(prefs.plang, topic);
+  if (!lesson) return ctx.answerCbQuery(t(lang, "no_lessons"), { show_alert: true });
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  const title = lesson.title[lang] || lesson.title.uz;
+  const body = renderText(lesson.body[lang] || lesson.body.uz);
+  await ctx.reply(`📖 <b>${esc(title)}</b>\n\n${body}`, {
+    parse_mode: "HTML",
+    ...Markup.inlineKeyboard([
+      [Markup.button.callback(t(lang, "btn_practice_topic"), `learntopic:${topic}`)],
+      [Markup.button.callback(t(lang, "btn_more_lessons"), "mode:learn")],
+    ]),
+  });
+});
+
+// Darsdan so'ng shu mavzuni mashq qilish (mavjud topic-testga ulanadi)
+bot.action(/^learntopic:(.+)$/, async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await beginExam(ctx, { mode: "topic", size: QUIZ_SIZE, topic: ctx.match[1] });
 });
 bot.action("mode:review", async (ctx) => {
   await ctx.answerCbQuery();
@@ -728,6 +779,7 @@ const COMMANDS = {
     { command: "start", description: "Qaytadan sozlash (til/daraja)" },
     { command: "exam", description: "To'liq mock imtihon" },
     { command: "quiz", description: "Tezkor test (10 savol)" },
+    { command: "learn", description: "Mini-dars (avval o'rgan)" },
     { command: "topic", description: "Mavzu bo'yicha mashq" },
     { command: "review", description: "Xatolar ustida ishlash" },
     { command: "practice", description: "Kunlik mashq (spaced repetition)" },
@@ -739,6 +791,7 @@ const COMMANDS = {
     { command: "start", description: "Reconfigure (language/level)" },
     { command: "exam", description: "Full mock exam" },
     { command: "quiz", description: "Quick quiz (10 questions)" },
+    { command: "learn", description: "Mini-lesson (learn first)" },
     { command: "topic", description: "Practice by topic" },
     { command: "review", description: "Review your mistakes" },
     { command: "practice", description: "Daily practice (spaced repetition)" },
