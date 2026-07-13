@@ -15,9 +15,24 @@ export function startSession(userId, { mode, questions, plang, level, target, po
     selected: new Set(),
     answers: [],
     startTime: Date.now(),
+    lastActive: Date.now(), // eskirgan sessiyalarni tozalash uchun
   };
   sessions.set(userId, session);
   return session;
+}
+
+// Tashlab ketilgan sessiyalarni tozalaydi (xotira oqishining oldini oladi).
+// Tozalangan sessiyalar sonini qaytaradi.
+export function sweepSessions(ttlMs) {
+  const now = Date.now();
+  let removed = 0;
+  for (const [userId, s] of sessions) {
+    if (now - (s.lastActive ?? s.startTime) > ttlMs) {
+      sessions.delete(userId);
+      removed += 1;
+    }
+  }
+  return removed;
 }
 
 export function getSession(userId) {
@@ -35,6 +50,7 @@ export function currentQuestion(session) {
 export function toggleSelection(session, optionIndex) {
   if (session.selected.has(optionIndex)) session.selected.delete(optionIndex);
   else session.selected.add(optionIndex);
+  session.lastActive = Date.now();
 }
 
 // Javobni baholaydi va navbatdagi savolga o'tadi. To'g'ri bo'lsa true qaytaradi.
@@ -48,6 +64,7 @@ export function submitAnswer(session) {
   session.answers.push({ questionId: q.id, picked, isCorrect });
   session.selected = new Set();
   session.index += 1;
+  session.lastActive = Date.now();
   return isCorrect;
 }
 

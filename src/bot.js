@@ -36,6 +36,7 @@ import {
   submitAnswer,
   isFinished,
   score,
+  sweepSessions,
 } from "./session.js";
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -51,6 +52,10 @@ const EXAM_SIZE = 40;
 const QUIZ_SIZE = 10;
 const REVIEW_SIZE = 20;
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
+
+// Tashlab ketilgan sessiyalarni tozalash
+const SESSION_TTL = 2 * 60 * 60 * 1000; // 2 soat
+const SWEEP_EVERY = 30 * 60 * 1000; // 30 daqiqada bir
 
 const bot = new Telegraf(TOKEN);
 
@@ -132,11 +137,12 @@ function questionBody(session, lang) {
 function optionKeyboard(session, lang) {
   const q = currentQuestion(session);
   const multi = isMulti(q);
+  const qi = session.index; // tugma qaysi savolga tegishli — eskirganini aniqlash uchun
   const rows = q.options.map((_o, i) => {
     const label = multi && session.selected.has(i) ? `☑️ ${LETTERS[i]}` : LETTERS[i];
-    return [Markup.button.callback(label, multi ? `toggle:${i}` : `pick:${i}`)];
+    return [Markup.button.callback(label, multi ? `toggle:${qi}:${i}` : `pick:${qi}:${i}`)];
   });
-  if (multi) rows.push([Markup.button.callback(t(lang, "confirm_btn"), "done")]);
+  if (multi) rows.push([Markup.button.callback(t(lang, "confirm_btn"), `done:${qi}`)]);
   return Markup.inlineKeyboard(rows);
 }
 
@@ -468,11 +474,17 @@ bot.action(/^topic:(.+)$/, async (ctx) => {
 });
 
 // ---------- Savol-javob callbacklar ----------
-bot.action(/^toggle:(\d+)$/, async (ctx) => {
+// Tugma joriy savolga tegishlimi? (eski xabar tugmasidan himoya)
+function isStale(ctx, session) {
+  return Number(ctx.match[1]) !== session.index;
+}
+
+bot.action(/^toggle:(\d+):(\d+)$/, async (ctx) => {
   const session = getSession(ctx.from.id);
   const lang = langOf(ctx);
   if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
-  toggleSelection(session, Number(ctx.match[1]));
+  if (isStale(ctx, session)) return ctx.answerCbQuery(t(lang, "stale_answer"));
+  toggleSelection(session, Number(ctx.match[2]));
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(optionKeyboard(session, lang).reply_markup).catch(() => {});
 });
@@ -509,17 +521,20 @@ async function handleSubmit(ctx) {
   await afterAnswer(ctx, session, q, picked, isCorrect, lang);
 }
 
-bot.action(/^pick:(\d+)$/, async (ctx) => {
-  const session = getSession(ctx.from.id);
-  if (!session) return ctx.answerCbQuery(t(langOf(ctx), "session_not_found"));
-  session.selected = new Set([Number(ctx.match[1])]);
-  await handleSubmit(ctx);
-});
-
-bot.action("done", async (ctx) => {
+bot.action(/^pick:(\d+):(\d+)$/, async (ctx) => {
   const session = getSession(ctx.from.id);
   const lang = langOf(ctx);
   if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
+  if (isStale(ctx, session)) return ctx.answerCbQuery(t(lang, "stale_answer"));
+  session.selected = new Set([Number(ctx.match[2])]);
+  await handleSubmit(ctx);
+});
+
+bot.action(/^done:(\d+)$/, async (ctx) => {
+  const session = getSession(ctx.from.id);
+  const lang = langOf(ctx);
+  if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
+  if (isStale(ctx, session)) return ctx.answerCbQuery(t(lang, "stale_answer"));
   if (session.selected.size === 0) return ctx.answerCbQuery(t(lang, "select_one"));
   await handleSubmit(ctx);
 });
@@ -597,6 +612,14 @@ bot.launch({ dropPendingUpdates: true }).catch((err) => {
 registerCommands().catch((err) =>
   console.error("⚠️ Buyruqlar menyusini o'rnatib bo'lmadi:", err.message)
 );
+
+// Eskirgan sessiyalarni davriy tozalash (xotira oqishiga qarshi)
+const sweepTimer = setInterval(() => {
+  const n = sweepSessions(SESSION_TTL);
+  if (n) console.log(`🧹 ${n} ta eskirgan sessiya tozalandi.`);
+}, SWEEP_EVERY);
+sweepTimer.unref(); // process yopilishiga to'sqinlik qilmasin
+
 console.log("✅ Bot ishladi. Telegram'da /start bosing.");
 
 function shutdown(signal) {
