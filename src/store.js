@@ -110,3 +110,48 @@ export function getTopicStats(userId, opts = {}) {
   }
   return stats;
 }
+
+// Kun raqami (O'zbekiston vaqti, UTC+5 taxminiy) — streak hisoblash uchun
+const TZ_OFFSET = 5 * 3600 * 1000;
+const dayKey = (t) => Math.floor((t + TZ_OFFSET) / 86400000);
+
+// Bugungacha uzluksiz faol kunlar soni (streak)
+function currentStreak(daySet) {
+  if (!daySet.size) return 0;
+  const today = dayKey(Date.now());
+  let d = daySet.has(today) ? today : daySet.has(today - 1) ? today - 1 : null;
+  if (d === null) return 0; // oxirgi faollik kechadan oldin — streak uzilgan
+  let streak = 0;
+  while (daySet.has(d)) {
+    streak += 1;
+    d -= 1;
+  }
+  return streak;
+}
+
+// To'liq statistika: umumiy aniqlik, mavzu bo'yicha va streak
+export function getStats(userId, opts = {}) {
+  let total = 0;
+  let correct = 0;
+  const byTopic = {};
+  const days = new Set();
+  for (const a of db.answers) {
+    if (a.u !== userId) continue;
+    if (opts.plang && a.plang !== opts.plang) continue;
+    if (opts.level && a.level !== opts.level) continue;
+    total += 1;
+    if (a.c) correct += 1;
+    const s = byTopic[a.topic] || { correct: 0, total: 0 };
+    s.total += 1;
+    if (a.c) s.correct += 1;
+    byTopic[a.topic] = s;
+    days.add(dayKey(a.t));
+  }
+  return {
+    total,
+    correct,
+    percent: total ? Math.round((correct / total) * 100) : 0,
+    byTopic,
+    streak: currentStreak(days),
+  };
+}

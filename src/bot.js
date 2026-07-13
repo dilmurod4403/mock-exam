@@ -25,6 +25,7 @@ import {
   getLang,
   recordAnswer,
   getWrongQuestionIds,
+  getStats,
   flush,
 } from "./store.js";
 import {
@@ -120,6 +121,7 @@ function menuKeyboard(lang) {
     [Markup.button.callback(t(lang, "btn_topic"), "mode:topic")],
     [Markup.button.callback(t(lang, "btn_review"), "mode:review")],
     [Markup.button.callback(t(lang, "btn_grade"), "mode:grade")],
+    [Markup.button.callback(t(lang, "btn_stats"), "mode:stats")],
     [Markup.button.callback(t(lang, "btn_change"), "settings")],
   ]);
 }
@@ -284,6 +286,49 @@ function gradeCardText(session, lang) {
   return out;
 }
 
+// Matnli progress bar: ▰▰▰▱▱▱▱▱
+function progressBar(pct, width = 8) {
+  const filled = Math.max(0, Math.min(width, Math.round((pct / 100) * width)));
+  return "▰".repeat(filled) + "▱".repeat(width - filled);
+}
+
+// /stats natijasi: umumiy aniqlik + tayyorlik + streak + mavzu bo'yicha
+function statsText(userId, lang) {
+  const prefs = getPrefs(userId);
+  const { plang, level } = prefs;
+  const stats = getStats(userId, { plang, level });
+  if (stats.total === 0) return t(lang, "stats_none");
+
+  const trackLabel = PROG_LANGS[plang]?.label || plang;
+  const pass = levelPass(plang, level);
+  const ready = stats.percent >= pass;
+
+  let out =
+    `${t(lang, "stats_title")}\n\n` +
+    `${t(lang, "stats_track", trackLabel, level)}\n` +
+    `${t(lang, "stats_total", stats.total)}\n` +
+    `${t(lang, "stats_overall", progressBar(stats.percent), stats.percent, pass)}\n` +
+    `${ready ? t(lang, "stats_ready") : t(lang, "stats_notready", pass - stats.percent)}\n` +
+    `${t(lang, "stats_streak", stats.streak)}`;
+
+  const topics = PROG_LANGS[plang]?.topics || {};
+  const rows = Object.entries(stats.byTopic)
+    .map(([code, s]) => ({
+      name: topics[code]?.[lang] || code,
+      c: s.correct,
+      total: s.total,
+      pct: Math.round((s.correct / s.total) * 100),
+    }))
+    .sort((a, b) => a.pct - b.pct); // zaif mavzular tepada
+  if (rows.length) {
+    out += `\n\n${t(lang, "stats_by_topic")}\n`;
+    out += rows
+      .map((r) => t(lang, "stats_topic_line", progressBar(r.pct, 6), r.name, r.c, r.total, r.pct))
+      .join("\n");
+  }
+  return out;
+}
+
 // ---------- Buyruqlar ----------
 bot.start((ctx) =>
   ctx.reply(t(langOf(ctx), "welcome", ctx.from.first_name), {
@@ -371,6 +416,15 @@ async function beginGrade(ctx) {
 }
 
 bot.command("grade", (ctx) => beginGrade(ctx));
+
+function sendStats(ctx) {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  return ctx.reply(statsText(ctx.from.id, lang), { parse_mode: "HTML" });
+}
+
+bot.command("stats", (ctx) => sendStats(ctx));
 
 function sendTopicMenu(ctx) {
   const lang = langOf(ctx);
@@ -465,6 +519,11 @@ bot.action("mode:grade", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await beginGrade(ctx);
+});
+bot.action("mode:stats", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await sendStats(ctx);
 });
 
 bot.action(/^topic:(.+)$/, async (ctx) => {
@@ -580,6 +639,7 @@ const COMMANDS = {
     { command: "topic", description: "Mavzu bo'yicha mashq" },
     { command: "review", description: "Xatolar ustida ishlash" },
     { command: "grade", description: "Darajamni aniqlash (adaptiv test)" },
+    { command: "stats", description: "Statistikam va rivojim" },
     { command: "stop", description: "Joriy imtihonni to'xtatish" },
   ],
   en: [
@@ -589,6 +649,7 @@ const COMMANDS = {
     { command: "topic", description: "Practice by topic" },
     { command: "review", description: "Review your mistakes" },
     { command: "grade", description: "Assess my level (adaptive test)" },
+    { command: "stats", description: "My stats and progress" },
     { command: "stop", description: "Stop the current exam" },
   ],
 };
