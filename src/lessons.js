@@ -1,8 +1,8 @@
 // Mini-darslar katalogi (dasturlash tili bo'yicha).
-// Hozircha JavaScript; boshqa tarmoqlar keyin qo'shiladi (mexanizm tayyor).
 import javascript from "./lessons/javascript.js";
+import plsql from "./lessons/plsql.js";
 
-const LESSONS = { javascript };
+const LESSONS = { javascript, plsql };
 
 // Berilgan til uchun darsli mavzular ro'yxati (topic kalitlari)
 export function lessonTopics(plang) {
