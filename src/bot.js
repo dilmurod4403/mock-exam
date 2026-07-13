@@ -4,6 +4,7 @@ import {
   PROG_LANGS,
   ALL_QUESTIONS,
   shuffle,
+  shuffleOptions,
   pickQuestions,
   getPool,
   topicCounts,
@@ -368,7 +369,7 @@ async function beginExam(ctx, { mode, size, topic }) {
   if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
   const { plang, level } = prefs;
 
-  const questions = pickQuestions(size, { plang, level, topic });
+  const questions = pickQuestions(size, { plang, level, topic }).map(shuffleOptions);
   if (questions.length === 0) return ctx.reply(t(lang, "no_questions"));
 
   const session = startSession(ctx.from.id, { mode, questions, plang, level });
@@ -397,7 +398,7 @@ async function beginReview(ctx) {
   const pool = wrongIds.map((id) => byId.get(id)).filter(Boolean);
   if (pool.length === 0) return ctx.reply(t(lang, "no_review"));
 
-  const questions = shuffle(pool).slice(0, REVIEW_SIZE);
+  const questions = shuffle(pool).slice(0, REVIEW_SIZE).map(shuffleOptions);
   const session = startSession(ctx.from.id, { mode: "review", questions, plang, level });
   await ctx.reply(t(lang, "started", t(lang, "review_label"), questions.length), {
     parse_mode: "HTML",
@@ -432,7 +433,12 @@ async function beginPractice(ctx) {
 
   if (questions.length === 0) return ctx.reply(t(lang, "practice_done"));
 
-  const session = startSession(ctx.from.id, { mode: "practice", questions, plang, level });
+  const session = startSession(ctx.from.id, {
+    mode: "practice",
+    questions: questions.map(shuffleOptions),
+    plang,
+    level,
+  });
   await ctx.reply(t(lang, "started", t(lang, "practice_label"), questions.length), {
     parse_mode: "HTML",
   });
@@ -463,7 +469,7 @@ async function beginGrade(ctx) {
     grading,
   });
 
-  const first = pickGradeQuestion(pool, grading);
+  const first = shuffleOptions(pickGradeQuestion(pool, grading));
   markAsked(grading, first);
   session.questions.push(first);
 
@@ -632,8 +638,9 @@ async function handleSubmit(ctx) {
     if (!isFinished(session)) {
       const nextQ = pickGradeQuestion(session.pool, session.grading);
       if (nextQ) {
-        markAsked(session.grading, nextQ);
-        session.questions.push(nextQ);
+        const shown = shuffleOptions(nextQ);
+        markAsked(session.grading, shown);
+        session.questions.push(shown);
       } else {
         session.target = session.index; // savollar tugadi — hozir yakunlaymiz
       }

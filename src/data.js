@@ -92,6 +92,21 @@ export function shuffle(array) {
   return a;
 }
 
+// Tartibga bog'liq variantlar (masalan "All of the above") — aralashtirmaymiz
+const ORDER_DEPENDENT =
+  /\b(of the above|of the following|the above|the following|all of these|none of these)\b/i;
+
+// Savol variantlarini aralashtiradi va to'g'ri javob indekslarini qayta moslaydi.
+// Asl obyektni o'zgartirmaydi (nusxa qaytaradi); id va boshqa maydonlar saqlanadi.
+export function shuffleOptions(q) {
+  if (q.options.some((o) => ORDER_DEPENDENT.test(o))) return q; // xavfsiz — tegmaymiz
+  const order = shuffle(q.options.map((_, i) => i)); // yangi tartib (eski indekslar)
+  const options = order.map((i) => q.options[i]);
+  const pos = new Map(order.map((oldIdx, newIdx) => [oldIdx, newIdx]));
+  const correct = q.correct.map((c) => pos.get(c)).sort((a, b) => a - b);
+  return { ...q, options, correct };
+}
+
 // ---------- Tanlash ----------
 // plang + (ixtiyoriy) level + topic bo'yicha savollar to'plami
 export function getPool({ plang, level, topic } = {}) {
