@@ -10,12 +10,14 @@ const FILE = join(DATA_DIR, "store.json");
 // prefs:   { [userId]: { lang, plang, level } }
 // answers: [ {u,q,plang,level,topic,c,t} ]
 // srs:     { [userId]: { [questionId]: { box, due, plang, level, topic } } }  (Leitner)
-let db = { prefs: {}, answers: [], srs: {} };
+// grades:  { [userId]: [ {plang, bandKey, bandName, theta, t} ] }  (baholash tarixi)
+let db = { prefs: {}, answers: [], srs: {}, grades: {} };
 try {
   const loaded = JSON.parse(readFileSync(FILE, "utf8"));
   db.prefs = loaded.prefs || {};
   db.answers = loaded.answers || [];
   db.srs = loaded.srs || {};
+  db.grades = loaded.grades || {};
 } catch {
   // fayl yo'q yoki buzuq — bo'sh baza bilan boshlaymiz
 }
@@ -206,4 +208,20 @@ export function getDueCount(userId, opts = {}) {
 // Foydalanuvchi allaqachon ko'rgan (SRS holati bor) barcha savol id-lari
 export function getSeenIds(userId) {
   return new Set(Object.keys(db.srs[userId] || {}));
+}
+
+// ---------- Baholash tarixi ----------
+export function recordGrade(userId, { plang, bandKey, bandName, bandEmoji, theta }) {
+  const list = (db.grades[userId] ||= []);
+  list.push({ plang, bandKey, bandName, bandEmoji, theta, t: Date.now() });
+  schedule();
+}
+
+// Shu tarmoq bo'yicha oxirgi baho (yoki null)
+export function getLastGrade(userId, plang) {
+  const list = db.grades[userId] || [];
+  for (let i = list.length - 1; i >= 0; i--) {
+    if (list[i].plang === plang) return list[i];
+  }
+  return null;
 }

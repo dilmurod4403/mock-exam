@@ -84,3 +84,8 @@ export function nextGrade(band) {
   const i = GRADES.findIndex((g) => g.key === band.key);
   return i >= 0 && i < GRADES.length - 1 ? GRADES[i + 1] : null;
 }
+
+// Daraja tartib raqami (past → yuqori taqqoslash uchun)
+export function gradeRank(key) {
+  return GRADES.findIndex((g) => g.key === key);
+}

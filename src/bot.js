@@ -20,6 +20,7 @@ import {
   applyGradeAnswer,
   gradeFor,
   nextGrade,
+  gradeRank,
 } from "./grading.js";
 import {
   getPrefs,
@@ -32,6 +33,8 @@ import {
   getDueQuestionIds,
   getSeenIds,
   getDueCount,
+  recordGrade,
+  getLastGrade,
   flush,
 } from "./store.js";
 import {
@@ -279,7 +282,7 @@ async function sendBlocks(ctx, blocks, sep = "\n\n──────────
 }
 
 // grade rejimi natija kartasi: daraja + qiyinlik/mavzu tahlili + keyingi qadam
-function gradeCardText(session, lang) {
+function gradeCardText(session, lang, prev) {
   const st = session.grading;
   const band = gradeFor(st.theta);
   const trackLabel = PROG_LANGS[session.plang]?.label || session.plang;
@@ -310,6 +313,16 @@ function gradeCardText(session, lang) {
     : [...entries].sort((a, b) => a.pct - b.pct).slice(0, 2).map((e) => e.name);
   const focus = focusList.slice(0, 3).join(", ");
   out += `\n\n${next ? t(lang, "grade_next", next.name, focus) : t(lang, "grade_top", band.name)}`;
+
+  // Oldingi baho bilan taqqoslash (o'sishni ko'rsatadi)
+  if (prev && prev.plang === session.plang) {
+    const cur = gradeRank(band.key);
+    const was = gradeRank(prev.bandKey);
+    const arrow = cur > was ? "⬆️" : cur < was ? "⬇️" : "➡️";
+    const days = Math.max(0, Math.floor((Date.now() - prev.t) / 86400000));
+    out += `\n\n${t(lang, "grade_progress", prev.bandName, days, arrow)}`;
+  }
+
   out += `\n\n${t(lang, "grade_note")}`;
   return out;
 }
@@ -341,6 +354,11 @@ function statsText(userId, lang) {
 
   const due = getDueCount(userId, { plang, level });
   if (due > 0) out += `\n${t(lang, "stats_due", due)}`;
+
+  const lastGrade = getLastGrade(userId, plang);
+  if (lastGrade) {
+    out += `\n${t(lang, "stats_lastgrade", lastGrade.bandEmoji || "🎓", lastGrade.bandName)}`;
+  }
 
   const topics = PROG_LANGS[plang]?.topics || {};
   const rows = Object.entries(stats.byTopic)
@@ -802,10 +820,21 @@ bot.action("result", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
 
-  const headline =
-    session.mode === "grade" && session.grading
-      ? gradeCardText(session, lang)
-      : resultText(session, lang);
+  let headline;
+  if (session.mode === "grade" && session.grading) {
+    const band = gradeFor(session.grading.theta);
+    const prev = getLastGrade(ctx.from.id, session.plang); // yangi yozuvdan oldin
+    recordGrade(ctx.from.id, {
+      plang: session.plang,
+      bandKey: band.key,
+      bandName: band.name,
+      bandEmoji: band.emoji,
+      theta: Math.round(session.grading.theta),
+    });
+    headline = gradeCardText(session, lang, prev);
+  } else {
+    headline = resultText(session, lang);
+  }
   await ctx.reply(headline, { parse_mode: "HTML" });
 
   const blocks = mistakeBlocks(session, lang);

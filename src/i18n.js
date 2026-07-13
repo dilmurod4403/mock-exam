@@ -48,6 +48,9 @@ const S = {
       `➡️ <b>${name}</b> darajasiga chiqish uchun: ${topics} ustida ishlang va qiyinroq savollarni yeching. /review yordam beradi.`,
     grade_top: (name) => `🏆 Siz eng yuqori darajadasiz: <b>${name}</b>! Zo'r natija.`,
     grade_note: "ℹ️ Baho taxminiy — ko'proq yechsangiz, aniqroq bo'ladi.",
+    grade_progress: (prevName, days, arrow) =>
+      `📈 Oldingi baho: <b>${prevName}</b> (${days} kun oldin) ${arrow}`,
+    stats_lastgrade: (emoji, name) => `🎓 Oxirgi baho: <b>${emoji} ${name}</b>`,
     stats_none: "📭 Hali statistika yo'q. /exam yoki /quiz bilan boshlang!",
     stats_title: "🏆 <b>Sizning statistikangiz</b>",
     stats_track: (label, level) => `Yo'nalish: ${label} · ${level}`,
@@ -144,6 +147,9 @@ const S = {
       `➡️ To reach <b>${name}</b>: work on ${topics} and tackle harder questions. /review will help.`,
     grade_top: (name) => `🏆 You're at the top level: <b>${name}</b>! Excellent.`,
     grade_note: "ℹ️ This is an estimate — the more you answer, the more accurate it gets.",
+    grade_progress: (prevName, days, arrow) =>
+      `📈 Previous: <b>${prevName}</b> (${days} day(s) ago) ${arrow}`,
+    stats_lastgrade: (emoji, name) => `🎓 Last assessment: <b>${emoji} ${name}</b>`,
     stats_none: "📭 No stats yet. Start with /exam or /quiz!",
     stats_title: "🏆 <b>Your stats</b>",
     stats_track: (label, level) => `Track: ${label} · ${level}`,
