@@ -1,0 +1,106 @@
+[
+  {
+    "id": "oop-15",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass A {\n  static x = 1;\n}\nclass B extends A {}\nconsole.log(B.x);\n```",
+    "options": ["undefined", "1", "TypeError", "ReferenceError"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Statik xususiyatlar meros orqali sinf konstruktorlari zanjiri bo'ylab o'tadi. `B` `A` dan meros oladi, shuning uchun `B.x` `A.x` ni ko'radi → 1.",
+      "en": "Static properties are inherited through the chain of class constructors. `B` extends `A`, so `B.x` resolves to `A.x` → 1."
+    }
+  },
+  {
+    "id": "oop-16",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst obj = {\n  val: 42,\n  get() {\n    return () => this.val;\n  }\n};\nconsole.log(obj.get()());\n```",
+    "options": ["42", "undefined", "TypeError", "NaN"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Strelkali funksiya o'z `this`ini yaratilgan joyidan oladi. `obj.get()` chaqirilganda `this` = obj, shuning uchun qaytgan strelkali funksiya `obj.val` = 42 ni ko'radi.",
+      "en": "An arrow function takes `this` from where it is defined. When `obj.get()` is called, `this` = obj, so the returned arrow function sees `obj.val` = 42."
+    }
+  },
+  {
+    "id": "oop-17",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst obj = { a: { b: null } };\nconsole.log(obj?.a?.b?.c ?? \"x\");\n```",
+    "options": ["null", "undefined", "\"x\"", "TypeError"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`b` — null, shuning uchun `b?.c` qisqa tutashuv bilan `undefined` qaytaradi (TypeError bo'lmaydi). `??` chap tomon null/undefined bo'lganda o'ng tomonni beradi → \"x\".",
+      "en": "`b` is null, so `b?.c` short-circuits to `undefined` (no TypeError). `??` returns the right side when the left is null/undefined → \"x\"."
+    }
+  },
+  {
+    "id": "as-15",
+    "topic": "async",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "In what order are the values logged?\n\n```js\nconsole.log(\"A\");\nsetTimeout(() => console.log(\"B\"), 0);\nPromise.resolve().then(() => console.log(\"C\"));\nconsole.log(\"D\");\n```",
+    "options": ["A B C D", "A D C B", "A D B C", "A C D B"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Avval sinxron kod: A, D. Keyin mikro-vazifalar (Promise.then): C. So'ngra makro-vazifalar (setTimeout): B. Mikro-vazifalar har doim makro-vazifalardan oldin bajariladi → A D C B.",
+      "en": "Synchronous code runs first: A, D. Then microtasks (Promise.then): C. Then macrotasks (setTimeout): B. Microtasks always run before macrotasks → A D C B."
+    }
+  },
+  {
+    "id": "as-16",
+    "topic": "async",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nasync function f() {\n  return 1;\n}\nconsole.log(f() instanceof Promise);\n```",
+    "options": ["false", "true", "1", "TypeError"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`async` funksiya har doim Promise qaytaradi — hatto oddiy qiymat return qilinsa ham u Promise ichiga o'raladi. Shuning uchun `f() instanceof Promise` → true.",
+      "en": "An `async` function always returns a Promise — even a plain returned value is wrapped in one. So `f() instanceof Promise` → true."
+    }
+  },
+  {
+    "id": "adv-15",
+    "topic": "advanced",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nfunction counter() {\n  let c = 0;\n  return () => ++c;\n}\nconst inc = counter();\nconsole.log(inc() + inc());\n```",
+    "options": ["2", "3", "1", "NaN"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Closure `c` o'zgaruvchisini saqlaydi. Birinchi `inc()` → 1, ikkinchisi → 2. `1 + 2 = 3`.",
+      "en": "The closure keeps the variable `c` alive. The first `inc()` → 1, the second → 2. `1 + 2 = 3`."
+    }
+  },
+  {
+    "id": "adv-16",
+    "topic": "advanced",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nfunction* g() {\n  yield 1;\n  yield 2;\n}\nconsole.log([...g()].length);\n```",
+    "options": ["0", "1", "2", "Infinity"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Generator iteratsiya qilinadigan obyekt qaytaradi. Spread (`...`) barcha `yield` qiymatlarini yig'adi: [1, 2]. Uzunligi 2.",
+      "en": "A generator returns an iterable. Spread (`...`) collects all yielded values: [1, 2]. Its length is 2."
+    }
+  },
+  {
+    "id": "adv-17",
+    "topic": "advanced",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconst [a = 1, b = 2] = [undefined, 5];\nconsole.log(a + b);\n```",
+    "options": ["3", "6", "7", "NaN"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Destrukturizatsiyada standart qiymat faqat element `undefined` bo'lganda ishlaydi. `a` = undefined → 1, `b` = 5 (standart ishlamaydi). `1 + 5 = 6`.",
+      "en": "In destructuring, a default value applies only when the element is `undefined`. `a` = undefined → 1, `b` = 5 (default not used). `1 + 5 = 6`."
+    }
+  }
+]

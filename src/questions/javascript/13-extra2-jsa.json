@@ -1,0 +1,98 @@
+[
+  {
+    "id": "intro-19",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "Which of the following is NOT a JavaScript primitive type?",
+    "options": ["string", "symbol", "object", "boolean"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Primitiv tiplar: string, number, bigint, boolean, undefined, null, symbol. `object` esa primitiv emas — u murakkab (reference) tip.",
+      "en": "The primitive types are string, number, bigint, boolean, undefined, null and symbol. `object` is not primitive — it is a reference (complex) type."
+    }
+  },
+  {
+    "id": "vars-27",
+    "topic": "variables",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet x;\nconsole.log(typeof x);\n```",
+    "options": ["null", "undefined", "object", "ReferenceError"],
+    "correct": [1],
+    "explanation": {
+      "uz": "E'lon qilingan, lekin qiymat berilmagan o'zgaruvchining qiymati `undefined`, va `typeof undefined` \"undefined\" satrini qaytaradi.",
+      "en": "A variable that is declared but not assigned holds `undefined`, and `typeof undefined` returns the string \"undefined\"."
+    }
+  },
+  {
+    "id": "op-24",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(1 + 2 + \"3\");\n```",
+    "options": ["\"123\"", "\"33\"", "6", "\"6\""],
+    "correct": [1],
+    "explanation": {
+      "uz": "`+` chapdan o'ngga bajariladi. `1 + 2` → 3 (son), keyin `3 + \"3\"` da son satrga ulanadi → \"33\".",
+      "en": "`+` is evaluated left to right. `1 + 2` → 3 (number), then `3 + \"3\"` concatenates the number to the string → \"33\"."
+    }
+  },
+  {
+    "id": "cf-24",
+    "topic": "control-flow",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nlet i = 0;\nfor (; i < 3; ) {\n  i++;\n}\nconsole.log(i);\n```",
+    "options": ["2", "3", "Infinite loop", "undefined"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`for` siklining init va update qismlari ixtiyoriy. Tanada `i++` bajariladi, sikl `i < 3` yolg'on bo'lganda (i=3) to'xtaydi → 3.",
+      "en": "The init and update parts of a `for` loop are optional. `i++` runs in the body, and the loop stops when `i < 3` is false (i=3) → 3."
+    }
+  },
+  {
+    "id": "col-24",
+    "topic": "collections",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconst a = [1, 2, 3, 4];\nconsole.log(a.slice(1, 3).length);\n```",
+    "options": ["3", "1", "2", "4"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`slice(1, 3)` 1-indeksdan boshlab 3-indeksgacha (uni o'z ichiga olmaydi) — ya'ni [2, 3]. Uzunligi 2. `slice` asl massivni o'zgartirmaydi.",
+      "en": "`slice(1, 3)` returns elements from index 1 up to (but not including) index 3 — that is [2, 3], length 2. `slice` does not mutate the original array."
+    }
+  },
+  {
+    "id": "fn-24",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfunction f(a, b = a * 2) {\n  return b;\n}\nconsole.log(f(3));\n```",
+    "options": ["NaN", "undefined", "6", "3"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`b` berilmagani uchun standart qiymat ishlaydi: `b = a * 2 = 3 * 2 = 6`. Standart parametr o'zidan oldingi parametrlarga murojaat qila oladi.",
+      "en": "Since `b` is not passed, its default value is used: `b = a * 2 = 3 * 2 = 6`. A default parameter can reference earlier parameters."
+    }
+  },
+  {
+    "id": "err-18",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What is logged?\n\n```js\ntry {\n  null.foo;\n} catch (e) {\n  console.log(e.constructor.name);\n}\n```",
+    "options": ["ReferenceError", "TypeError", "SyntaxError", "Error"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`null` yoki `undefined`ning xususiyatiga murojaat qilish `TypeError` keltirib chiqaradi. Xato obyektining konstruktori — `TypeError`.",
+      "en": "Reading a property of `null` or `undefined` throws a `TypeError`. The thrown error's constructor is `TypeError`."
+    }
+  },
+  {
+    "id": "col-25",
+    "topic": "collections",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconst o = { a: 1, b: 2, c: 3 };\nconsole.log(Object.keys(o).length);\n```",
+    "options": ["3", "6", "undefined", "1"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`Object.keys(o)` obyektning o'z (own, enumerable) kalitlari massivini qaytaradi: [\"a\", \"b\", \"c\"]. Uning uzunligi 3.",
+      "en": "`Object.keys(o)` returns an array of the object's own enumerable keys: [\"a\", \"b\", \"c\"]. Its length is 3."
+    }
+  }
+]

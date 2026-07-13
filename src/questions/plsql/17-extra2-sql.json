@@ -1,0 +1,116 @@
+[
+  {
+    "id": "sq-10",
+    "topic": "queries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which clause is processed FIRST in the logical order of evaluation of a SELECT statement?",
+    "options": ["SELECT", "WHERE", "FROM", "ORDER BY"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Mantiqiy ishlov tartibi: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY. Shuning uchun `FROM` birinchi bo'lib ishlanadi. Aynan shu sabab ustun aliaslarini WHERE da ishlatib bo'lmaydi, lekin ORDER BY da mumkin.",
+      "en": "The logical processing order is: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY. So `FROM` is processed first. This is why column aliases can't be used in WHERE but can be in ORDER BY."
+    }
+  },
+  {
+    "id": "sq-11",
+    "topic": "queries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which rows does this WHERE clause match?\n\n```sql\nSELECT ename FROM emp WHERE ename LIKE '_A%';\n```",
+    "options": [
+      "Names whose second character is 'A'",
+      "Names that start with 'A'",
+      "Names that contain 'A' anywhere",
+      "Names whose second character is '_' followed by 'A'"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`_` — aynan bitta ixtiyoriy belgi, `%` — nol yoki undan ko'p belgi. `'_A%'` demak: bitta belgi, keyin 'A', keyin istalgan qolgan qism — ya'ni ikkinchi belgisi 'A' bo'lgan nomlar.",
+      "en": "`_` matches exactly one character, `%` matches zero or more. `'_A%'` means: one character, then 'A', then anything — i.e. names whose second character is 'A'."
+    }
+  },
+  {
+    "id": "sf-11",
+    "topic": "functions",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which function returns the first NON-NULL expression from a list of any number of arguments?",
+    "options": ["NVL", "NVL2", "COALESCE", "DECODE"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`COALESCE(e1, e2, ...)` ro'yxatdagi birinchi NULL bo'lmagan ifodani qaytaradi va istalgancha argument qabul qiladi. `NVL` faqat 2 ta argument oladi, `NVL2` esa 3 ta.",
+      "en": "`COALESCE(e1, e2, ...)` returns the first non-NULL expression and accepts any number of arguments. `NVL` takes only 2 arguments and `NVL2` takes 3."
+    }
+  },
+  {
+    "id": "sa-09",
+    "topic": "aggregates",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Given a table where some rows have a NULL commission_pct, which statement is TRUE?\n\n```sql\nSELECT COUNT(*), COUNT(commission_pct) FROM employees;\n```",
+    "options": [
+      "Both count all rows including NULLs",
+      "COUNT(*) counts all rows; COUNT(commission_pct) ignores NULLs",
+      "Both ignore NULLs",
+      "COUNT(*) ignores NULLs; COUNT(commission_pct) counts all rows"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`COUNT(*)` barcha qatorlarni (shu jumladan NULLlarni) sanaydi. `COUNT(ustun)` esa faqat NULL bo'lmagan qiymatlarni sanaydi, shuning uchun natijasi kamroq bo'lishi mumkin.",
+      "en": "`COUNT(*)` counts all rows (including NULLs). `COUNT(column)` counts only non-NULL values, so its result can be smaller."
+    }
+  },
+  {
+    "id": "sj-09",
+    "topic": "joins",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which join returns ALL rows from the left table, plus matching rows from the right table (NULLs where there is no match)?",
+    "options": ["INNER JOIN", "LEFT OUTER JOIN", "RIGHT OUTER JOIN", "CROSS JOIN"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`LEFT OUTER JOIN` chap jadvalning barcha qatorlarini saqlaydi; o'ng jadvalda mos yo'q bo'lsa, o'ng ustunlar NULL bilan to'ldiriladi. `INNER JOIN` faqat mos qatorlarni qaytaradi.",
+      "en": "`LEFT OUTER JOIN` keeps every row of the left table; where there is no match on the right, the right columns are filled with NULLs. `INNER JOIN` returns only matching rows."
+    }
+  },
+  {
+    "id": "ss-09",
+    "topic": "subqueries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which set operator combines the results of two queries and REMOVES duplicate rows?",
+    "options": ["UNION ALL", "UNION", "INTERSECT", "MINUS"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`UNION` ikki so'rov natijasini birlashtiradi va takror qatorlarni olib tashlaydi (natijani saralaydi ham). `UNION ALL` esa takrorlarni saqlaydi va tezroq ishlaydi.",
+      "en": "`UNION` combines the results of two queries and removes duplicate rows (and also sorts the result). `UNION ALL` keeps duplicates and is faster."
+    }
+  },
+  {
+    "id": "sd-09",
+    "topic": "dml",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which statement permanently saves the DML changes of the current transaction and makes them visible to other sessions?",
+    "options": ["SAVEPOINT", "COMMIT", "ROLLBACK", "SET TRANSACTION"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`COMMIT` joriy tranzaksiyadagi barcha o'zgarishlarni doimiy saqlaydi va boshqa sessiyalarga ko'rinadigan qiladi. `ROLLBACK` esa o'zgarishlarni bekor qiladi.",
+      "en": "`COMMIT` permanently saves all changes of the current transaction and makes them visible to other sessions. `ROLLBACK` undoes the changes instead."
+    }
+  },
+  {
+    "id": "sl-10",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which constraint prevents duplicate values in a column but still permits NULL values?",
+    "options": ["PRIMARY KEY", "UNIQUE", "NOT NULL", "CHECK"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`UNIQUE` cheklovi takror qiymatlarga yo'l qo'ymaydi, lekin NULL qiymatlarga ruxsat beradi. `PRIMARY KEY` esa ham noyob, ham NOT NULL bo'lishini talab qiladi.",
+      "en": "A `UNIQUE` constraint disallows duplicate values but still permits NULLs. A `PRIMARY KEY` requires values to be both unique and NOT NULL."
+    }
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "id": "pb-10",
+    "topic": "blocks",
+    "difficulty": "easy",
+    "levels": ["1Z0-149"],
+    "question": "Which operator is used for assignment in PL/SQL?",
+    "options": ["=", ":=", "==", "=>"],
+    "correct": [1],
+    "explanation": {
+      "uz": "PL/SQL da qiymat berish `:=` operatori bilan bajariladi (masalan `v := 10;`). `=` esa faqat taqqoslash (tenglik) uchun ishlatiladi.",
+      "en": "Assignment in PL/SQL is done with the `:=` operator (e.g. `v := 10;`). `=` is used only for comparison (equality)."
+    }
+  },
+  {
+    "id": "pc-10",
+    "topic": "control",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "In what order are the values printed?\n\n```sql\nBEGIN\n  FOR i IN REVERSE 1..3 LOOP\n    DBMS_OUTPUT.PUT_LINE(i);\n  END LOOP;\nEND;\n```",
+    "options": ["1, 2, 3", "3, 2, 1", "Nothing (error)", "3, 3, 3"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`REVERSE` ishlatilsa ham diapazon `1..3` (kichikdan kattaga) yoziladi, lekin sikl teskari yo'nalishda kechadi: 3, 2, 1. `REVERSE 3..1` esa umuman ishlamas edi.",
+      "en": "Even with `REVERSE`, the range is still written low..high as `1..3`, but the loop iterates in reverse: 3, 2, 1. Writing `REVERSE 3..1` would not iterate at all."
+    }
+  },
+  {
+    "id": "pcu-09",
+    "topic": "cursors",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which cursor attribute returns the number of rows fetched so far (or affected by the most recent DML)?",
+    "options": ["%FOUND", "%NOTFOUND", "%ROWCOUNT", "%ISOPEN"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`%ROWCOUNT` hozirgacha olingan (fetch qilingan) qatorlar sonini yoki oxirgi DML ta'sir qilgan qatorlar sonini qaytaradi. `%FOUND`/`%NOTFOUND` mantiqiy (boolean) qiymat qaytaradi.",
+      "en": "`%ROWCOUNT` returns the number of rows fetched so far (or affected by the most recent DML). `%FOUND`/`%NOTFOUND` return a boolean instead."
+    }
+  },
+  {
+    "id": "pe-10",
+    "topic": "exceptions",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which predefined exception is raised when a `SELECT ... INTO` returns NO rows?",
+    "options": ["NO_DATA_FOUND", "TOO_MANY_ROWS", "VALUE_ERROR", "INVALID_CURSOR"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`SELECT ... INTO` hech qanday qator qaytarmasa `NO_DATA_FOUND` ko'tariladi. Agar bittadan ko'p qator qaytsa esa `TOO_MANY_ROWS` ko'tariladi.",
+      "en": "When a `SELECT ... INTO` returns no rows, `NO_DATA_FOUND` is raised. If it returns more than one row, `TOO_MANY_ROWS` is raised instead."
+    }
+  },
+  {
+    "id": "ps-10",
+    "topic": "subprograms",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which parameter mode passes a value INTO a subprogram and also returns a (possibly modified) value back to the caller?",
+    "options": ["IN", "OUT", "IN OUT", "OUT NOCOPY"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`IN OUT` rejimi chaqiruvchidan qiymatni ichkariga uzatadi va o'zgartirilgan qiymatni orqaga qaytaradi. `IN` — faqat o'qish, `OUT` — faqat qaytarish (kirishda qiymati NULL).",
+      "en": "The `IN OUT` mode passes a value in from the caller and returns a (possibly modified) value back. `IN` is read-only, and `OUT` only returns (its incoming value is NULL)."
+    }
+  },
+  {
+    "id": "ps-11",
+    "topic": "subprograms",
+    "difficulty": "easy",
+    "levels": ["1Z0-149"],
+    "question": "What is the key difference between a stored procedure and a stored function in PL/SQL?",
+    "options": [
+      "A function MUST return a value; a procedure need not",
+      "A procedure must return a value; a function need not",
+      "Functions cannot accept parameters",
+      "Procedures cannot be stored in the database"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Funksiya `RETURN` orqali albatta qiymat qaytarishi shart va SQL ifodalarida ishlatilishi mumkin. Protsedura esa qiymat qaytarishi shart emas (natijani OUT parametrlar orqali beradi).",
+      "en": "A function must return a value via `RETURN` and can be used in SQL expressions. A procedure need not return a value (it passes results back through OUT parameters)."
+    }
+  },
+  {
+    "id": "pt-09",
+    "topic": "triggers",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "In a row-level BEFORE INSERT trigger, which pseudorecord holds the values about to be inserted?",
+    "options": [":OLD", ":NEW", ":ROW", ":CURRENT"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Qator darajasidagi triggerda `:NEW` qo'shilayotgan/yangilanayotgan yangi qiymatlarni tutadi. BEFORE triggerda `:NEW` qiymatlarini o'zgartirish ham mumkin. INSERT da `:OLD` NULL bo'ladi.",
+      "en": "In a row-level trigger, `:NEW` holds the new values being inserted/updated. In a BEFORE trigger you can even modify `:NEW` values. On INSERT, `:OLD` is NULL."
+    }
+  },
+  {
+    "id": "pk-10",
+    "topic": "collections",
+    "difficulty": "medium",
+    "levels": ["1Z0-149"],
+    "question": "Which PL/SQL collection type is sparse, unbounded, and indexed by PLS_INTEGER or VARCHAR2, and cannot be stored in a database column?",
+    "options": ["Nested table", "VARRAY", "Associative array (INDEX BY table)", "Record"],
+    "correct": [2],
+    "explanation": {
+      "uz": "Assotsiativ massiv (INDEX BY jadval) siyrak (sparse), chegarasiz va PLS_INTEGER yoki VARCHAR2 kalit bilan indekslanadi; u faqat PL/SQL ichida yashaydi, jadval ustunida saqlanmaydi. Nested table va VARRAY esa saqlanishi mumkin.",
+      "en": "An associative array (INDEX BY table) is sparse, unbounded and indexed by PLS_INTEGER or VARCHAR2; it lives only inside PL/SQL and cannot be stored in a table column. Nested tables and VARRAYs can be stored."
+    }
+  }
+]
