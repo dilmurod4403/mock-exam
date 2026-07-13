@@ -136,10 +136,19 @@ function menuKeyboard(lang) {
 function questionBody(session, lang) {
   const q = currentQuestion(session);
   const total = session.target ?? session.questions.length;
-  const header = t(lang, "question_header", session.index + 1, total, isMulti(q));
+  const answered = session.index;
+  const correct = session.answers.filter((a) => a.isCorrect).length;
+  const header = t(lang, "question_header", answered + 1, total, isMulti(q));
+  const progress = t(
+    lang,
+    "progress_line",
+    progressBar(Math.round((answered / total) * 100)),
+    correct,
+    answered - correct
+  );
   const body = renderText(q.question);
   const opts = q.options.map((o, i) => `${LETTERS[i]}) ${renderText(o)}`).join("\n");
-  return `${header}\n\n${body}\n\n${opts}`;
+  return `${header}\n${progress}\n\n${body}\n\n${opts}`;
 }
 
 function optionKeyboard(session, lang) {
@@ -151,6 +160,10 @@ function optionKeyboard(session, lang) {
     return [Markup.button.callback(label, multi ? `toggle:${qi}:${i}` : `pick:${qi}:${i}`)];
   });
   if (multi) rows.push([Markup.button.callback(t(lang, "confirm_btn"), `done:${qi}`)]);
+  rows.push([
+    Markup.button.callback(t(lang, "btn_skip"), `skip:${qi}`),
+    Markup.button.callback(t(lang, "btn_stop"), "stop"),
+  ]);
   return Markup.inlineKeyboard(rows);
 }
 
@@ -601,6 +614,7 @@ async function handleSubmit(ctx) {
   const lang = langOf(ctx);
   const q = currentQuestion(session);
   const picked = [...session.selected].sort((a, b) => a - b);
+  const skipped = picked.length === 0; // bo'sh javob = o'tkazildi
   const isCorrect = submitAnswer(session);
   const answerInfo = {
     questionId: q.id,
@@ -626,7 +640,9 @@ async function handleSubmit(ctx) {
     }
   }
 
-  await ctx.answerCbQuery(isCorrect ? t(lang, "correct_toast") : t(lang, "wrong_toast"));
+  await ctx.answerCbQuery(
+    skipped ? t(lang, "skipped_toast") : isCorrect ? t(lang, "correct_toast") : t(lang, "wrong_toast")
+  );
   await afterAnswer(ctx, session, q, picked, isCorrect, lang);
 }
 
@@ -646,6 +662,25 @@ bot.action(/^done:(\d+)$/, async (ctx) => {
   if (isStale(ctx, session)) return ctx.answerCbQuery(t(lang, "stale_answer"));
   if (session.selected.size === 0) return ctx.answerCbQuery(t(lang, "select_one"));
   await handleSubmit(ctx);
+});
+
+// Savolni o'tkazish: bo'sh javob (xato deb yoziladi, izoh ko'rsatiladi)
+bot.action(/^skip:(\d+)$/, async (ctx) => {
+  const session = getSession(ctx.from.id);
+  const lang = langOf(ctx);
+  if (!session) return ctx.answerCbQuery(t(lang, "session_not_found"));
+  if (isStale(ctx, session)) return ctx.answerCbQuery(t(lang, "stale_answer"));
+  session.selected = new Set();
+  await handleSubmit(ctx);
+});
+
+// Imtihonni to'xtatish (tugma orqali) — sessiyani yopadi va menyuni ko'rsatadi
+bot.action("stop", async (ctx) => {
+  const lang = langOf(ctx);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  endSession(ctx.from.id);
+  await ctx.reply(t(lang, "stopped"), { parse_mode: "HTML", ...menuKeyboard(lang) });
 });
 
 bot.action("next", async (ctx) => {

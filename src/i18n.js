@@ -63,6 +63,10 @@ const S = {
     choose_topic: "Qaysi mavzu bo'yicha mashq qilamiz?",
     question_header: (num, total, multi) =>
       `<b>Savol ${num}/${total}</b>${multi ? "  <i>(bir nechta to'g'ri javob)</i>" : ""}`,
+    progress_line: (bar, correct, wrong) => `${bar}  ✅ ${correct} · ❌ ${wrong}`,
+    btn_skip: "⏭ O'tkazish",
+    btn_stop: "⏹ To'xtatish",
+    skipped_toast: "O'tkazildi ⏭",
     confirm_btn: "✅ Javobni tasdiqlash",
     correct_toast: "To'g'ri ✅",
     wrong_toast: "Xato ❌",
@@ -148,6 +152,10 @@ const S = {
     choose_topic: "Which topic do you want to practice?",
     question_header: (num, total, multi) =>
       `<b>Question ${num}/${total}</b>${multi ? "  <i>(multiple correct answers)</i>" : ""}`,
+    progress_line: (bar, correct, wrong) => `${bar}  ✅ ${correct} · ❌ ${wrong}`,
+    btn_skip: "⏭ Skip",
+    btn_stop: "⏹ Stop",
+    skipped_toast: "Skipped ⏭",
     confirm_btn: "✅ Confirm answer",
     correct_toast: "Correct ✅",
     wrong_toast: "Wrong ❌",
