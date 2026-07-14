@@ -1,0 +1,218 @@
+[
+  {
+    "id": "pf-11",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "For which kind of column is a BITMAP index most suitable?",
+    "options": [
+      "A high-cardinality column (many distinct values) in an OLTP system",
+      "A low-cardinality column (few distinct values) in a read-mostly / data-warehouse system",
+      "A primary key",
+      "Any frequently updated column"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Bitmap indeks kam kardinallikli (kam xil qiymatли, masalan jins, holat) ustunlar va ko'p o'qiladigan (data warehouse) tizimlar uchun eng mos. OLTP'да yozuvлар ko'p bo'lсa, bitmap lock muammosi kelib chiqadi — u yerда B-tree afzal.",
+      "en": "A bitmap index suits low-cardinality columns (few distinct values, e.g. gender, status) in read-mostly / data-warehouse systems. In OLTP with frequent writes, bitmap locking is a problem — a B-tree is preferred there."
+    }
+  },
+  {
+    "id": "pf-12",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Why might this query NOT use the index on `name`?\n\n```sql\nSELECT * FROM emp WHERE UPPER(name) = 'ALI';\n```",
+    "options": [
+      "Indexes never work with WHERE",
+      "Applying a function to an indexed column disables the normal index (unless a function-based index exists)",
+      "UPPER is not a valid function",
+      "The table is too small"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Indekslangan ustunga funksiya qo'llaganда (UPPER(name)) oddiy indeks ishlamaydi — optimizer full scan qiladi. Yechim: shu ifoda uchun function-based index yaratish yoki so'rovни qayta yozish.",
+      "en": "Wrapping an indexed column in a function (UPPER(name)) prevents the normal index from being used — the optimizer does a full scan. Fix: create a function-based index on that expression, or rewrite the query."
+    }
+  },
+  {
+    "id": "pf-13",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "You have a composite index on (last_name, first_name). Which query can use it MOST efficiently?",
+    "options": [
+      "WHERE first_name = 'Ali'",
+      "WHERE last_name = 'Valiyev'",
+      "WHERE UPPER(last_name) = 'VALIYEV'",
+      "A query with no WHERE clause"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Kompozit indeksда BOSHLOVCHI ustun (last_name) shart bo'lsa, indeks samarali ishlaydi. Faqat first_name bo'yicha qidiruv boshlovchi ustunни o'tkazib yuboradi (index skip scan bundan istisno, lekin cheklangan).",
+      "en": "A composite index works efficiently when the LEADING column (last_name) is in the predicate. Searching by first_name alone skips the leading column (index skip scan is an exception, but limited)."
+    }
+  },
+  {
+    "id": "pf-14",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "When is a FULL TABLE SCAN often BETTER than using an index?",
+    "options": [
+      "When the query returns a small number of rows",
+      "When the query returns a large percentage of the table's rows",
+      "Never — indexes are always faster",
+      "Only for primary key lookups"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "So'rov jadvalning katta qismini (masalan >5-10%) qaytarsa, full scan indeks orqali bitta-bitta o'qishдан tezroq bo'ladi (multiblock read). Indeks kam satr qaytarilганда afzal.",
+      "en": "If a query returns a large fraction of the table (e.g. >5-10%), a full scan (multiblock reads) is often faster than many single-row index lookups. Indexes win when few rows are returned."
+    }
+  },
+  {
+    "id": "pf-15",
+    "topic": "performance",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is a downside of having many indexes on a table?",
+    "options": [
+      "SELECT queries become slower",
+      "INSERT/UPDATE/DELETE become slower because every index must be maintained",
+      "The table uses less storage",
+      "There is no downside"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Indekslar o'qishни tezlashtiradi, lekin har DML (INSERT/UPDATE/DELETE) da barcha tegishли indekslar ham yangilanishi kerak — bu yozishни sekinlashtiradi va joy oladi. Shuning uchun kerakли indekslarни tanlab yaratish kerak.",
+      "en": "Indexes speed up reads, but every DML (INSERT/UPDATE/DELETE) must also maintain all relevant indexes — slowing writes and using space. So create only the indexes you need."
+    }
+  },
+  {
+    "id": "pf-16",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is a FUNCTION-BASED index used for?",
+    "options": [
+      "Indexing a whole table",
+      "Indexing the result of an expression/function so queries using that expression can use the index",
+      "Replacing primary keys",
+      "Speeding up INSERTs"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Function-based index ifoda/funksiya natijasиni indekslaydi — masalan CREATE INDEX ... ON emp(UPPER(name)). Shundан so'ng WHERE UPPER(name)=... so'rovi indeksdан foydalana oladi.",
+      "en": "A function-based index indexes the result of an expression/function — e.g. CREATE INDEX ... ON emp(UPPER(name)). Then WHERE UPPER(name)=... can use the index."
+    }
+  },
+  {
+    "id": "pf-17",
+    "topic": "performance",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is an optimizer HINT, e.g. /*+ INDEX(e emp_idx) */ ?",
+    "options": [
+      "A comment ignored by Oracle",
+      "An instruction that influences the optimizer's plan choice (e.g. forcing an index)",
+      "A syntax error",
+      "A way to create an index"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Hint — optimizer'ga reja tanlashда ta'sir qiladigan maxsus izoh (/*+ ... */). Masalan, ma'lum indeksни ishlatishга majbur qiladi. Ehtiyotkorlik bilan ishlatish kerak — statistика yaxshi bo'lsa, CBO odatда o'zi to'g'ri tanlaydi.",
+      "en": "A hint is a special comment (/*+ ... */) that influences the optimizer's plan choice — e.g. forcing a specific index. Use sparingly — with good statistics, the CBO usually chooses well on its own."
+    }
+  },
+  {
+    "id": "pf-18",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "How does PARTITIONING a large table improve query performance?",
+    "options": [
+      "It duplicates the data",
+      "Partition pruning lets the optimizer scan only the relevant partitions instead of the whole table",
+      "It removes all indexes",
+      "It compresses every row"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Katta jadvalни bo'laklarga (partition) ajratsak, so'rov shartиga mos partition pruning tufayli optimizer faqat kerakли bo'lakларни o'qiydi — butun jadvalни emas. Bu I/O ni keskin kamaytiradi.",
+      "en": "Splitting a large table into partitions lets partition pruning read only the relevant partitions matching the query, not the whole table. This sharply cuts I/O."
+    }
+  },
+  {
+    "id": "pf-19",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "How does a MATERIALIZED VIEW differ from a normal VIEW for performance?",
+    "options": [
+      "There is no difference",
+      "A materialized view STORES precomputed results on disk (fast reads); a normal view re-runs its query each time",
+      "A normal view stores data; a materialized view does not",
+      "Materialized views cannot be indexed"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Materialized view so'rov natijasиni diskда SAQLAYDI (oldindan hisoblab) — takroriy og'ir hisob-kitoblар (masalan agregatlar) tez o'qiladi. Oddiy view esa har murojaатда asosий so'rovni qайта bajaradi. Materialized view yangilanib turishи (refresh) kerak.",
+      "en": "A materialized view STORES precomputed results on disk — heavy repeated computations (e.g. aggregates) are read fast. A normal view re-runs its query each time. A materialized view must be refreshed to stay current."
+    }
+  },
+  {
+    "id": "pf-20",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Which WHERE predicate is 'sargable' (index-friendly)?",
+    "options": [
+      "WHERE TRUNC(hire_date) = DATE '2020-01-01'",
+      "WHERE hire_date >= DATE '2020-01-01' AND hire_date < DATE '2020-01-02'",
+      "WHERE SUBSTR(name,1,1) = 'A'",
+      "WHERE salary * 12 > 60000"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Sargable predikat — indekslangan ustunни funksiyaга o'ramaydigan shart. Ustunga funksiya (TRUNC, SUBSTR) yoki arifmetika qo'llasak, indeks ishlamaydi. Diapazон (>= ... < ...) ko'rinishда yozсak, indeks ishlaydi.",
+      "en": "A sargable predicate doesn't wrap the indexed column in a function. Applying a function (TRUNC, SUBSTR) or arithmetic to the column disables the index. Rewriting as a range (>= ... < ...) keeps the index usable."
+    }
+  },
+  {
+    "id": "pf-21",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "To diagnose overall database performance and find the biggest bottlenecks, a DBA typically looks at:",
+    "options": [
+      "The alert log only",
+      "AWR/ASH reports and wait events (V$ views)",
+      "The DUAL table",
+      "The listener log"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "DBA umumiy unumdorlikни AWR/ASH hisobotlari va kutish hodisalari (wait events, V$SESSION/V$SYSTEM_EVENT) orqali tahlил qiladi — qayси resurs (CPU, I/O, lock) eng ko'p kutish keltirayotganини topadi.",
+      "en": "A DBA diagnoses overall performance via AWR/ASH reports and wait events (V$SESSION/V$SYSTEM_EVENT) — finding which resource (CPU, I/O, locks) causes the most waiting."
+    }
+  },
+  {
+    "id": "pf-22",
+    "topic": "performance",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "For checking 'does a matching row exist in another table', which is often the most efficient?",
+    "options": [
+      "A correlated EXISTS subquery (stops at the first match)",
+      "COUNT(*) > 0 in a subquery",
+      "Selecting all rows and counting in the app",
+      "A CROSS JOIN"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Mavjudlikни tekshirishда `EXISTS` odatда samarali — u BIRINCHI mos satr topilganда to'xtaydi, hammasини sanamaydi. COUNT(*) esa barcha mos satrlarни sanashга majbur bo'ladi (keraksiz ish).",
+      "en": "For existence checks, `EXISTS` is usually efficient — it stops at the FIRST matching row instead of counting all. COUNT(*) forces counting every match (wasted work)."
+    }
+  }
+]
