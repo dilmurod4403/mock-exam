@@ -42,6 +42,10 @@ for (const q of ALL_QUESTIONS) {
   for (const lvl of q.levels || []) {
     if (!cfg.levels[lvl]) err(`${where} noma'lum daraja: "${lvl}"`);
   }
+
+  // O'zbekcha matn lotin yozuvda bo'lishi kerak — kirill harflar aralashmasin
+  const cyr = JSON.stringify(q).match(/[Ѐ-ӿ]/g);
+  if (cyr) err(`${where} kirill harf(lar) aralashgan: ${[...new Set(cyr)].join(" ")}`);
 }
 
 function err(msg) {

@@ -44,7 +44,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`OUT` parametr protsedura ichida hisoblangan qiymatni chaqiruvchiga qaytaradi. Chaqirishда unga o'zgaruvchi (l-value) uzatilishi kerak.",
+      "uz": "`OUT` parametr protsedura ichida hisoblangan qiymatni chaqiruvchiga qaytaradi. Chaqirishda unga o'zgaruvchi (l-value) uzatilishi kerak.",
       "en": "An `OUT` parameter returns a value computed inside the subprogram back to the caller. The caller must pass a variable (an l-value) for it."
     }
   },

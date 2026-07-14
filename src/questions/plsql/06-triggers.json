@@ -85,7 +85,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Mutating table xatosi (ORA-04091) satr darajasidagi trigger o'zi bog'langan jadvalни SELECT yoki DML bilan o'qishga/o'zgartirishga uringanда yuz beradi — chunki jadval hali o'zgarish jarayonida.",
+      "uz": "Mutating table xatosi (ORA-04091) satr darajasidagi trigger o'zi bog'langan jadvalni SELECT yoki DML bilan o'qishga/o'zgartirishga uringanda yuz beradi — chunki jadval hali o'zgarish jarayonida.",
       "en": "A mutating table error (ORA-04091) occurs when a row-level trigger tries to query or modify the SAME table it is defined on — because that table is still in the middle of being changed."
     }
   },

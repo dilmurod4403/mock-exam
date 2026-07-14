@@ -19,7 +19,7 @@
     "options": ["The global object", "undefined", "An empty object {}", "The function itself"],
     "correct": [1],
     "explanation": {
-      "uz": "Strict rejimда oddiy funksiya `f()` tarzida chaqirilganда `this` — `undefined`. Oddiy (non-strict) rejimда esa `this` global obyektga (window/globalThis) ishora qiladi.",
+      "uz": "Strict rejimda oddiy funksiya `f()` tarzida chaqirilganda `this` — `undefined`. Oddiy (non-strict) rejimda esa `this` global obyektga (window/globalThis) ishora qiladi.",
       "en": "In strict mode, when a normal function is called as `f()`, `this` is `undefined`. In non-strict mode `this` would point to the global object (window/globalThis)."
     }
   },
@@ -43,7 +43,7 @@
     "options": ["\"\" (empty string)", "0", "[]", "NaN"],
     "correct": [0],
     "explanation": {
-      "uz": "`+` obyektlarni primitivga aylantiradi. Bo'sh massiv primitivga aylanганда bo'sh string \"\" bo'ladi, shuning uchun \"\" + \"\" = \"\" (bo'sh string).",
+      "uz": "`+` obyektlarni primitivga aylantiradi. Bo'sh massiv primitivga aylanganda bo'sh string \"\" bo'ladi, shuning uchun \"\" + \"\" = \"\" (bo'sh string).",
       "en": "`+` converts objects to primitives. An empty array becomes the empty string \"\", so \"\" + \"\" = \"\" (an empty string)."
     }
   },
@@ -55,7 +55,7 @@
     "options": ["81", "36", "729", "12"],
     "correct": [0],
     "explanation": {
-      "uz": "`**` o'ngdan-chapga (right-associative) hisoblanadi: 3 ** (2 ** 2) = 3 ** 4 = 81. (Chapdan bo'lганда (3**2)**2 = 81 ham chiqardi, lekin 2**3**2 kabi holatда farq bilinadi.)",
+      "uz": "`**` o'ngdan-chapga (right-associative) hisoblanadi: 3 ** (2 ** 2) = 3 ** 4 = 81. (Chapdan bo'lganda (3**2)**2 = 81 ham chiqardi, lekin 2**3**2 kabi holatda farq bilinadi.)",
       "en": "`**` is right-associative: 3 ** (2 ** 2) = 3 ** 4 = 81. (Here left-to-right would also give 81, but the associativity matters in cases like 2**3**2.)"
     }
   },
@@ -84,7 +84,7 @@
     ],
     "correct": [2],
     "explanation": {
-      "uz": "Oddiy obyekt iterable emas, shuning uchun `for...of` unда TypeError beradi. Obyekt kalitlari uchun `for...in` yoki `Object.keys()` ishlatiladi.",
+      "uz": "Oddiy obyekt iterable emas, shuning uchun `for...of` unda TypeError beradi. Obyekt kalitlari uchun `for...in` yoki `Object.keys()` ishlatiladi.",
       "en": "A plain object is not iterable, so `for...of` throws a TypeError. Use `for...in` or `Object.keys()` for object keys."
     }
   },
@@ -96,7 +96,7 @@
     "options": ["big", "mid", "small", "nothing"],
     "correct": [1],
     "explanation": {
-      "uz": "`switch(true)` — har case shartini true bilan solishtiradi. x > 10 (false) o'tadi, x > 3 (5 > 3 → true) mos keladi → \"mid\". Bu ko'p shartли if-else o'rniga ishlatiladigan naqsh.",
+      "uz": "`switch(true)` — har case shartini true bilan solishtiradi. x > 10 (false) o'tadi, x > 3 (5 > 3 → true) mos keladi → \"mid\". Bu ko'p shartli if-else o'rniga ishlatiladigan naqsh.",
       "en": "`switch(true)` compares each case condition against true. x > 10 (false) is skipped, x > 3 (5 > 3 → true) matches → \"mid\". This is a pattern used instead of a long if-else chain."
     }
   },
@@ -125,7 +125,7 @@
     "options": ["3", "4", "1", "TypeError"],
     "correct": [1],
     "explanation": {
-      "uz": "Massivlar HAVOLA (reference) bo'yicha uzatiladi. `b = a` yangi nusxa yaratmaydi — b va a bir massivга ishora qiladi. b.push(4) a ga ham ta'sir qiladi → length 4. Nusxa uchun [...a] kerak.",
+      "uz": "Massivlar HAVOLA (reference) bo'yicha uzatiladi. `b = a` yangi nusxa yaratmaydi — b va a bir massivga ishora qiladi. b.push(4) a ga ham ta'sir qiladi → length 4. Nusxa uchun [...a] kerak.",
       "en": "Arrays are assigned by REFERENCE. `b = a` doesn't create a copy — b and a point to the same array. b.push(4) also affects a → length 4. Use [...a] for a copy."
     }
   },
@@ -149,7 +149,7 @@
     "options": ["1 1", "1 2", "2 2", "0 0"],
     "correct": [0],
     "explanation": {
-      "uz": "Standart parametr qiymati (`= []`) HAR chaqiruvда qaytadan hisoblanadi — har safar yangi bo'sh massiv yaratiladi. Shuning uchun ikkalasi ham 1. (Python'даги umumiy tuzoqдан farqli.)",
+      "uz": "Standart parametr qiymati (`= []`) HAR chaqiruvda qaytadan hisoblanadi — har safar yangi bo'sh massiv yaratiladi. Shuning uchun ikkalasi ham 1. (Python'dagi umumiy tuzoqdan farqli.)",
       "en": "A default parameter value (`= []`) is re-evaluated on EACH call — a fresh empty array each time. So both are 1. (Unlike the well-known Python pitfall.)"
     }
   },
@@ -161,7 +161,7 @@
     "options": ["1", "2", "undefined", "SyntaxError"],
     "correct": [1],
     "explanation": {
-      "uz": "`finally` ичидаги `return` try'даги return'ни BEKOR qiladi. Shuning uchun funksiya 2 qaytaradi. (finally'да return ishlatish odatда tavsiya etilmaydi — aynan shu sabab.)",
+      "uz": "`finally` ichidagi `return` try'dagi return'ni BEKOR qiladi. Shuning uchun funksiya 2 qaytaradi. (finally'da return ishlatish odatda tavsiya etilmaydi — aynan shu sabab.)",
       "en": "A `return` inside `finally` OVERRIDES the return in try. So the function returns 2. (Returning from finally is usually discouraged — precisely for this reason.)"
     }
   },
@@ -173,7 +173,7 @@
     "options": ["true", "false", "TypeError", "\"oops\""],
     "correct": [0],
     "explanation": {
-      "uz": "MyError `Error` dan meros oladi, shuning uchun uning nusxasi ham Error hisoblanadi: e instanceof Error → true. Bu maxsus (custom) xato klasslarини yaratish usuli.",
+      "uz": "MyError `Error` dan meros oladi, shuning uchun uning nusxasi ham Error hisoblanadi: e instanceof Error → true. Bu maxsus (custom) xato klasslarini yaratish usuli.",
       "en": "MyError extends `Error`, so its instance is also an Error: e instanceof Error → true. This is how you create custom error classes."
     }
   }

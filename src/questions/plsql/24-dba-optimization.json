@@ -13,7 +13,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Bitmap indeks kam kardinallikli (kam xil qiymatли, masalan jins, holat) ustunlar va ko'p o'qiladigan (data warehouse) tizimlar uchun eng mos. OLTP'да yozuvлар ko'p bo'lсa, bitmap lock muammosi kelib chiqadi — u yerда B-tree afzal.",
+      "uz": "Bitmap indeks kam kardinallikli (kam xil qiymatli, masalan jins, holat) ustunlar va ko'p o'qiladigan (data warehouse) tizimlar uchun eng mos. OLTP'da yozuvlar ko'p bo'lsa, bitmap lock muammosi kelib chiqadi — u yerda B-tree afzal.",
       "en": "A bitmap index suits low-cardinality columns (few distinct values, e.g. gender, status) in read-mostly / data-warehouse systems. In OLTP with frequent writes, bitmap locking is a problem — a B-tree is preferred there."
     }
   },
@@ -31,7 +31,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Indekslangan ustunga funksiya qo'llaganда (UPPER(name)) oddiy indeks ishlamaydi — optimizer full scan qiladi. Yechim: shu ifoda uchun function-based index yaratish yoki so'rovни qayta yozish.",
+      "uz": "Indekslangan ustunga funksiya qo'llaganda (UPPER(name)) oddiy indeks ishlamaydi — optimizer full scan qiladi. Yechim: shu ifoda uchun function-based index yaratish yoki so'rovni qayta yozish.",
       "en": "Wrapping an indexed column in a function (UPPER(name)) prevents the normal index from being used — the optimizer does a full scan. Fix: create a function-based index on that expression, or rewrite the query."
     }
   },
@@ -49,7 +49,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Kompozit indeksда BOSHLOVCHI ustun (last_name) shart bo'lsa, indeks samarali ishlaydi. Faqat first_name bo'yicha qidiruv boshlovchi ustunни o'tkazib yuboradi (index skip scan bundan istisno, lekin cheklangan).",
+      "uz": "Kompozit indeksda BOSHLOVCHI ustun (last_name) shart bo'lsa, indeks samarali ishlaydi. Faqat first_name bo'yicha qidiruv boshlovchi ustunni o'tkazib yuboradi (index skip scan bundan istisno, lekin cheklangan).",
       "en": "A composite index works efficiently when the LEADING column (last_name) is in the predicate. Searching by first_name alone skips the leading column (index skip scan is an exception, but limited)."
     }
   },
@@ -67,7 +67,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "So'rov jadvalning katta qismini (masalan >5-10%) qaytarsa, full scan indeks orqali bitta-bitta o'qishдан tezroq bo'ladi (multiblock read). Indeks kam satr qaytarilганда afzal.",
+      "uz": "So'rov jadvalning katta qismini (masalan >5-10%) qaytarsa, full scan indeks orqali bitta-bitta o'qishdan tezroq bo'ladi (multiblock read). Indeks kam satr qaytarilganda afzal.",
       "en": "If a query returns a large fraction of the table (e.g. >5-10%), a full scan (multiblock reads) is often faster than many single-row index lookups. Indexes win when few rows are returned."
     }
   },
@@ -85,7 +85,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Indekslar o'qishни tezlashtiradi, lekin har DML (INSERT/UPDATE/DELETE) da barcha tegishли indekslar ham yangilanishi kerak — bu yozishни sekinlashtiradi va joy oladi. Shuning uchun kerakли indekslarни tanlab yaratish kerak.",
+      "uz": "Indekslar o'qishni tezlashtiradi, lekin har DML (INSERT/UPDATE/DELETE) da barcha tegishli indekslar ham yangilanishi kerak — bu yozishni sekinlashtiradi va joy oladi. Shuning uchun kerakli indekslarni tanlab yaratish kerak.",
       "en": "Indexes speed up reads, but every DML (INSERT/UPDATE/DELETE) must also maintain all relevant indexes — slowing writes and using space. So create only the indexes you need."
     }
   },
@@ -103,7 +103,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Function-based index ifoda/funksiya natijasиni indekslaydi — masalan CREATE INDEX ... ON emp(UPPER(name)). Shundан so'ng WHERE UPPER(name)=... so'rovi indeksdан foydalana oladi.",
+      "uz": "Function-based index ifoda/funksiya natijasini indekslaydi — masalan CREATE INDEX ... ON emp(UPPER(name)). Shundan so'ng WHERE UPPER(name)=... so'rovi indeksdan foydalana oladi.",
       "en": "A function-based index indexes the result of an expression/function — e.g. CREATE INDEX ... ON emp(UPPER(name)). Then WHERE UPPER(name)=... can use the index."
     }
   },
@@ -121,7 +121,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Hint — optimizer'ga reja tanlashда ta'sir qiladigan maxsus izoh (/*+ ... */). Masalan, ma'lum indeksни ishlatishга majbur qiladi. Ehtiyotkorlik bilan ishlatish kerak — statistика yaxshi bo'lsa, CBO odatда o'zi to'g'ri tanlaydi.",
+      "uz": "Hint — optimizer'ga reja tanlashda ta'sir qiladigan maxsus izoh (/*+ ... */). Masalan, ma'lum indeksni ishlatishga majbur qiladi. Ehtiyotkorlik bilan ishlatish kerak — statistika yaxshi bo'lsa, CBO odatda o'zi to'g'ri tanlaydi.",
       "en": "A hint is a special comment (/*+ ... */) that influences the optimizer's plan choice — e.g. forcing a specific index. Use sparingly — with good statistics, the CBO usually chooses well on its own."
     }
   },
@@ -139,7 +139,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Katta jadvalни bo'laklarga (partition) ajratsak, so'rov shartиga mos partition pruning tufayli optimizer faqat kerakли bo'lakларни o'qiydi — butun jadvalни emas. Bu I/O ni keskin kamaytiradi.",
+      "uz": "Katta jadvalni bo'laklarga (partition) ajratsak, so'rov shartiga mos partition pruning tufayli optimizer faqat kerakli bo'laklarni o'qiydi — butun jadvalni emas. Bu I/O ni keskin kamaytiradi.",
       "en": "Splitting a large table into partitions lets partition pruning read only the relevant partitions matching the query, not the whole table. This sharply cuts I/O."
     }
   },
@@ -157,7 +157,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Materialized view so'rov natijasиni diskда SAQLAYDI (oldindan hisoblab) — takroriy og'ir hisob-kitoblар (masalan agregatlar) tez o'qiladi. Oddiy view esa har murojaатда asosий so'rovni qайта bajaradi. Materialized view yangilanib turishи (refresh) kerak.",
+      "uz": "Materialized view so'rov natijasini diskda SAQLAYDI (oldindan hisoblab) — takroriy og'ir hisob-kitoblar (masalan agregatlar) tez o'qiladi. Oddiy view esa har murojaatda asosiy so'rovni qayta bajaradi. Materialized view yangilanib turishi (refresh) kerak.",
       "en": "A materialized view STORES precomputed results on disk — heavy repeated computations (e.g. aggregates) are read fast. A normal view re-runs its query each time. A materialized view must be refreshed to stay current."
     }
   },
@@ -175,7 +175,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Sargable predikat — indekslangan ustunни funksiyaга o'ramaydigan shart. Ustunga funksiya (TRUNC, SUBSTR) yoki arifmetika qo'llasak, indeks ishlamaydi. Diapazон (>= ... < ...) ko'rinishда yozсak, indeks ishlaydi.",
+      "uz": "Sargable predikat — indekslangan ustunni funksiyaga o'ramaydigan shart. Ustunga funksiya (TRUNC, SUBSTR) yoki arifmetika qo'llasak, indeks ishlamaydi. Diapazon (>= ... < ...) ko'rinishda yozsak, indeks ishlaydi.",
       "en": "A sargable predicate doesn't wrap the indexed column in a function. Applying a function (TRUNC, SUBSTR) or arithmetic to the column disables the index. Rewriting as a range (>= ... < ...) keeps the index usable."
     }
   },
@@ -193,7 +193,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "DBA umumiy unumdorlikни AWR/ASH hisobotlari va kutish hodisalari (wait events, V$SESSION/V$SYSTEM_EVENT) orqali tahlил qiladi — qayси resurs (CPU, I/O, lock) eng ko'p kutish keltirayotganини topadi.",
+      "uz": "DBA umumiy unumdorlikni AWR/ASH hisobotlari va kutish hodisalari (wait events, V$SESSION/V$SYSTEM_EVENT) orqali tahlil qiladi — qaysi resurs (CPU, I/O, lock) eng ko'p kutish keltirayotganini topadi.",
       "en": "A DBA diagnoses overall performance via AWR/ASH reports and wait events (V$SESSION/V$SYSTEM_EVENT) — finding which resource (CPU, I/O, locks) causes the most waiting."
     }
   },
@@ -211,7 +211,7 @@
     ],
     "correct": [0],
     "explanation": {
-      "uz": "Mavjudlikни tekshirishда `EXISTS` odatда samarali — u BIRINCHI mos satr topilganда to'xtaydi, hammasини sanamaydi. COUNT(*) esa barcha mos satrlarни sanashга majbur bo'ladi (keraksiz ish).",
+      "uz": "Mavjudlikni tekshirishda `EXISTS` odatda samarali — u BIRINCHI mos satr topilganda to'xtaydi, hammasini sanamaydi. COUNT(*) esa barcha mos satrlarni sanashga majbur bo'ladi (keraksiz ish).",
       "en": "For existence checks, `EXISTS` is usually efficient — it stops at the FIRST matching row instead of counting all. COUNT(*) forces counting every match (wasted work)."
     }
   }

@@ -85,7 +85,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "DELETE — DML amali, commit qilinmaguncha `ROLLBACK` bilan bekor qilinadi. (Agar TRUNCATE ishlatilganда edi, u avtomatik commit qilgani uchun qaytarib bo'lmasdi.)",
+      "uz": "DELETE — DML amali, commit qilinmaguncha `ROLLBACK` bilan bekor qilinadi. (Agar TRUNCATE ishlatilganda edi, u avtomatik commit qilgani uchun qaytarib bo'lmasdi.)",
       "en": "DELETE is DML; until it's committed, `ROLLBACK` undoes it. (Had you used TRUNCATE, it auto-commits and could not be undone.)"
     }
   },

@@ -21,7 +21,7 @@
     "options": ["5", "undefined", "TypeError", "0"],
     "correct": [0],
     "explanation": {
-      "uz": "`static` maydon klassning o'ziga tegishli (nusxaга emas). Config.version → 5. Nusxaда (new Config().version) esa undefined bo'lardi.",
+      "uz": "`static` maydon klassning o'ziga tegishli (nusxaga emas). Config.version → 5. Nusxada (new Config().version) esa undefined bo'lardi.",
       "en": "A `static` field belongs to the class itself (not instances). Config.version → 5. On an instance (new Config().version) it would be undefined."
     }
   },
@@ -39,7 +39,7 @@
     ],
     "correct": [0],
     "explanation": {
-      "uz": "`Promise.allSettled` HAR promise natijasini kutadi va rad etilгани bo'lsa ham rad etmaydi. Har biriга { status } beradi: ['fulfilled', 'rejected']. (Promise.all esa birinchi reject'да darhol rad etadi.)",
+      "uz": "`Promise.allSettled` HAR promise natijasini kutadi va rad etilgani bo'lsa ham rad etmaydi. Har biriga { status } beradi: ['fulfilled', 'rejected']. (Promise.all esa birinchi reject'da darhol rad etadi.)",
       "en": "`Promise.allSettled` waits for every promise and does not reject even if one rejects. It gives each a { status }: ['fulfilled', 'rejected']. (Promise.all would reject immediately on the first rejection.)"
     }
   },
@@ -65,7 +65,7 @@
     "options": ["[1, 2]", "[gen]", "[undefined]", "TypeError"],
     "correct": [0],
     "explanation": {
-      "uz": "Generator iterable, shuning uchun spread `...` uning barcha yield qiymatlarини yig'adi → [1, 2].",
+      "uz": "Generator iterable, shuning uchun spread `...` uning barcha yield qiymatlarini yig'adi → [1, 2].",
       "en": "A generator is iterable, so the spread `...` collects all its yielded values → [1, 2]."
     }
   },

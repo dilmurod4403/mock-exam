@@ -85,7 +85,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`MINUS` birinchi so'rovда bo'lgan, lekin ikkinchisida bo'lmagan satrlarni qaytaradi (a dan b ni ayirish). Takroriy satrlar ham olib tashlanadi.",
+      "uz": "`MINUS` birinchi so'rovda bo'lgan, lekin ikkinchisida bo'lmagan satrlarni qaytaradi (a dan b ni ayirish). Takroriy satrlar ham olib tashlanadi.",
       "en": "`MINUS` returns rows that are in the first query but NOT in the second (a minus b). Duplicates are also removed."
     }
   },

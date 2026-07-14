@@ -26,7 +26,7 @@
     "options": ["# comment", "-- comment", "// comment", "<!-- comment -->"],
     "correct": [1],
     "explanation": {
-      "uz": "PL/SQL'da bir qatorli izoh `--` bilan, ko'p qatorli izoh esa `/* ... */` bilan yoziladi. `#` va `//` PL/SQL'да izoh emas.",
+      "uz": "PL/SQL'da bir qatorli izoh `--` bilan, ko'p qatorli izoh esa `/* ... */` bilan yoziladi. `#` va `//` PL/SQL'da izoh emas.",
       "en": "In PL/SQL a single-line comment uses `--`, and a multi-line comment uses `/* ... */`. `#` and `//` are not comments in PL/SQL."
     }
   },
@@ -93,7 +93,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`cursor%ISOPEN` kursor ochiq bo'lsa TRUE, aks holda FALSE qaytaradi. Kursorni ikki marta ochib yubormaslik uchun tekshirishда foydali.",
+      "uz": "`cursor%ISOPEN` kursor ochiq bo'lsa TRUE, aks holda FALSE qaytaradi. Kursorni ikki marta ochib yubormaslik uchun tekshirishda foydali.",
       "en": "`cursor%ISOPEN` returns TRUE if the cursor is currently open, otherwise FALSE. Useful to avoid opening an already-open cursor."
     }
   },
@@ -124,7 +124,7 @@
     "options": ["VALUE_ERROR", "ZERO_DIVIDE", "NO_DATA_FOUND", "INVALID_NUMBER"],
     "correct": [1],
     "explanation": {
-      "uz": "Songa 0 ga bo'lishга urinilganда `ZERO_DIVIDE` istisnosi yuz beradi (ORA-01476).",
+      "uz": "Songa 0 ga bo'lishga urinilganda `ZERO_DIVIDE` istisnosi yuz beradi (ORA-01476).",
       "en": "Attempting to divide a number by zero raises the `ZERO_DIVIDE` exception (ORA-01476)."
     }
   },

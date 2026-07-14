@@ -31,7 +31,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Oracle 12c'dан `FETCH FIRST n ROWS ONLY` (row limiting) ishlatiladi. `LIMIT` — MySQL/Postgres, `TOP` — SQL Server. Eski Oracle'да ROWNUM bilan qilinardi.",
+      "uz": "Oracle 12c'dan `FETCH FIRST n ROWS ONLY` (row limiting) ishlatiladi. `LIMIT` — MySQL/Postgres, `TOP` — SQL Server. Eski Oracle'da ROWNUM bilan qilinardi.",
       "en": "From Oracle 12c, use `FETCH FIRST n ROWS ONLY` (row limiting). `LIMIT` is MySQL/Postgres, `TOP` is SQL Server. Older Oracle used ROWNUM."
     }
   },
@@ -44,7 +44,7 @@
     "options": ["5", "0", "NULL", "TRUE"],
     "correct": [2],
     "explanation": {
-      "uz": "`NULLIF(a, b)` — a va b teng bo'lsa NULL, aks holда a qaytaradi. 5 = 5, shuning uchun NULL.",
+      "uz": "`NULLIF(a, b)` — a va b teng bo'lsa NULL, aks holda a qaytaradi. 5 = 5, shuning uchun NULL.",
       "en": "`NULLIF(a, b)` returns NULL if a equals b, otherwise a. 5 = 5, so it returns NULL."
     }
   },
@@ -62,7 +62,7 @@
     ],
     "correct": [0],
     "explanation": {
-      "uz": "Oracle'да `CONCAT` faqat 2 ta argument oladi: CONCAT('a','b') → 'ab'. Ikkitadan ko'p satr uchun `||` operatori ishlatiladi.",
+      "uz": "Oracle'da `CONCAT` faqat 2 ta argument oladi: CONCAT('a','b') → 'ab'. Ikkitadan ko'p satr uchun `||` operatori ishlatiladi.",
       "en": "In Oracle, `CONCAT` takes exactly 2 arguments: CONCAT('a','b') → 'ab'. For more than two strings, use the `||` operator."
     }
   },
@@ -75,7 +75,7 @@
     "options": ["100", "1", "0", "As many as distinct salaries"],
     "correct": [1],
     "explanation": {
-      "uz": "GROUP BY'siz agregat funksiya butun jadvalни BITTA guruh deb hisoblaydi va faqat 1 satr qaytaradi (eng katta maosh).",
+      "uz": "GROUP BY'siz agregat funksiya butun jadvalni BITTA guruh deb hisoblaydi va faqat 1 satr qaytaradi (eng katta maosh).",
       "en": "Without GROUP BY, an aggregate function treats the whole table as ONE group and returns just 1 row (the maximum salary)."
     }
   },
@@ -93,7 +93,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`ROLLUP` odatiy guruh natijalariga qo'shimcha yakuniy (grand total) satr(lar)ни qo'shadi — har guruh + umumiy jami. Hisobotlar uchun qulay.",
+      "uz": "`ROLLUP` odatiy guruh natijalariga qo'shimcha yakuniy (grand total) satr(lar)ni qo'shadi — har guruh + umumiy jami. Hisobotlar uchun qulay.",
       "en": "`ROLLUP` adds extra subtotal/grand-total row(s) on top of the normal group results — each group plus an overall total. Useful for reports."
     }
   },
@@ -106,7 +106,7 @@
     "options": ["Equijoin", "Non-equijoin", "Natural join", "Cross join"],
     "correct": [1],
     "explanation": {
-      "uz": "Tenglik (=) o'rnига diapazon/oraliq shartи bilan (masalan BETWEEN) birlashtirish — non-equijoin. Klassik misol: maoshni maosh-darajalari jadvali bilan bog'lash.",
+      "uz": "Tenglik (=) o'rniga diapazon/oraliq sharti bilan (masalan BETWEEN) birlashtirish — non-equijoin. Klassik misol: maoshni maosh-darajalari jadvali bilan bog'lash.",
       "en": "Joining with a range condition (e.g. BETWEEN) instead of equality (=) is a non-equijoin. A classic example is mapping a salary to a salary-grade table."
     }
   },
@@ -119,7 +119,7 @@
     "options": ["N", "N - 1", "N + 1", "Exactly 1"],
     "correct": [1],
     "explanation": {
-      "uz": "N ta jadvalни to'g'ri bog'lash uchun kamida N-1 ta join sharti kerak. Yetmasa — Dekart ko'paytmasi (Cartesian) hosil bo'ladi.",
+      "uz": "N ta jadvalni to'g'ri bog'lash uchun kamida N-1 ta join sharti kerak. Yetmasa — Dekart ko'paytmasi (Cartesian) hosil bo'ladi.",
       "en": "To properly join N tables you generally need at least N-1 join conditions. Fewer produces a Cartesian product."
     }
   },
@@ -132,7 +132,7 @@
     "options": ["A correlated subquery", "An inline view", "A scalar subquery", "A CTE"],
     "correct": [1],
     "explanation": {
-      "uz": "FROM ичидаги ichki so'rov — inline view (satr manbasi sifatida ishlatiladigan vaqtинча jadval). Masalan: SELECT * FROM (SELECT ... ) x.",
+      "uz": "FROM ichidagi ichki so'rov — inline view (satr manbasi sifatida ishlatiladigan vaqtincha jadval). Masalan: SELECT * FROM (SELECT ... ) x.",
       "en": "A subquery in the FROM clause is an inline view (a temporary table used as a row source). E.g. SELECT * FROM (SELECT ...) x."
     }
   },
@@ -150,7 +150,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "SELECT ро'yxatidаги skalyar ichki so'rov har tashqi satr uchun aynan BITTA qiymat (1 satr, 1 ustun) qaytarishi kerak. Bir nechta satr qaytarsa — ORA-01427 xatosi.",
+      "uz": "SELECT ro'yxatidagi skalyar ichki so'rov har tashqi satr uchun aynan BITTA qiymat (1 satr, 1 ustun) qaytarishi kerak. Bir nechta satr qaytarsa — ORA-01427 xatosi.",
       "en": "A scalar subquery in the SELECT list must return exactly ONE value (1 row, 1 column) per outer row. If it returns more than one row, you get ORA-01427."
     }
   },
@@ -168,7 +168,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`INSERT INTO ... SELECT` — so'rov qaytargan barcha satrlarни boshqa jadvalga ko'chiradi. Bu yerda status='OLD' bo'lган satrlar archive'га qo'shiladi.",
+      "uz": "`INSERT INTO ... SELECT` — so'rov qaytargan barcha satrlarni boshqa jadvalga ko'chiradi. Bu yerda status='OLD' bo'lgan satrlar archive'ga qo'shiladi.",
       "en": "`INSERT INTO ... SELECT` copies all rows returned by the query into another table. Here, rows with status='OLD' are inserted into archive."
     }
   },
@@ -186,7 +186,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "SET ичидa ichki so'rov ishlatish mumkin — u yangi qiymatни beradi. Bu yerда 10-bo'lim xodimlarining maoshi umumiy o'rtacha maoshга tenglashtiriladi (skalyar subquery 1 qiymat qaytaradi).",
+      "uz": "SET ichida ichki so'rov ishlatish mumkin — u yangi qiymatni beradi. Bu yerda 10-bo'lim xodimlarining maoshi umumiy o'rtacha maoshga tenglashtiriladi (skalyar subquery 1 qiymat qaytaradi).",
       "en": "A subquery is allowed in SET to supply the new value. Here, department 10's salaries are set to the overall average (a scalar subquery returning one value)."
     }
   },
@@ -204,7 +204,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Ustunда allaqачон NULL qiymatlar bo'lsa, NOT NULL cheklovини qo'shib bo'lmaydi — xato beradi (ORA-02296). Avval NULL'larни to'ldirish kerak.",
+      "uz": "Ustunda allaqachon NULL qiymatlar bo'lsa, NOT NULL cheklovini qo'shib bo'lmaydi — xato beradi (ORA-02296). Avval NULL'larni to'ldirish kerak.",
       "en": "If the column already contains NULLs, you can't add a NOT NULL constraint — it fails (ORA-02296). You must fill in the NULLs first."
     }
   },
@@ -222,7 +222,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`ON DELETE CASCADE` — ota (parent) satri o'chirilganда unга bog'liq bola (child) satrlar avtomatik o'chiriladi. `ON DELETE SET NULL` esa bola ustunни NULL qiladi.",
+      "uz": "`ON DELETE CASCADE` — ota (parent) satri o'chirilganda unga bog'liq bola (child) satrlar avtomatik o'chiriladi. `ON DELETE SET NULL` esa bola ustunni NULL qiladi.",
       "en": "`ON DELETE CASCADE` automatically deletes child rows when their parent row is deleted. `ON DELETE SET NULL` instead sets the child column to NULL."
     }
   }

@@ -13,7 +13,7 @@
     ],
     "correct": [2],
     "explanation": {
-      "uz": "`INDEX BY PLS_INTEGER` — bu assotsiativ massiv (index-by jadval). U kalit-qiymat juftliklarини saqlaydi, oldindan o'lchami belgilanmaydi va bazada saqlanmaydi (faqat PL/SQL ichida).",
+      "uz": "`INDEX BY PLS_INTEGER` — bu assotsiativ massiv (index-by jadval). U kalit-qiymat juftliklarini saqlaydi, oldindan o'lchami belgilanmaydi va bazada saqlanmaydi (faqat PL/SQL ichida).",
       "en": "`INDEX BY PLS_INTEGER` makes this an associative array (index-by table). It stores key-value pairs, needs no predefined size, and cannot be stored in the database (PL/SQL only)."
     }
   },
@@ -26,7 +26,7 @@
     "options": ["Associative array", "Nested table", "VARRAY", "Index-by table"],
     "correct": [2],
     "explanation": {
-      "uz": "`VARRAY(n)` e'lon qilinganда maksimal element soni (n) belgilanadi va undan oshib bo'lmaydi. Nested table va associative array esa o'lchamsiz (cheksiz) o'sishi mumkin.",
+      "uz": "`VARRAY(n)` e'lon qilinganda maksimal element soni (n) belgilanadi va undan oshib bo'lmaydi. Nested table va associative array esa o'lchamsiz (cheksiz) o'sishi mumkin.",
       "en": "A `VARRAY(n)` fixes its maximum number of elements (n) at declaration and can't exceed it. Nested tables and associative arrays can grow without a fixed bound."
     }
   },
@@ -75,7 +75,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`BULK COLLECT` bir amalda barcha satrlarni kolleksiyaga yuklaydi — satrma-satr FETCH qilishдан ancha tezroq (kontekst almashinuvlari kamayadi).",
+      "uz": "`BULK COLLECT` bir amalda barcha satrlarni kolleksiyaga yuklaydi — satrma-satr FETCH qilishdan ancha tezroq (kontekst almashinuvlari kamayadi).",
       "en": "`BULK COLLECT` loads all rows into a collection in one operation — much faster than fetching row by row (fewer context switches)."
     }
   },
@@ -93,7 +93,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`FORALL` kolleksiya elementlari bo'yicha DML (INSERT/UPDATE/DELETE) ni yuqori unumdorlikда bajaradi — bu oddiy FOR sikldagi DML'дан tezroq. FORALL — sikl emas, bitta bulk amal.",
+      "uz": "`FORALL` kolleksiya elementlari bo'yicha DML (INSERT/UPDATE/DELETE) ni yuqori unumdorlikda bajaradi — bu oddiy FOR sikldagi DML'dan tezroq. FORALL — sikl emas, bitta bulk amal.",
       "en": "`FORALL` runs a DML statement (INSERT/UPDATE/DELETE) once per collection element with high performance — faster than DML inside a normal FOR loop. FORALL is not a loop; it's a single bulk operation."
     }
   },
@@ -111,7 +111,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`TYPE ... IS RECORD` — bir nechta turli tipdagi maydonlarни birlashtiruvchi foydalanuvchi RECORD tipini e'lon qiladi. Maydonlarga nuqta orqali murojaat qilinadi: v_emp.id, v_emp.name.",
+      "uz": "`TYPE ... IS RECORD` — bir nechta turli tipdagi maydonlarni birlashtiruvchi foydalanuvchi RECORD tipini e'lon qiladi. Maydonlarga nuqta orqali murojaat qilinadi: v_emp.id, v_emp.name.",
       "en": "`TYPE ... IS RECORD` declares a user-defined RECORD type grouping several fields of different types. Fields are accessed with a dot: v_emp.id, v_emp.name."
     }
   }

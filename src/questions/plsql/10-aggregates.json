@@ -26,7 +26,7 @@
     "options": ["WHERE", "HAVING", "FILTER", "GROUP FILTER"],
     "correct": [1],
     "explanation": {
-      "uz": "`HAVING` guruhlarni (agregatsiyadan keyin) filtrlaydi, `WHERE` esa satrlarni (guruhlashдан oldin). Masalan: HAVING COUNT(*) > 5.",
+      "uz": "`HAVING` guruhlarni (agregatsiyadan keyin) filtrlaydi, `WHERE` esa satrlarni (guruhlashdan oldin). Masalan: HAVING COUNT(*) > 5.",
       "en": "`HAVING` filters groups (after aggregation), while `WHERE` filters rows (before grouping). For example: HAVING COUNT(*) > 5."
     }
   },
@@ -44,7 +44,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "SELECT'dagi agregatlanmagan ustun (first_name) GROUP BY'да bo'lishi SHART. Aks holda ORA-00979 \"not a GROUP BY expression\" xatosi chiqadi.",
+      "uz": "SELECT'dagi agregatlanmagan ustun (first_name) GROUP BY'da bo'lishi SHART. Aks holda ORA-00979 \"not a GROUP BY expression\" xatosi chiqadi.",
       "en": "Any non-aggregated column in SELECT (first_name) MUST appear in GROUP BY. Otherwise you get ORA-00979 \"not a GROUP BY expression\"."
     }
   },
@@ -80,7 +80,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "WHERE'да agregat funksiya ishlatib bo'lmaydi (ORA-00934 \"group function is not allowed here\"). Buning o'rniga ichki so'rov ishlatiladi: WHERE salary = (SELECT MAX(salary) FROM employees).",
+      "uz": "WHERE'da agregat funksiya ishlatib bo'lmaydi (ORA-00934 \"group function is not allowed here\"). Buning o'rniga ichki so'rov ishlatiladi: WHERE salary = (SELECT MAX(salary) FROM employees).",
       "en": "You cannot use an aggregate function in WHERE (ORA-00934 \"group function is not allowed here\"). Use a subquery instead: WHERE salary = (SELECT MAX(salary) FROM employees)."
     }
   },

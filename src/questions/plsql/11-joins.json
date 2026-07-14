@@ -13,7 +13,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`INNER JOIN` faqat ikkala jadvalда ham mos keladigan (join sharti bajarilgan) satrlarni qaytaradi. Mos kelmaganlar tushib qoladi.",
+      "uz": "`INNER JOIN` faqat ikkala jadvalda ham mos keladigan (join sharti bajarilgan) satrlarni qaytaradi. Mos kelmaganlar tushib qoladi.",
       "en": "`INNER JOIN` returns only rows that have matching values in both tables (where the join condition is met). Non-matching rows are excluded."
     }
   },
@@ -80,7 +80,7 @@
     ],
     "correct": [0],
     "explanation": {
-      "uz": "`USING (ustun)` — ikkala jadvalда bir xil nomli ustun bo'lishini talab qiladi va shu ustun bo'yicha birlashtiradi. USING ustuniga jadval prefiksi qo'yilmaydi.",
+      "uz": "`USING (ustun)` — ikkala jadvalda bir xil nomli ustun bo'lishini talab qiladi va shu ustun bo'yicha birlashtiradi. USING ustuniga jadval prefiksi qo'yilmaydi.",
       "en": "`USING (column)` requires both tables to have a column with the same name and joins on it. You must not qualify the USING column with a table prefix."
     }
   },

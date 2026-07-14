@@ -13,7 +13,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "NULL bilan taqqoslashда `IS NULL` / `IS NOT NULL` ishlatiladi. `= NULL` hech qachon TRUE bo'lmaydi, chunki NULL — noma'lum qiymat.",
+      "uz": "NULL bilan taqqoslashda `IS NULL` / `IS NOT NULL` ishlatiladi. `= NULL` hech qachon TRUE bo'lmaydi, chunki NULL — noma'lum qiymat.",
       "en": "To compare with NULL you use `IS NULL` / `IS NOT NULL`. `= NULL` is never TRUE because NULL is an unknown value."
     }
   },

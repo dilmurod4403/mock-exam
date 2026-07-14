@@ -175,7 +175,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "Oddiy ALTER TABLE ... MOVE jadvalni bloklaydi (DML to'xtaydi). Prod'da minimal downtime uchun online redefinition (DBMS_REDEFINITION) yoki MOVE ONLINE ishlatiladi — parallel DML davom etadi. Eslatma: DBMS_REDEFINITION barcha versiyalarда ishlaydi; ALTER TABLE ... MOVE ONLINE esa 12.2+ dan mavjud.",
+      "uz": "Oddiy ALTER TABLE ... MOVE jadvalni bloklaydi (DML to'xtaydi). Prod'da minimal downtime uchun online redefinition (DBMS_REDEFINITION) yoki MOVE ONLINE ishlatiladi — parallel DML davom etadi. Eslatma: DBMS_REDEFINITION barcha versiyalarda ishlaydi; ALTER TABLE ... MOVE ONLINE esa 12.2+ dan mavjud.",
       "en": "A plain ALTER TABLE ... MOVE locks the table (blocks DML). For minimal downtime on production, use online redefinition (DBMS_REDEFINITION) or MOVE ONLINE, which allow concurrent DML. Note: DBMS_REDEFINITION works on all versions; ALTER TABLE ... MOVE ONLINE is available only from 12.2 onward."
     }
   }

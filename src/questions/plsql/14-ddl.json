@@ -13,7 +13,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`PRIMARY KEY` bir vaqtda ikki cheklovni ta'minlaydi: qiymatlar NOYOB (unique) va NULL bo'lmasligi (NOT NULL) kerak. Jadvalда bitta primary key bo'ladi.",
+      "uz": "`PRIMARY KEY` bir vaqtda ikki cheklovni ta'minlaydi: qiymatlar NOYOB (unique) va NULL bo'lmasligi (NOT NULL) kerak. Jadvalda bitta primary key bo'ladi.",
       "en": "A `PRIMARY KEY` enforces two constraints at once: values must be UNIQUE and NOT NULL. A table has only one primary key."
     }
   },
@@ -98,7 +98,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`VIEW` — saqlangan SELECT so'rovi; virtual jadval kabi ishlaydi, lekin o'zi ma'lumot saqlamaydi. Har murojaatда asosiy jadvallardan real vaqtда o'qiladi.",
+      "uz": "`VIEW` — saqlangan SELECT so'rovi; virtual jadval kabi ishlaydi, lekin o'zi ma'lumot saqlamaydi. Har murojaatda asosiy jadvallardan real vaqtda o'qiladi.",
       "en": "A `VIEW` is a stored SELECT query; it acts as a virtual table but stores no data itself. Each access reads live from the underlying tables."
     }
   },

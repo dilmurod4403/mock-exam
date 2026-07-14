@@ -239,7 +239,7 @@ export function touchUser(userId, { name, username } = {}) {
   schedule();
 }
 
-// Har foydalanuvchi bo'yicha umumlashtirilgan ma'lumot (oxirgi faollik bo'yicha saralanган)
+// Har foydalanuvchi bo'yicha umumlashtirilgan ma'lumot (oxirgi faollik bo'yicha saralangan)
 export function getUsersOverview() {
   const agg = {}; // userId -> { total, correct, last }
   for (const a of db.answers) {

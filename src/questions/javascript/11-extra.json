@@ -163,7 +163,7 @@
     "options": ["true false", "false true", "true true", "1 undefined"],
     "correct": [0],
     "explanation": {
-      "uz": "`in` operatori obyektда xossa mavjudligini tekshiradi. \"a\" bor → true, \"b\" yo'q → false.",
+      "uz": "`in` operatori obyektda xossa mavjudligini tekshiradi. \"a\" bor → true, \"b\" yo'q → false.",
       "en": "The `in` operator checks whether a property exists in an object. \"a\" exists → true, \"b\" doesn't → false."
     }
   },
@@ -223,7 +223,7 @@
     "options": ["ReferenceError", "\"undefined\"", "\"function\"", "null"],
     "correct": [1],
     "explanation": {
-      "uz": "`typeof` — e'lon qilinmagan o'zgaruvchiga ishlatilганda ham xato TASHLAMAYDI, \"undefined\" qaytaradi. Bu typeof ning maxsus xususiyati.",
+      "uz": "`typeof` — e'lon qilinmagan o'zgaruvchiga ishlatilganda ham xato TASHLAMAYDI, \"undefined\" qaytaradi. Bu typeof ning maxsus xususiyati.",
       "en": "`typeof` does NOT throw even for an undeclared variable — it returns \"undefined\". This is a special feature of typeof."
     }
   },

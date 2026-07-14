@@ -60,7 +60,7 @@
     "options": ["6", "123", "[1,2,3]", "NaN"],
     "correct": [0],
     "explanation": {
-      "uz": "Chaqirishда `...nums` (spread) massiv elementlarini alohida argumentlarga yoyadi: sum(1, 2, 3) = 6.",
+      "uz": "Chaqirishda `...nums` (spread) massiv elementlarini alohida argumentlarga yoyadi: sum(1, 2, 3) = 6.",
       "en": "In the call, `...nums` (spread) expands the array elements into separate arguments: sum(1, 2, 3) = 6."
     }
   },

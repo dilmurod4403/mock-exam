@@ -26,7 +26,7 @@
     "options": ["First (NULLS FIRST)", "Last (NULLS LAST)", "They are excluded", "Random"],
     "correct": [1],
     "explanation": {
-      "uz": "Oracle'da ASC saralashда NULL'lar standart holatda OXIRIDA (NULLS LAST) turadi. DESC da esa birinchi (NULLS FIRST). Buni NULLS FIRST/LAST bilan boshqarish mumkin.",
+      "uz": "Oracle'da ASC saralashda NULL'lar standart holatda OXIRIDA (NULLS LAST) turadi. DESC da esa birinchi (NULLS FIRST). Buni NULLS FIRST/LAST bilan boshqarish mumkin.",
       "en": "In Oracle, with ASC sorting NULLs come LAST by default (NULLS LAST). With DESC they come first (NULLS FIRST). You can override with NULLS FIRST/LAST."
     }
   },
@@ -106,7 +106,7 @@
     "options": ["CROSS JOIN", "Self join", "NATURAL JOIN", "UNION"],
     "correct": [1],
     "explanation": {
-      "uz": "Jadvalни o'ziga birlashtirish — self join. Jadvalga ikki xil alias beriladi (masalan e va m) va e.manager_id = m.employee_id sharti qo'yiladi.",
+      "uz": "Jadvalni o'ziga birlashtirish — self join. Jadvalga ikki xil alias beriladi (masalan e va m) va e.manager_id = m.employee_id sharti qo'yiladi.",
       "en": "Joining a table to itself is a self join. You give the table two aliases (e.g. e and m) and use a condition like e.manager_id = m.employee_id."
     }
   },
@@ -178,7 +178,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`MERGE` bitta amalда shart bo'yicha satrni yangilaydi (UPDATE) yoki yo'q bo'lsa qo'shadi (INSERT) — 'upsert' operatsiyasi.",
+      "uz": "`MERGE` bitta amalda shart bo'yicha satrni yangilaydi (UPDATE) yoki yo'q bo'lsa qo'shadi (INSERT) — 'upsert' operatsiyasi.",
       "en": "`MERGE` updates a row if it matches a condition or inserts it if not — all in one statement (an 'upsert' operation)."
     }
   },
@@ -209,7 +209,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`DROP TABLE` jadvalни to'liq (tuzilishi bilan) o'chiradi. `TRUNCATE TABLE` esa faqat barcha satrlarni o'chiradi, jadval tuzilishi qoladi.",
+      "uz": "`DROP TABLE` jadvalni to'liq (tuzilishi bilan) o'chiradi. `TRUNCATE TABLE` esa faqat barcha satrlarni o'chiradi, jadval tuzilishi qoladi.",
       "en": "`DROP TABLE` removes the entire table (including its structure). `TRUNCATE TABLE` removes only all rows, keeping the table structure."
     }
   },
@@ -227,7 +227,7 @@
     ],
     "correct": [1],
     "explanation": {
-      "uz": "`DEFAULT` qiymat INSERT'да ustunga qiymat berilmaganда ishlatiladi. Agar qiymat kiritilsa, default e'tiborsiz qoladi.",
+      "uz": "`DEFAULT` qiymat INSERT'da ustunga qiymat berilmaganda ishlatiladi. Agar qiymat kiritilsa, default e'tiborsiz qoladi.",
       "en": "A `DEFAULT` value is used when an INSERT does not provide a value for that column. If a value is given, the default is ignored."
     }
   }
