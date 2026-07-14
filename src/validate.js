@@ -44,7 +44,7 @@ for (const q of ALL_QUESTIONS) {
   }
 
   // O'zbekcha matn lotin yozuvda bo'lishi kerak — kirill harflar aralashmasin
-  const cyr = JSON.stringify(q).match(/[Ѐ-ӿ]/g);
+  const cyr = JSON.stringify(q).match(/[\u0400-\u04FF]/g);
   if (cyr) err(`${where} kirill harf(lar) aralashgan: ${[...new Set(cyr)].join(" ")}`);
 }
 
