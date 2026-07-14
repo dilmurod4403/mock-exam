@@ -1,0 +1,85 @@
+[
+  {
+    "id": "oop-18",
+    "topic": "oop",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nconsole.log(Symbol(\"a\") === Symbol(\"a\"));\n```",
+    "options": ["true", "false", "TypeError", "undefined"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Har `Symbol()` chaqiruvi NOYOB qiymat yaratadi, tavsif (\"a\") bir xil bo'lsa ham. Shuning uchun ular teng emas → false. Symbol'lar noyob obyekt kalitlari uchun ishlatiladi.",
+      "en": "Each `Symbol()` call creates a UNIQUE value, even with the same description (\"a\"). So they are not equal → false. Symbols are used for unique object keys."
+    }
+  },
+  {
+    "id": "oop-19",
+    "topic": "oop",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nclass Config {\n  static version = 5;\n}\nconsole.log(Config.version);\n```",
+    "options": ["5", "undefined", "TypeError", "0"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`static` maydon klassning o'ziga tegishli (nusxaга emas). Config.version → 5. Nusxaда (new Config().version) esa undefined bo'lardi.",
+      "en": "A `static` field belongs to the class itself (not instances). Config.version → 5. On an instance (new Config().version) it would be undefined."
+    }
+  },
+  {
+    "id": "as-17",
+    "topic": "async",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nPromise.allSettled([\n  Promise.resolve(1),\n  Promise.reject(2)\n]).then(r => console.log(r.map(x => x.status)));\n```",
+    "options": [
+      "['fulfilled', 'rejected']",
+      "[1, 2]",
+      "It rejects with 2",
+      "['resolved', 'error']"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "`Promise.allSettled` HAR promise natijasini kutadi va rad etilгани bo'lsa ham rad etmaydi. Har biriга { status } beradi: ['fulfilled', 'rejected']. (Promise.all esa birinchi reject'да darhol rad etadi.)",
+      "en": "`Promise.allSettled` waits for every promise and does not reject even if one rejects. It gives each a { status }: ['fulfilled', 'rejected']. (Promise.all would reject immediately on the first rejection.)"
+    }
+  },
+  {
+    "id": "as-18",
+    "topic": "async",
+    "difficulty": "medium",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nPromise.resolve(1)\n  .then(() => { throw new Error(\"boom\"); })\n  .catch(e => console.log(e.message));\n```",
+    "options": ["1", "boom", "undefined", "unhandled rejection"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`.then` ichida tashlangan xato zanjirni rad etadi va keyingi `.catch` uni ushlaydi → \"boom\". Xatolar promise zanjiri bo'ylab pastga tushadi.",
+      "en": "An error thrown inside `.then` rejects the chain, and the next `.catch` handles it → \"boom\". Errors propagate down the promise chain."
+    }
+  },
+  {
+    "id": "adv-18",
+    "topic": "advanced",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nfunction* gen() {\n  yield 1;\n  yield 2;\n}\nconsole.log([...gen()]);\n```",
+    "options": ["[1, 2]", "[gen]", "[undefined]", "TypeError"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Generator iterable, shuning uchun spread `...` uning barcha yield qiymatlarини yig'adi → [1, 2].",
+      "en": "A generator is iterable, so the spread `...` collects all its yielded values → [1, 2]."
+    }
+  },
+  {
+    "id": "adv-19",
+    "topic": "advanced",
+    "difficulty": "hard",
+    "levels": ["JSP"],
+    "question": "What is the output?\n\n```js\nlet x = 0;\nx ||= 10;\nlet y = 0;\ny ??= 10;\nconsole.log(x, y);\n```",
+    "options": ["10 10", "10 0", "0 10", "0 0"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`||=` chap tomon FALSY bo'lsa yozadi: 0 falsy → x = 10. `??=` esa faqat NULL/undefined bo'lsa yozadi: 0 null emas → y 0 bo'lib qoladi. Natija: 10, 0.",
+      "en": "`||=` assigns when the left is FALSY: 0 is falsy → x = 10. `??=` assigns only when NULL/undefined: 0 is not null → y stays 0. Result: 10, 0."
+    }
+  }
+]

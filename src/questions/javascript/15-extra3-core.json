@@ -1,0 +1,180 @@
+[
+  {
+    "id": "intro-20",
+    "topic": "intro",
+    "difficulty": "easy",
+    "question": "Which of the following is NOT a reserved word in JavaScript?",
+    "options": ["class", "function", "variable", "return"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`variable` — zaxiralangan so'z emas, uni identifikator sifatida ishlatish mumkin. `class`, `function`, `return` esa tilning kalit so'zlari.",
+      "en": "`variable` is not a reserved word — it can be used as an identifier. `class`, `function`, and `return` are language keywords."
+    }
+  },
+  {
+    "id": "intro-21",
+    "topic": "intro",
+    "difficulty": "hard",
+    "question": "In strict mode, what is `this` inside a normal function called as `f()`?",
+    "options": ["The global object", "undefined", "An empty object {}", "The function itself"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Strict rejimда oddiy funksiya `f()` tarzida chaqirilganда `this` — `undefined`. Oddiy (non-strict) rejimда esa `this` global obyektga (window/globalThis) ishora qiladi.",
+      "en": "In strict mode, when a normal function is called as `f()`, `this` is `undefined`. In non-strict mode `this` would point to the global object (window/globalThis)."
+    }
+  },
+  {
+    "id": "vars-28",
+    "topic": "variables",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(typeof []);\n```",
+    "options": ["\"array\"", "\"object\"", "\"list\"", "\"undefined\""],
+    "correct": [1],
+    "explanation": {
+      "uz": "Massiv ham obyekt turi hisoblanadi, shuning uchun typeof [] → \"object\". Massivligini tekshirish uchun `Array.isArray()` ishlatiladi.",
+      "en": "An array is a kind of object, so typeof [] → \"object\". To check for an array, use `Array.isArray()`."
+    }
+  },
+  {
+    "id": "vars-29",
+    "topic": "variables",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log([] + []);\n```",
+    "options": ["\"\" (empty string)", "0", "[]", "NaN"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`+` obyektlarni primitivga aylantiradi. Bo'sh massiv primitivga aylanганда bo'sh string \"\" bo'ladi, shuning uchun \"\" + \"\" = \"\" (bo'sh string).",
+      "en": "`+` converts objects to primitives. An empty array becomes the empty string \"\", so \"\" + \"\" = \"\" (an empty string)."
+    }
+  },
+  {
+    "id": "op-25",
+    "topic": "operators",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconsole.log(3 ** 2 ** 2);\n```",
+    "options": ["81", "36", "729", "12"],
+    "correct": [0],
+    "explanation": {
+      "uz": "`**` o'ngdan-chapga (right-associative) hisoblanadi: 3 ** (2 ** 2) = 3 ** 4 = 81. (Chapdan bo'lганда (3**2)**2 = 81 ham chiqardi, lekin 2**3**2 kabi holatда farq bilinadi.)",
+      "en": "`**` is right-associative: 3 ** (2 ** 2) = 3 ** 4 = 81. (Here left-to-right would also give 81, but the associativity matters in cases like 2**3**2.)"
+    }
+  },
+  {
+    "id": "op-26",
+    "topic": "operators",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(!!\"0\");\n```",
+    "options": ["false", "true", "0", "\"0\""],
+    "correct": [1],
+    "explanation": {
+      "uz": "\"0\" — bo'sh bo'lmagan string, shuning uchun truthy. `!!` uni boolean'ga aylantiradi → true. (Faqat \"\" bo'sh string falsy bo'ladi.)",
+      "en": "\"0\" is a non-empty string, so it's truthy. `!!` converts it to a boolean → true. (Only the empty string \"\" is falsy.)"
+    }
+  },
+  {
+    "id": "cf-25",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What happens?\n\n```js\nfor (const x of { a: 1, b: 2 }) {\n  console.log(x);\n}\n```",
+    "options": [
+      "Prints 1 and 2",
+      "Prints a and b",
+      "TypeError: object is not iterable",
+      "Prints nothing"
+    ],
+    "correct": [2],
+    "explanation": {
+      "uz": "Oddiy obyekt iterable emas, shuning uchun `for...of` unда TypeError beradi. Obyekt kalitlari uchun `for...in` yoki `Object.keys()` ishlatiladi.",
+      "en": "A plain object is not iterable, so `for...of` throws a TypeError. Use `for...in` or `Object.keys()` for object keys."
+    }
+  },
+  {
+    "id": "cf-26",
+    "topic": "control-flow",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nlet x = 5;\nswitch (true) {\n  case x > 10:\n    console.log(\"big\");\n    break;\n  case x > 3:\n    console.log(\"mid\");\n    break;\n  default:\n    console.log(\"small\");\n}\n```",
+    "options": ["big", "mid", "small", "nothing"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`switch(true)` — har case shartini true bilan solishtiradi. x > 10 (false) o'tadi, x > 3 (5 > 3 → true) mos keladi → \"mid\". Bu ko'p shartли if-else o'rniga ishlatiladigan naqsh.",
+      "en": "`switch(true)` compares each case condition against true. x > 10 (false) is skipped, x > 3 (5 > 3 → true) matches → \"mid\". This is a pattern used instead of a long if-else chain."
+    }
+  },
+  {
+    "id": "col-26",
+    "topic": "collections",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nconsole.log(Object.entries({ a: 1, b: 2 }));\n```",
+    "options": [
+      "[\"a\", \"b\"]",
+      "[1, 2]",
+      "[[\"a\", 1], [\"b\", 2]]",
+      "{a: 1, b: 2}"
+    ],
+    "correct": [2],
+    "explanation": {
+      "uz": "`Object.entries()` obyektni [kalit, qiymat] juftliklari massiviga aylantiradi: [[\"a\", 1], [\"b\", 2]]. Bu obyekt bo'ylab aylanish uchun qulay.",
+      "en": "`Object.entries()` turns an object into an array of [key, value] pairs: [[\"a\", 1], [\"b\", 2]]. Handy for iterating over an object."
+    }
+  },
+  {
+    "id": "col-27",
+    "topic": "collections",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nconst a = [1, 2, 3];\nconst b = a;\nb.push(4);\nconsole.log(a.length);\n```",
+    "options": ["3", "4", "1", "TypeError"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Massivlar HAVOLA (reference) bo'yicha uzatiladi. `b = a` yangi nusxa yaratmaydi — b va a bir massivга ishora qiladi. b.push(4) a ga ham ta'sir qiladi → length 4. Nusxa uchun [...a] kerak.",
+      "en": "Arrays are assigned by REFERENCE. `b = a` doesn't create a copy — b and a point to the same array. b.push(4) also affects a → length 4. Use [...a] for a copy."
+    }
+  },
+  {
+    "id": "fn-25",
+    "topic": "functions",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nfunction f() {\n  return typeof arguments;\n}\nconsole.log(f(1, 2));\n```",
+    "options": ["\"array\"", "\"object\"", "\"arguments\"", "\"undefined\""],
+    "correct": [1],
+    "explanation": {
+      "uz": "`arguments` — massivsimon obyekt (array-like object), lekin haqiqiy massiv emas. typeof arguments → \"object\".",
+      "en": "`arguments` is an array-like object, but not a real array. typeof arguments → \"object\"."
+    }
+  },
+  {
+    "id": "fn-26",
+    "topic": "functions",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction f(a = []) {\n  a.push(1);\n  return a.length;\n}\nconsole.log(f(), f());\n```",
+    "options": ["1 1", "1 2", "2 2", "0 0"],
+    "correct": [0],
+    "explanation": {
+      "uz": "Standart parametr qiymati (`= []`) HAR chaqiruvда qaytadan hisoblanadi — har safar yangi bo'sh massiv yaratiladi. Shuning uchun ikkalasi ham 1. (Python'даги umumiy tuzoqдан farqli.)",
+      "en": "A default parameter value (`= []`) is re-evaluated on EACH call — a fresh empty array each time. So both are 1. (Unlike the well-known Python pitfall.)"
+    }
+  },
+  {
+    "id": "err-19",
+    "topic": "errors",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```js\nfunction f() {\n  try {\n    return 1;\n  } finally {\n    return 2;\n  }\n}\nconsole.log(f());\n```",
+    "options": ["1", "2", "undefined", "SyntaxError"],
+    "correct": [1],
+    "explanation": {
+      "uz": "`finally` ичидаги `return` try'даги return'ни BEKOR qiladi. Shuning uchun funksiya 2 qaytaradi. (finally'да return ishlatish odatда tavsiya etilmaydi — aynan shu sabab.)",
+      "en": "A `return` inside `finally` OVERRIDES the return in try. So the function returns 2. (Returning from finally is usually discouraged — precisely for this reason.)"
+    }
+  },
+  {
+    "id": "err-20",
+    "topic": "errors",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```js\nclass MyError extends Error {}\ntry {\n  throw new MyError(\"oops\");\n} catch (e) {\n  console.log(e instanceof Error);\n}\n```",
+    "options": ["true", "false", "TypeError", "\"oops\""],
+    "correct": [0],
+    "explanation": {
+      "uz": "MyError `Error` dan meros oladi, shuning uchun uning nusxasi ham Error hisoblanadi: e instanceof Error → true. Bu maxsus (custom) xato klasslarини yaratish usuli.",
+      "en": "MyError extends `Error`, so its instance is also an Error: e instanceof Error → true. This is how you create custom error classes."
+    }
+  }
+]

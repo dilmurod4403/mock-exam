@@ -1,0 +1,229 @@
+[
+  {
+    "id": "sq-12",
+    "topic": "queries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does this match?\n\n```sql\nWHERE name LIKE '%\\_%' ESCAPE '\\'\n```",
+    "options": [
+      "Any name (underscore is a wildcard)",
+      "Names containing a literal underscore character",
+      "Names starting with underscore only",
+      "Nothing"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`ESCAPE '\\'` `_` ni maxsus belgidan oddiy belgiga aylantiradi. Shuning uchun `\\_` — haqiqiy pastki chiziq (underscore) belgisini qidiradi, bitta ixtiyoriy belgini emas.",
+      "en": "`ESCAPE '\\'` makes `_` a literal character instead of a wildcard. So `\\_` searches for an actual underscore character, not any single character."
+    }
+  },
+  {
+    "id": "sq-13",
+    "topic": "queries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "Which clause returns only the first 5 rows (Oracle 12c+)?",
+    "options": [
+      "LIMIT 5",
+      "FETCH FIRST 5 ROWS ONLY",
+      "TOP 5",
+      "ROWNUM = 5"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oracle 12c'dан `FETCH FIRST n ROWS ONLY` (row limiting) ishlatiladi. `LIMIT` — MySQL/Postgres, `TOP` — SQL Server. Eski Oracle'да ROWNUM bilan qilinardi.",
+      "en": "From Oracle 12c, use `FETCH FIRST n ROWS ONLY` (row limiting). `LIMIT` is MySQL/Postgres, `TOP` is SQL Server. Older Oracle used ROWNUM."
+    }
+  },
+  {
+    "id": "sf-12",
+    "topic": "functions",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does this return?\n\n```sql\nSELECT NULLIF(5, 5) FROM dual;\n```",
+    "options": ["5", "0", "NULL", "TRUE"],
+    "correct": [2],
+    "explanation": {
+      "uz": "`NULLIF(a, b)` — a va b teng bo'lsa NULL, aks holда a qaytaradi. 5 = 5, shuning uchun NULL.",
+      "en": "`NULLIF(a, b)` returns NULL if a equals b, otherwise a. 5 = 5, so it returns NULL."
+    }
+  },
+  {
+    "id": "sf-13",
+    "topic": "functions",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "How many arguments does Oracle's CONCAT function accept?",
+    "options": [
+      "Exactly 2",
+      "Any number",
+      "Up to 5",
+      "Exactly 1"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Oracle'да `CONCAT` faqat 2 ta argument oladi: CONCAT('a','b') → 'ab'. Ikkitadan ko'p satr uchun `||` operatori ishlatiladi.",
+      "en": "In Oracle, `CONCAT` takes exactly 2 arguments: CONCAT('a','b') → 'ab'. For more than two strings, use the `||` operator."
+    }
+  },
+  {
+    "id": "sa-10",
+    "topic": "aggregates",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "How many rows does this return (table has 100 rows)?\n\n```sql\nSELECT MAX(salary) FROM employees;\n```",
+    "options": ["100", "1", "0", "As many as distinct salaries"],
+    "correct": [1],
+    "explanation": {
+      "uz": "GROUP BY'siz agregat funksiya butun jadvalни BITTA guruh deb hisoblaydi va faqat 1 satr qaytaradi (eng katta maosh).",
+      "en": "Without GROUP BY, an aggregate function treats the whole table as ONE group and returns just 1 row (the maximum salary)."
+    }
+  },
+  {
+    "id": "sa-11",
+    "topic": "aggregates",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "What does GROUP BY ROLLUP(department_id) add to the result?",
+    "options": [
+      "Nothing extra",
+      "Subtotal/grand-total rows (a summary row across all groups)",
+      "It removes duplicates",
+      "It sorts the result"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`ROLLUP` odatiy guruh natijalariga qo'shimcha yakuniy (grand total) satr(lar)ни qo'shadi — har guruh + umumiy jami. Hisobotlar uchun qulay.",
+      "en": "`ROLLUP` adds extra subtotal/grand-total row(s) on top of the normal group results — each group plus an overall total. Useful for reports."
+    }
+  },
+  {
+    "id": "sj-10",
+    "topic": "joins",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "A join that uses a range condition (e.g. salary BETWEEN low AND high) instead of equality is called a:",
+    "options": ["Equijoin", "Non-equijoin", "Natural join", "Cross join"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Tenglik (=) o'rnига diapazon/oraliq shartи bilan (masalan BETWEEN) birlashtirish — non-equijoin. Klassik misol: maoshni maosh-darajalari jadvali bilan bog'lash.",
+      "en": "Joining with a range condition (e.g. BETWEEN) instead of equality (=) is a non-equijoin. A classic example is mapping a salary to a salary-grade table."
+    }
+  },
+  {
+    "id": "sj-11",
+    "topic": "joins",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "To join N tables and avoid a Cartesian product, how many join conditions do you generally need?",
+    "options": ["N", "N - 1", "N + 1", "Exactly 1"],
+    "correct": [1],
+    "explanation": {
+      "uz": "N ta jadvalни to'g'ri bog'lash uchun kamida N-1 ta join sharti kerak. Yetmasa — Dekart ko'paytmasi (Cartesian) hosil bo'ladi.",
+      "en": "To properly join N tables you generally need at least N-1 join conditions. Fewer produces a Cartesian product."
+    }
+  },
+  {
+    "id": "ss-10",
+    "topic": "subqueries",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "A subquery placed in the FROM clause is called:",
+    "options": ["A correlated subquery", "An inline view", "A scalar subquery", "A CTE"],
+    "correct": [1],
+    "explanation": {
+      "uz": "FROM ичидаги ichki so'rov — inline view (satr manbasi sifatida ishlatiladigan vaqtинча jadval). Masalan: SELECT * FROM (SELECT ... ) x.",
+      "en": "A subquery in the FROM clause is an inline view (a temporary table used as a row source). E.g. SELECT * FROM (SELECT ...) x."
+    }
+  },
+  {
+    "id": "ss-11",
+    "topic": "subqueries",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "A scalar subquery in the SELECT list must return:",
+    "options": [
+      "Multiple rows",
+      "Exactly one row and one column per outer row (else it errors)",
+      "No rows",
+      "A whole table"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SELECT ро'yxatidаги skalyar ichki so'rov har tashqi satr uchun aynan BITTA qiymat (1 satr, 1 ustun) qaytarishi kerak. Bir nechta satr qaytarsa — ORA-01427 xatosi.",
+      "en": "A scalar subquery in the SELECT list must return exactly ONE value (1 row, 1 column) per outer row. If it returns more than one row, you get ORA-01427."
+    }
+  },
+  {
+    "id": "sd-10",
+    "topic": "dml",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does this do?\n\n```sql\nINSERT INTO archive (id, name)\nSELECT id, name FROM active WHERE status = 'OLD';\n```",
+    "options": [
+      "Inserts one row with literal values",
+      "Copies matching rows from 'active' into 'archive'",
+      "Deletes rows from active",
+      "Creates a new table"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`INSERT INTO ... SELECT` — so'rov qaytargan barcha satrlarни boshqa jadvalga ko'chiradi. Bu yerda status='OLD' bo'lган satrlar archive'га qo'shiladi.",
+      "en": "`INSERT INTO ... SELECT` copies all rows returned by the query into another table. Here, rows with status='OLD' are inserted into archive."
+    }
+  },
+  {
+    "id": "sd-11",
+    "topic": "dml",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "Is this valid?\n\n```sql\nUPDATE emp\nSET salary = (SELECT AVG(salary) FROM emp)\nWHERE department_id = 10;\n```",
+    "options": [
+      "No, subqueries aren't allowed in SET",
+      "Yes — a subquery can supply the new value in SET",
+      "It updates every row in the table",
+      "It raises TOO_MANY_ROWS"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SET ичидa ichki so'rov ishlatish mumkin — u yangi qiymatни beradi. Bu yerда 10-bo'lim xodimlarining maoshi umumiy o'rtacha maoshга tenglashtiriladi (skalyar subquery 1 qiymat qaytaradi).",
+      "en": "A subquery is allowed in SET to supply the new value. Here, department 10's salaries are set to the overall average (a scalar subquery returning one value)."
+    }
+  },
+  {
+    "id": "sl-11",
+    "topic": "ddl",
+    "difficulty": "hard",
+    "levels": ["1Z0-071"],
+    "question": "You try to add a NOT NULL constraint to an existing column that already contains NULL values. What happens?",
+    "options": [
+      "It succeeds and converts NULLs to 0",
+      "It fails — existing NULLs violate the constraint",
+      "It deletes rows with NULLs",
+      "It is ignored"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Ustunда allaqачон NULL qiymatlar bo'lsa, NOT NULL cheklovини qo'shib bo'lmaydi — xato beradi (ORA-02296). Avval NULL'larни to'ldirish kerak.",
+      "en": "If the column already contains NULLs, you can't add a NOT NULL constraint — it fails (ORA-02296). You must fill in the NULLs first."
+    }
+  },
+  {
+    "id": "sl-12",
+    "topic": "ddl",
+    "difficulty": "medium",
+    "levels": ["1Z0-071"],
+    "question": "What does ON DELETE CASCADE do on a foreign key?",
+    "options": [
+      "Blocks deleting the parent row",
+      "When a parent row is deleted, its child rows are deleted automatically",
+      "Sets child rows to NULL",
+      "Copies the parent row"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`ON DELETE CASCADE` — ota (parent) satri o'chirilganда unга bog'liq bola (child) satrlar avtomatik o'chiriladi. `ON DELETE SET NULL` esa bola ustunни NULL qiladi.",
+      "en": "`ON DELETE CASCADE` automatically deletes child rows when their parent row is deleted. `ON DELETE SET NULL` instead sets the child column to NULL."
+    }
+  }
+]
