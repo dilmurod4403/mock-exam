@@ -1,0 +1,177 @@
+[
+  {
+    "id": "ix-01",
+    "topic": "indexes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the primary purpose of an index?",
+    "options": [
+      "To store the table's data permanently",
+      "To speed up row lookups by avoiding full table scans (like a book's index)",
+      "To force a COMMIT",
+      "To compress the table"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Indeks — kitob indeksi kabi: kerakli qatorni tez topish uchun. U to'liq jadval skanini (full table scan) o'rniga aniq bloklarga yo'naltiradi. Lekin DML'ni sekinlashtiradi (indeks ham yangilanadi).",
+      "en": "An index, like a book's index, speeds up finding rows — it avoids a full table scan by pointing to the right blocks. It does slow down DML, since the index must be maintained too."
+    }
+  },
+  {
+    "id": "ix-02",
+    "topic": "indexes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the DEFAULT index type created by CREATE INDEX in Oracle?",
+    "options": ["Bitmap", "B-tree", "Hash", "Reverse key"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Standart indeks — B-tree (balanced tree). U keng ko'lamli, ayniqsa yuqori kardinallikdagi (ko'p turli qiymatli) ustunlar va OLTP uchun mos.",
+      "en": "The default index is a B-tree (balanced tree). It is general-purpose and works well for high-cardinality columns (many distinct values) and OLTP."
+    }
+  },
+  {
+    "id": "ix-03",
+    "topic": "indexes",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Why are BITMAP indexes usually a poor choice on tables with heavy concurrent DML (OLTP)?",
+    "options": [
+      "They cannot be created on such tables",
+      "A single row change can lock a whole bitmap segment (covering many rows), causing serious concurrency problems",
+      "They are always larger than B-tree indexes",
+      "They cannot index NULLs"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Bitmap indeksda bitta qatorni o'zgartirish ko'p qatorni qamrab oladigan butun bitmap bo'lagini bloklaydi — bu OLTP'da (ko'p parallel DML) jiddiy konkurentlik muammosi. Shuning uchun bitmap asosan DWH / o'qishga mo'ljallangan tizimlarda ishlatiladi.",
+      "en": "In a bitmap index, changing one row can lock an entire bitmap segment that covers many rows — a serious concurrency problem under OLTP (lots of concurrent DML). Hence bitmaps are used mainly in DWH / read-mostly systems."
+    }
+  },
+  {
+    "id": "ix-04",
+    "topic": "indexes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What does CREATE UNIQUE INDEX enforce?",
+    "options": [
+      "Faster inserts",
+      "That the indexed column(s) contain no duplicate values",
+      "Automatic compression",
+      "That the column is NOT NULL"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Unique indeks indekslangan ustun(lar)da takror qiymatlarga yo'l qo'ymaydi. PRIMARY KEY va UNIQUE cheklovlari aynan shunday indeks orqali ta'minlanadi. (NULL'ga esa ruxsat beriladi.)",
+      "en": "A unique index disallows duplicate values in the indexed column(s). PRIMARY KEY and UNIQUE constraints are enforced by exactly such an index. (NULLs are still allowed.)"
+    }
+  },
+  {
+    "id": "ix-05",
+    "topic": "indexes",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is a REVERSE KEY index and why use one?",
+    "options": [
+      "It stores the table rows in reverse order",
+      "It reverses the bytes of the key so sequential values scatter across leaf blocks — reducing 'hot block' contention on monotonically increasing keys (e.g. a sequence)",
+      "It reverses the query result",
+      "It removes duplicate keys"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Reverse key indeks kalit baytlarini teskari qiladi — shuning uchun ketma-ket o'sadigan qiymatlar (masalan sequence'dan) turli leaf bloklarga tarqaladi. Bu 'issiq blok' (hot block) uchun konkurentlikni kamaytiradi (RAC'da ayniqsa foydali).",
+      "en": "A reverse key index reverses the bytes of the key, so monotonically increasing values (e.g. from a sequence) scatter across leaf blocks. This reduces 'hot block' contention (especially useful in RAC)."
+    }
+  },
+  {
+    "id": "ix-06",
+    "topic": "indexes",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "On a partitioned table, what is the difference between a LOCAL and a GLOBAL index?",
+    "options": [
+      "There is no difference",
+      "A LOCAL index is partitioned to match the table (one index partition per table partition); a GLOBAL index is a single structure spanning all partitions",
+      "A local index is always faster",
+      "A global index cannot be unique"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "LOCAL indeks jadval bilan bir xil bo'linadi — har jadval bo'lagiga bitta indeks bo'lagi. Shuning uchun bo'lakni tashlash/qo'shish oson. GLOBAL indeks esa barcha bo'laklarni qamrab oluvchi yagona struktura — bo'lak o'zgarsa qayta qurish kerak bo'lishi mumkin.",
+      "en": "A LOCAL index is partitioned the same way as the table — one index partition per table partition, so dropping/adding a partition is easy. A GLOBAL index is one structure spanning all partitions and may need rebuilding when partitions change."
+    }
+  },
+  {
+    "id": "ix-07",
+    "topic": "indexes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "You add a PRIMARY KEY. Can Oracle reuse an already-existing index on the same columns instead of creating a new one?",
+    "options": [
+      "No — a PK always creates its own new index",
+      "Yes — if a suitable index (unique or non-unique) on those columns already exists, the PK can use it",
+      "Only if that index is a bitmap",
+      "Only in a data warehouse"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Ha. Agar o'sha ustun(lar) bo'yicha mos indeks (unique yoki hatto non-unique) allaqachon mavjud bo'lsa, PRIMARY KEY yangi indeks yaratmasdan o'shani ishlatadi. Bu ortiqcha indeksni oldini oladi.",
+      "en": "Yes. If a suitable index (unique, or even non-unique) on those columns already exists, the PRIMARY KEY uses it instead of creating a new one — avoiding a redundant index."
+    }
+  },
+  {
+    "id": "ix-08",
+    "topic": "indexes",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "After ALTER TABLE ... MOVE (relocating a table's rows), what happens to that table's indexes?",
+    "options": [
+      "Nothing — they keep working",
+      "They become UNUSABLE and must be rebuilt, because the rows' physical rowids changed",
+      "They are automatically dropped",
+      "They shrink automatically"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "MOVE qatorlarni jismonan ko'chiradi — rowid'lar o'zgaradi. Indekslar rowid'ga tayangani uchun ular UNUSABLE holatga o'tadi va ALTER INDEX ... REBUILD bilan qayta qurilishi shart.",
+      "en": "MOVE physically relocates rows, so their rowids change. Because indexes point by rowid, they become UNUSABLE and must be rebuilt with ALTER INDEX ... REBUILD."
+    }
+  },
+  {
+    "id": "ix-09",
+    "topic": "indexes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "You RENAME a table. What happens to its indexes and constraints?",
+    "options": [
+      "They become unusable",
+      "They remain valid and continue to work (rename doesn't move data or change rowids)",
+      "They are dropped",
+      "They must be recreated"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "RENAME faqat nomni o'zgartiradi — ma'lumot ko'chmaydi, rowid'lar o'zgarmaydi. Shuning uchun indekslar va cheklovlar amal qilaveradi (MOVE'dan farqli o'laroq).",
+      "en": "RENAME only changes the name — data isn't moved and rowids don't change. So indexes and constraints stay valid and keep working (unlike MOVE)."
+    }
+  },
+  {
+    "id": "ix-10",
+    "topic": "indexes",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "On a busy PRODUCTION system, how do you create or rebuild an index with minimal blocking of DML?",
+    "options": [
+      "Plain CREATE INDEX / ALTER INDEX REBUILD (these lock the table)",
+      "Use the ONLINE clause: CREATE INDEX ... ONLINE or ALTER INDEX ... REBUILD ONLINE, which allows concurrent DML",
+      "Drop the table first, then recreate it",
+      "It is impossible on a live system"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oddiy CREATE INDEX / REBUILD jadvalni bloklaydi (DML to'xtaydi). Prod'da ONLINE bandidan foydalaniladi — CREATE INDEX ... ONLINE yoki ALTER INDEX ... REBUILD ONLINE — bu parallel DML'ga ruxsat beradi.",
+      "en": "A plain CREATE INDEX / REBUILD locks the table (blocking DML). On production use the ONLINE clause — CREATE INDEX ... ONLINE or ALTER INDEX ... REBUILD ONLINE — which allows concurrent DML."
+    }
+  }
+]

@@ -1,0 +1,141 @@
+[
+  {
+    "id": "ru-01",
+    "topic": "redoundo",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between REDO and UNDO?",
+    "options": [
+      "They are the same thing",
+      "Redo records how to RE-APPLY changes (for recovery); undo records how to REVERSE changes (for rollback and read consistency)",
+      "Undo is for recovery, redo is for rollback",
+      "Both exist only for rollback"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Redo — o'zgarishlarni qayta qo'llash uchun (crash/media recovery). Undo — o'zgarishlarni bekor qilish uchun (ROLLBACK) va boshqa sessiyalarga o'qish izchilligi (eski versiya) uchun. Ular ikki xil maqsad.",
+      "en": "Redo records how to re-apply changes (for crash/media recovery). Undo records how to reverse changes (for ROLLBACK) and to give other sessions read consistency (old versions). They serve two different purposes."
+    }
+  },
+  {
+    "id": "ru-02",
+    "topic": "redoundo",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What are the two main uses of UNDO data?",
+    "options": [
+      "Backups and archiving",
+      "Rolling back transactions, and providing read consistency (serving old row versions to other sessions)",
+      "Generating redo",
+      "Building indexes"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Undo ikki narsaga kerak: (1) ROLLBACK — tranzaksiyani bekor qilish; (2) read consistency — COMMIT qilinmagan o'zgarish boshqa sessiyalarga ko'rinmasligi uchun ularga qatorning eski versiyasini berish.",
+      "en": "Undo serves two things: (1) ROLLBACK — reversing a transaction; (2) read consistency — giving other sessions the old version of a row so they don't see uncommitted changes."
+    }
+  },
+  {
+    "id": "ru-03",
+    "topic": "redoundo",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which parameter controls how long undo is retained (for consistent reads / flashback)?",
+    "options": ["UNDO_TABLESPACE", "UNDO_RETENTION", "DB_BLOCK_SIZE", "OPEN_CURSORS"],
+    "correct": [1],
+    "explanation": {
+      "uz": "UNDO_RETENTION (sekundlarda) undo ma'lumoti qancha vaqt saqlanishini belgilaydi — uzoq so'rovlar va flashback uchun. UNDO_TABLESPACE esa qaysi tablespace'da saqlanishini ko'rsatadi.",
+      "en": "UNDO_RETENTION (in seconds) controls how long undo is kept — for long-running queries and flashback. UNDO_TABLESPACE names which tablespace stores it."
+    }
+  },
+  {
+    "id": "ru-04",
+    "topic": "redoundo",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What does the LGWR (Log Writer) background process do?",
+    "options": [
+      "Writes data blocks to the datafiles",
+      "Writes the redo log buffer to the online redo log files",
+      "Cleans up after failed processes",
+      "Gathers optimizer statistics"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "LGWR redo log buffer'dagi yozuvlarni online redo log fayllariga yozadi — masalan COMMIT paytida. Bu tranzaksiya bardoshliligini (durability) ta'minlaydi. (Data bloklarni esa DBWn yozadi.)",
+      "en": "LGWR writes the redo entries from the redo log buffer to the online redo log files — e.g. at COMMIT. This guarantees transaction durability. (DBWn writes data blocks.)"
+    }
+  },
+  {
+    "id": "ru-05",
+    "topic": "redoundo",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the key difference between ARCHIVELOG and NOARCHIVELOG mode?",
+    "options": [
+      "There is no real difference",
+      "In ARCHIVELOG mode filled online redo logs are archived (copied), enabling point-in-time recovery and hot (online) backups; NOARCHIVELOG doesn't archive, so you can only restore to the last cold backup",
+      "NOARCHIVELOG recovers faster",
+      "ARCHIVELOG disables redo generation"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "ARCHIVELOG rejimida to'lgan online redo loglar arxivlanadi (nusxalanadi) — bu vaqt bo'yicha (point-in-time) tiklash va ishlab turgan (hot) backup imkonini beradi. NOARCHIVELOG'da arxiv yo'q — faqat oxirgi cold backup'gacha tiklash mumkin.",
+      "en": "In ARCHIVELOG mode filled online redo logs are archived (copied), enabling point-in-time recovery and hot (online) backups. NOARCHIVELOG doesn't archive, so you can only restore to the last cold backup."
+    }
+  },
+  {
+    "id": "ru-06",
+    "topic": "redoundo",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which parameter tells Oracle WHERE to write archived redo logs?",
+    "options": [
+      "UNDO_TABLESPACE",
+      "LOG_ARCHIVE_DEST (or DB_RECOVERY_FILE_DEST for the FRA)",
+      "SGA_TARGET",
+      "PGA_AGGREGATE_TARGET"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Arxiv redo loglar LOG_ARCHIVE_DEST_n (yoki Fast Recovery Area uchun DB_RECOVERY_FILE_DEST) bilan belgilangan joyga yoziladi.",
+      "en": "Archived redo logs are written to the location set by LOG_ARCHIVE_DEST_n (or DB_RECOVERY_FILE_DEST for the Fast Recovery Area)."
+    }
+  },
+  {
+    "id": "ru-07",
+    "topic": "redoundo",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is Oracle Data Guard (a standby database)?",
+    "options": [
+      "A one-time backup utility",
+      "A feature that keeps a synchronized standby copy of the primary database (via redo shipping/apply) for disaster recovery and failover",
+      "A type of index",
+      "A memory area in the SGA"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Data Guard — asosiy (primary) bazaning sinxron nusxasini (standby) redo'ni uzatib qo'llash orqali saqlab turadi. Ofat yoki nosozlikda standby'ga failover qilinadi — uzluksizlik va falokatdan tiklanish uchun.",
+      "en": "Data Guard maintains a synchronized standby copy of the primary database by shipping and applying redo. On disaster or failure you fail over to the standby — for high availability and disaster recovery."
+    }
+  },
+  {
+    "id": "ru-08",
+    "topic": "redoundo",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "A long-running query fails with 'ORA-01555: snapshot too old'. What is the usual cause and fix?",
+    "options": [
+      "The table is locked — kill the blocker",
+      "The undo needed for read consistency was overwritten (undo too small or UNDO_RETENTION too low) — increase the undo tablespace / retention, or tune the query",
+      "The redo logs are full — add redo",
+      "A missing index — create one"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "ORA-01555 — uzoq so'rovga kerak bo'lgan eski undo boshqa tranzaksiyalar tomonidan qayta yozib yuborilgan. Yechim: undo tablespace / UNDO_RETENTION'ni oshirish yoki so'rovni tezlashtirish (undo'ga bog'liqlik vaqtini qisqartirish).",
+      "en": "ORA-01555 means the old undo a long query needed was overwritten by other transactions. Fix: increase the undo tablespace / UNDO_RETENTION, or speed up the query to shorten how long it depends on that undo."
+    }
+  }
+]

@@ -1,0 +1,105 @@
+[
+  {
+    "id": "jb-01",
+    "topic": "jobs",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is a database Job (DBMS_SCHEDULER)?",
+    "options": [
+      "A background process of the instance",
+      "A task scheduled to run automatically at defined times or intervals inside the database",
+      "A type of index",
+      "A user session"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Job — bazada avtomatik, belgilangan vaqt yoki intervalda ishlaydigan vazifa (masalan tunda statistika yig'ish, hisobot). Zamonaviy Oracle'da DBMS_SCHEDULER bilan boshqariladi.",
+      "en": "A job is a task that runs automatically at defined times or intervals inside the database (e.g. gather stats nightly, run a report). In modern Oracle it is managed with DBMS_SCHEDULER."
+    }
+  },
+  {
+    "id": "jb-02",
+    "topic": "jobs",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "A job is scheduled every 5 minutes, but one run takes 10 minutes. What happens?",
+    "options": [
+      "A second copy starts at the 5-minute mark, so two run at once",
+      "By default the same job does NOT overlap itself — the next run is deferred until the current one finishes",
+      "The job raises an error and stops",
+      "The database restarts the job twice"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Scheduler bir xil jobning nusxalarini bir vaqtda ishlatmaydi. Joriy ishga tushish 10 daqiqa davom etsa, oradagi 5-daqiqalik nuqta o'tkazib yuboriladi — keyingi ishga tushish joriysi tugagach rejalashtiriladi (o'zaro ustma-ust bo'lmaydi).",
+      "en": "The Scheduler does not run overlapping instances of the same job. If a run takes 10 minutes, the intervening 5-minute mark is skipped — the next run is scheduled after the current one finishes (no self-overlap)."
+    }
+  },
+  {
+    "id": "jb-03",
+    "topic": "jobs",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Can DIFFERENT jobs run in parallel (at the same time)?",
+    "options": [
+      "No — only one job can run in the whole database at a time",
+      "Yes — different jobs run concurrently, limited by JOB_QUEUE_PROCESSES and resource plans",
+      "Only in NOARCHIVELOG mode",
+      "Only one job per user"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Ha — turli joblar bir vaqtda parallel ishlaydi. Nechta parallel ishlashi JOB_QUEUE_PROCESSES parametri va resurs rejalari bilan cheklanadi. (Faqat bir xil jobning o'zi o'ziga ustma-ust ishlamaydi.)",
+      "en": "Yes — different jobs run concurrently. How many run in parallel is limited by JOB_QUEUE_PROCESSES and resource plans. (Only the same job doesn't overlap itself.)"
+    }
+  },
+  {
+    "id": "jb-04",
+    "topic": "jobs",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which parameter limits how many scheduler/job processes can run concurrently?",
+    "options": ["OPEN_CURSORS", "JOB_QUEUE_PROCESSES", "UNDO_RETENTION", "DB_BLOCK_SIZE"],
+    "correct": [1],
+    "explanation": {
+      "uz": "JOB_QUEUE_PROCESSES bir vaqtda ishga tushishi mumkin bo'lgan job jarayonlari sonini cheklaydi. 0 ga qo'yilsa, joblar umuman ishlamaydi.",
+      "en": "JOB_QUEUE_PROCESSES caps how many job processes can run at once. If set to 0, jobs don't run at all."
+    }
+  },
+  {
+    "id": "jb-05",
+    "topic": "jobs",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "How do you make sure a second instance of the SAME work does not start while one is still running?",
+    "options": [
+      "Rely on the Scheduler (a repeating job never overlaps itself), or guard the logic with an application lock (DBMS_LOCK)",
+      "Run the job faster",
+      "Disable redo logging",
+      "Increase the SGA size"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Bir xil takrorlanuvchi job o'zi bilan ustma-ust ishlamaydi — bu tabiiy himoya. Agar mantiq turli joblardan yoki qo'lda ham chaqirilishi mumkin bo'lsa, DBMS_LOCK bilan qo'shimcha 'lock' qo'yib, ikkinchi nusxa boshlanmasligini kafolatlaysiz.",
+      "en": "A repeating job never overlaps itself — that's built-in protection. If the same logic can also be triggered from other jobs or manually, add an application lock (DBMS_LOCK) so a second instance can't start."
+    }
+  },
+  {
+    "id": "jb-06",
+    "topic": "jobs",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What replaced the older DBMS_JOB package in modern Oracle?",
+    "options": [
+      "DBMS_OUTPUT",
+      "DBMS_SCHEDULER — richer: calendar schedules, job chains, windows, resource plans, and logging",
+      "DBMS_STATS",
+      "DBMS_LOB"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "DBMS_JOB o'rniga DBMS_SCHEDULER keldi — u kuchliroq: kalendar jadvallar, job zanjirlari (chains), oynalar (windows), resurs rejalari va batafsil log. Yangi tizimlarda DBMS_SCHEDULER tavsiya etiladi.",
+      "en": "DBMS_SCHEDULER replaced DBMS_JOB — it is richer: calendar schedules, job chains, windows, resource plans, and detailed logging. New systems should use DBMS_SCHEDULER."
+    }
+  }
+]

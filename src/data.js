@@ -59,6 +59,9 @@ export const PROG_LANGS = {
       concurrency: { uz: "Konkurentlik (lock, deadlock)", en: "Concurrency (locks, deadlock)" },
       architecture: { uz: "Arxitektura va xotira (SGA/PGA)", en: "Architecture & memory (SGA/PGA)" },
       performance: { uz: "Optimizatsiya (optimizer, parse, plan)", en: "Performance (optimizer, parse, plan)" },
+      indexes: { uz: "Indekslar (turlari, rebuild)", en: "Indexes (types, rebuild)" },
+      redoundo: { uz: "Redo/Undo va recovery", en: "Redo/Undo & recovery" },
+      jobs: { uz: "Job va Scheduler", en: "Jobs & Scheduler" },
     },
     levels: {
       "1Z0-071": { label: "1Z0-071 — Oracle SQL", pass: 63, filter: (q) => q.levels?.includes("1Z0-071") },
