@@ -38,6 +38,11 @@ import {
   touchUser,
   getUsersOverview,
   getGlobalStats,
+  isBlocked,
+  blockUser,
+  unblockUser,
+  removeUser,
+  getUserDetail,
   flush,
 } from "./store.js";
 import {
@@ -93,6 +98,8 @@ bot.use((ctx, next) => {
       name: [f.first_name, f.last_name].filter(Boolean).join(" ") || null,
       username: f.username || null,
     });
+    // Bloklangan foydalanuvchi (adminlardan tashqari) — jimgina e'tiborsiz qoldiriladi
+    if (isBlocked(f.id) && !isAdmin(f.id)) return;
   }
   return next();
 });
@@ -121,28 +128,172 @@ bot.command("myid", (ctx) =>
   ctx.reply(`🆔 Telegram ID: <code>${ctx.from.id}</code>`, { parse_mode: "HTML" })
 );
 
-// Admin panel — faqat ADMIN_IDS dagilar uchun
-bot.command("admin", async (ctx) => {
-  if (!isAdmin(ctx.from.id)) return; // admin bo'lmasa — jimgina e'tiborsiz
+const ADMIN_LIST_SIZE = 20; // panelda ko'rsatiladigan (va tugmali) foydalanuvchilar soni
+const adminGuard = (ctx) => {
+  if (isAdmin(ctx.from.id)) return true;
+  ctx.answerCbQuery && ctx.answerCbQuery().catch(() => {});
+  return false;
+};
+
+// Admin panel matni + boshqaruv tugmalari (har foydalanuvchi uchun bitta tugma)
+function adminPanel() {
   const g = getGlobalStats();
   const users = getUsersOverview();
   let out =
     `👑 <b>Admin panel</b>\n\n` +
-    `👥 Jami foydalanuvchi: <b>${g.totalUsers}</b>\n` +
-    `🟢 So'nggi 24 soat faol: <b>${g.active24}</b>\n` +
-    `📅 So'nggi 7 kun faol: <b>${g.active7}</b>\n` +
-    `📝 Jami javoblar: <b>${g.totalAnswers}</b>\n\n` +
-    `<b>Foydalanuvchilar</b> (oxirgi faollik bo'yicha):\n`;
-  const TOP = 40;
-  users.slice(0, TOP).forEach((u, i) => {
+    `👥 Jami: <b>${g.totalUsers}</b> · 🟢 24s: <b>${g.active24}</b> · 📅 7k: <b>${g.active7}</b>\n` +
+    `📝 Javoblar: <b>${g.totalAnswers}</b> · 🚫 Bloklangan: <b>${g.blocked}</b>\n\n` +
+    `<b>Foydalanuvchilar</b> (oxirgi faollik):\n`;
+  const shown = users.slice(0, ADMIN_LIST_SIZE);
+  shown.forEach((u, i) => {
     const who = u.name ? esc(u.name) : `id${u.id}`;
     const uname = u.username ? ` @${esc(u.username)}` : "";
     const track = u.plang ? `${u.plang}/${u.level || "?"}` : "—";
     const acc = u.accuracy === null ? "—" : `${u.accuracy}%`;
-    out += `${i + 1}. ${who}${uname} · ${track} · ${u.answers} javob · ${acc} · ${fmtAgo(u.lastSeen)}\n`;
+    out += `${i + 1}. ${u.blocked ? "🚫 " : ""}${who}${uname} · ${track} · ${u.answers}j · ${acc} · ${fmtAgo(u.lastSeen)}\n`;
   });
-  if (users.length > TOP) out += `\n… va yana ${users.length - TOP} ta foydalanuvchi`;
-  await sendChunked(ctx, out);
+  if (users.length > ADMIN_LIST_SIZE)
+    out += `\n… va yana ${users.length - ADMIN_LIST_SIZE} ta. Boshqarish: /user &lt;id&gt;`;
+  const rows = shown.map((u, i) => [
+    Markup.button.callback(
+      `${i + 1}. ${u.blocked ? "🚫 " : ""}${(u.name || "id" + u.id).slice(0, 48)}`,
+      `adm:u:${u.id}`
+    ),
+  ]);
+  return { text: out, kb: Markup.inlineKeyboard(rows) };
+}
+
+async function showAdmin(ctx) {
+  const { text, kb } = adminPanel();
+  await sendChunked(ctx, text);
+  await ctx.reply("👇 Boshqarish uchun foydalanuvchini tanlang:", kb);
+}
+
+// Bitta foydalanuvchi kartasi (batafsil) + tugmalari
+function userCard(d) {
+  const who = d.name ? esc(d.name) : `id${d.id}`;
+  const uname = d.username ? ` @${esc(d.username)}` : "";
+  let out =
+    `👤 <b>${who}</b>${uname}\n` +
+    `🆔 <code>${d.id}</code>${d.blocked ? "  🚫 <b>BLOKLANGAN</b>" : ""}\n` +
+    `🌐 ${d.lang || "—"} · 🎯 ${d.plang ? `${d.plang}/${d.level || "?"}` : "—"}\n` +
+    `📅 Ro'yxatdan: ${fmtAgo(d.firstSeen)} · Oxirgi: ${fmtAgo(d.lastSeen)}\n\n` +
+    `📝 Jami javob: <b>${d.total}</b> · Aniqlik: <b>${d.accuracy === null ? "—" : d.accuracy + "%"}</b>`;
+  const levels = Object.entries(d.byLevel);
+  if (levels.length) {
+    out += `\n\n📊 <b>Daraja bo'yicha:</b>\n`;
+    out += levels
+      .map(([lk, s]) => `• ${lk}: ${s.c}/${s.t} (${Math.round((s.c / s.t) * 100)}%)`)
+      .join("\n");
+  }
+  if (d.grades.length) {
+    out += `\n\n🎓 <b>Baholar:</b>\n`;
+    out += d.grades
+      .map((g) => `• ${g.bandEmoji || "🎓"} ${esc(g.bandName)} (${g.plang}, ${fmtAgo(g.t)})`)
+      .join("\n");
+  }
+  return out;
+}
+
+function userCardKb(d) {
+  return Markup.inlineKeyboard([
+    [
+      d.blocked
+        ? Markup.button.callback("✅ Blokdan chiqarish", `adm:unblock:${d.id}`)
+        : Markup.button.callback("🚫 Bloklash", `adm:block:${d.id}`),
+      Markup.button.callback("🗑 O'chirish", `adm:rm:${d.id}`),
+    ],
+    [Markup.button.callback("⬅️ Admin", "adm:back")],
+  ]);
+}
+
+async function showUserCard(ctx, id, edit = false) {
+  const d = getUserDetail(id);
+  const opts = { parse_mode: "HTML", ...userCardKb(d) };
+  if (edit) await ctx.editMessageText(userCard(d), opts).catch(() => ctx.reply(userCard(d), opts));
+  else await ctx.reply(userCard(d), opts);
+}
+
+// Admin panel — faqat ADMIN_IDS dagilar uchun
+bot.command("admin", async (ctx) => {
+  if (!isAdmin(ctx.from.id)) return; // admin bo'lmasa — jimgina e'tiborsiz
+  await showAdmin(ctx);
+});
+
+// Batafsil ko'rish / bloklash — to'g'ridan id bo'yicha (ro'yxatda yo'q bo'lsa ham)
+bot.command("user", (ctx) => {
+  if (!isAdmin(ctx.from.id)) return;
+  const id = ctx.message.text.split(/\s+/)[1];
+  if (!id) return ctx.reply("Foydalanish: /user &lt;id&gt;", { parse_mode: "HTML" });
+  return showUserCard(ctx, id);
+});
+bot.command("block", (ctx) => {
+  if (!isAdmin(ctx.from.id)) return;
+  const id = ctx.message.text.split(/\s+/)[1];
+  if (!id) return ctx.reply("Foydalanish: /block &lt;id&gt;", { parse_mode: "HTML" });
+  blockUser(id);
+  endSession(Number(id));
+  return ctx.reply(`🚫 <code>${esc(id)}</code> bloklandi.`, { parse_mode: "HTML" });
+});
+bot.command("unblock", (ctx) => {
+  if (!isAdmin(ctx.from.id)) return;
+  const id = ctx.message.text.split(/\s+/)[1];
+  if (!id) return ctx.reply("Foydalanish: /unblock &lt;id&gt;", { parse_mode: "HTML" });
+  unblockUser(id);
+  return ctx.reply(`✅ <code>${esc(id)}</code> blokdan chiqarildi.`, { parse_mode: "HTML" });
+});
+
+// ---------- Admin panel callbacklar ----------
+bot.action(/^adm:u:(\d+)$/, async (ctx) => {
+  if (!adminGuard(ctx)) return;
+  await ctx.answerCbQuery();
+  await showUserCard(ctx, ctx.match[1]);
+});
+bot.action(/^adm:block:(\d+)$/, async (ctx) => {
+  if (!adminGuard(ctx)) return;
+  blockUser(ctx.match[1]);
+  endSession(Number(ctx.match[1]));
+  await ctx.answerCbQuery("Bloklandi 🚫");
+  await showUserCard(ctx, ctx.match[1], true);
+});
+bot.action(/^adm:unblock:(\d+)$/, async (ctx) => {
+  if (!adminGuard(ctx)) return;
+  unblockUser(ctx.match[1]);
+  await ctx.answerCbQuery("Blokdan chiqarildi ✅");
+  await showUserCard(ctx, ctx.match[1], true);
+});
+bot.action(/^adm:rm:(\d+)$/, async (ctx) => {
+  if (!adminGuard(ctx)) return;
+  await ctx.answerCbQuery();
+  const id = ctx.match[1];
+  await ctx.reply(
+    `⚠️ <code>${esc(id)}</code> — BARCHA ma'lumotini o'chirasizmi? Qaytarib bo'lmaydi.`,
+    {
+      parse_mode: "HTML",
+      ...Markup.inlineKeyboard([
+        [
+          Markup.button.callback("✅ Ha, o'chir", `adm:rmyes:${id}`),
+          Markup.button.callback("❌ Yo'q", `adm:u:${id}`),
+        ],
+      ]),
+    }
+  );
+});
+bot.action(/^adm:rmyes:(\d+)$/, async (ctx) => {
+  if (!adminGuard(ctx)) return;
+  const id = ctx.match[1];
+  removeUser(id);
+  endSession(Number(id));
+  await ctx.answerCbQuery("O'chirildi 🗑");
+  await ctx.editMessageText(`🗑 <code>${esc(id)}</code> — ma'lumotlari o'chirildi.`, {
+    parse_mode: "HTML",
+  }).catch(() => {});
+});
+bot.action("adm:back", async (ctx) => {
+  if (!adminGuard(ctx)) return;
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await showAdmin(ctx);
 });
 
 // ---------- Matn formatlash (Telegram HTML) ----------

@@ -12,7 +12,8 @@ const FILE = join(DATA_DIR, "store.json");
 // srs:     { [userId]: { [questionId]: { box, due, plang, level, topic } } }  (Leitner)
 // grades:  { [userId]: [ {plang, bandKey, bandName, theta, t} ] }  (baholash tarixi)
 // users:   { [userId]: { name, username, firstSeen, lastSeen } }  (admin uchun kimlik)
-let db = { prefs: {}, answers: [], srs: {}, grades: {}, users: {} };
+// blocked: { [userId]: { at } }  (bloklangan foydalanuvchilar)
+let db = { prefs: {}, answers: [], srs: {}, grades: {}, users: {}, blocked: {} };
 try {
   const loaded = JSON.parse(readFileSync(FILE, "utf8"));
   db.prefs = loaded.prefs || {};
@@ -20,6 +21,7 @@ try {
   db.srs = loaded.srs || {};
   db.grades = loaded.grades || {};
   db.users = loaded.users || {};
+  db.blocked = loaded.blocked || {};
 } catch {
   // fayl yo'q yoki buzuq — bo'sh baza bilan boshlaymiz
 }
@@ -270,6 +272,7 @@ export function getUsersOverview() {
       accuracy: a.total ? Math.round((a.correct / a.total) * 100) : null,
       lastSeen: u.lastSeen || a.last || null,
       firstSeen: u.firstSeen || null,
+      blocked: !!db.blocked[id],
     });
   }
   list.sort((x, y) => (y.lastSeen || 0) - (x.lastSeen || 0));
@@ -286,5 +289,76 @@ export function getGlobalStats() {
     active24: users.filter((u) => u.lastSeen && now - u.lastSeen < DAY).length,
     active7: users.filter((u) => u.lastSeen && now - u.lastSeen < 7 * DAY).length,
     totalAnswers: db.answers.length,
+    blocked: Object.keys(db.blocked).length,
+  };
+}
+
+// ---------- Foydalanuvchini boshqarish (admin) ----------
+export function isBlocked(userId) {
+  return !!db.blocked[String(userId)];
+}
+export function blockUser(userId) {
+  db.blocked[String(userId)] = { at: Date.now() };
+  schedule();
+}
+export function unblockUser(userId) {
+  delete db.blocked[String(userId)];
+  schedule();
+}
+
+// Foydalanuvchining barcha ma'lumotini o'chiradi (prefs, javob, SRS, baho, kimlik, blok)
+export function removeUser(userId) {
+  const key = String(userId);
+  delete db.prefs[key];
+  delete db.srs[key];
+  delete db.grades[key];
+  delete db.users[key];
+  delete db.blocked[key];
+  db.answers = db.answers.filter((a) => String(a.u) !== key);
+  schedule();
+}
+
+// Bitta foydalanuvchi bo'yicha batafsil ma'lumot (admin ko'rishi uchun)
+export function getUserDetail(userId) {
+  const key = String(userId);
+  const u = db.users[key] || {};
+  const p = db.prefs[key] || {};
+  let total = 0;
+  let correct = 0;
+  let lastAnswer = 0;
+  const byLevel = {}; // "plang/level" -> {c,t}
+  const byTopic = {}; // topic -> {c,t}
+  for (const a of db.answers) {
+    if (String(a.u) !== key) continue;
+    total += 1;
+    if (a.c) correct += 1;
+    if (a.t > lastAnswer) lastAnswer = a.t;
+    const lk = `${a.plang}/${a.level}`;
+    const bl = byLevel[lk] || { c: 0, t: 0 };
+    bl.t += 1;
+    if (a.c) bl.c += 1;
+    byLevel[lk] = bl;
+    const bt = byTopic[a.topic] || { c: 0, t: 0 };
+    bt.t += 1;
+    if (a.c) bt.c += 1;
+    byTopic[a.topic] = bt;
+  }
+  return {
+    id: key,
+    name: u.name || null,
+    username: u.username || null,
+    lang: p.lang || null,
+    plang: p.plang || null,
+    level: p.level || null,
+    firstSeen: u.firstSeen || null,
+    lastSeen: u.lastSeen || null,
+    lastAnswer,
+    blocked: !!db.blocked[key],
+    total,
+    correct,
+    accuracy: total ? Math.round((correct / total) * 100) : null,
+    byLevel,
+    byTopic,
+    grades: (db.grades[key] || []).slice(-5),
   };
 }
