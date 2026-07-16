@@ -64,6 +64,7 @@ export const PROG_LANGS = {
       jobs: { uz: "Job va Scheduler", en: "Jobs & Scheduler" },
       bulk: { uz: "Bulk va dinamik SQL", en: "Bulk & dynamic SQL" },
       datatypes: { uz: "Ma'lumot tiplari (LOB, rowid, rownum)", en: "Data types (LOB, rowid, rownum)" },
+      modeling: { uz: "Modellashtirish (normal form, OLAP/OLTP)", en: "Data modeling (normal forms, OLAP/OLTP)" },
     },
     levels: {
       "1Z0-071": { label: "1Z0-071 — Oracle SQL", pass: 63, filter: (q) => q.levels?.includes("1Z0-071") },

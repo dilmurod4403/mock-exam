@@ -1,0 +1,92 @@
+[
+  {
+    "id": "ar-11",
+    "topic": "architecture",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between an Oracle INSTANCE and a DATABASE?",
+    "options": [
+      "They are the same thing",
+      "The INSTANCE is the memory (SGA) plus background processes; the DATABASE is the set of files on disk (datafiles, control files, redo logs). An instance mounts and opens a database",
+      "The database is the memory; the instance is on disk",
+      "An instance is a single table"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Instance — xotira (SGA) + background jarayonlar (o'tkinchi, o'chirsa yo'qoladi). Database — diskdagi fayllar (datafile, control file, redo log). Instance database'ni mount qilib, ochadi. (RAC'da bitta database'ga bir nechta instance bo'ladi.)",
+      "en": "The instance is memory (SGA) + background processes (transient, gone when shut down). The database is the files on disk (datafiles, control files, redo logs). An instance mounts and opens a database. (In RAC, several instances serve one database.)"
+    }
+  },
+  {
+    "id": "ar-12",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "Which tablespace holds the data dictionary and core system metadata?",
+    "options": [
+      "USERS",
+      "SYSTEM (with SYSAUX as its auxiliary companion for extra metadata)",
+      "TEMP",
+      "UNDO"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SYSTEM tablespace ma'lumotlar lug'ati (data dictionary) va asosiy tizim obyektlarini saqlaydi. SYSAUX — uning yordamchisi (qo'shimcha metama'lumot, masalan AWR). Foydalanuvchi ma'lumoti odatda USERS yoki alohida tablespace'da bo'ladi.",
+      "en": "The SYSTEM tablespace holds the data dictionary and core system objects. SYSAUX is its auxiliary companion (extra metadata, e.g. AWR). User data normally lives in USERS or a dedicated tablespace."
+    }
+  },
+  {
+    "id": "ar-13",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the TEMP (temporary) tablespace used for?",
+    "options": [
+      "Permanently storing table data",
+      "Temporary work that spills to disk — large sorts, hash joins, and global temporary tables when they don't fit in PGA memory",
+      "Storing undo data",
+      "Storing redo logs"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "TEMP tablespace vaqtinchalik ishlar diskka to'kilganda ishlatiladi: katta ORDER BY/GROUP BY sortlari, hash join'lar va global temporary table'lar PGA'ga sig'masa. Doimiy ma'lumot u yerda saqlanmaydi.",
+      "en": "The TEMP tablespace is used when temporary work spills to disk: large ORDER BY/GROUP BY sorts, hash joins, and global temporary tables that don't fit in PGA. No permanent data is stored there."
+    }
+  },
+  {
+    "id": "ar-14",
+    "topic": "architecture",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is a SEGMENT in Oracle's storage hierarchy?",
+    "options": [
+      "A network packet",
+      "The storage allocated to a specific database object (e.g. a table segment, index segment, undo segment), made up of one or more extents",
+      "A background process",
+      "A region of the SGA"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Segment — muayyan obyektga (jadval, indeks, undo...) ajratilgan xotira. U bir yoki bir nechta extent'dan iborat, extent esa uzluksiz bloklar guruhi. Ierarxiya: Tablespace > Segment > Extent > Block.",
+      "en": "A segment is the storage allocated to a specific object (table, index, undo, ...). It consists of one or more extents, and an extent is a set of contiguous blocks. Hierarchy: Tablespace > Segment > Extent > Block."
+    }
+  },
+  {
+    "id": "ar-15",
+    "topic": "architecture",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the SPFILE (the 'init' parameters)?",
+    "options": [
+      "A data table in the SYSTEM tablespace",
+      "The server parameter file (SPFILE, or the older text PFILE init.ora) holding instance startup parameters — SGA sizes, processes, control_files, undo_tablespace, etc.",
+      "An online redo log",
+      "A type of index"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SPFILE (yoki eski matnli PFILE init.ora) — instance ishga tushganda o'qiladigan parametrlar fayli: SGA o'lchamlari, processes, control_files, undo_tablespace va boshqalar. SPFILE ikkilik va ALTER SYSTEM bilan o'zgartiriladi.",
+      "en": "The SPFILE (or older text PFILE init.ora) is the parameter file read at instance startup: SGA sizes, processes, control_files, undo_tablespace, and more. The SPFILE is binary and changed with ALTER SYSTEM."
+    }
+  }
+]

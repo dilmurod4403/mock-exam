@@ -1,0 +1,110 @@
+[
+  {
+    "id": "md-01",
+    "topic": "modeling",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is database normalization?",
+    "options": [
+      "Making every column a VARCHAR2",
+      "Organizing data into related tables to reduce redundancy and avoid update/insert/delete anomalies",
+      "Adding as many indexes as possible",
+      "Encrypting the data"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Normalizatsiya — ma'lumotni bog'langan jadvallarga bo'lib, takrorlanishni (redundancy) kamaytirish va yangilash/qo'shish/o'chirish anomaliyalarining oldini olish. Har fakt bir joyda saqlanadi.",
+      "en": "Normalization organizes data into related tables to reduce redundancy and avoid update/insert/delete anomalies. Each fact is stored in one place."
+    }
+  },
+  {
+    "id": "md-02",
+    "topic": "modeling",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "In order, what do 1NF, 2NF, and 3NF each add?",
+    "options": [
+      "They are the same rule repeated three times",
+      "1NF: atomic column values, no repeating groups; 2NF: no partial dependency on part of a composite key; 3NF: no transitive dependency (a non-key column depending on another non-key column)",
+      "3NF comes first, then 2NF, then 1NF",
+      "They only apply to indexes"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "1NF — ustun qiymatlari atomar (bo'linmas), takror guruh yo'q. 2NF — kompozit kalitning bir qismiga qisman bog'liqlik yo'q. 3NF — tranzitiv bog'liqlik yo'q (kalit bo'lmagan ustun boshqa kalit bo'lmagan ustunga bog'liq bo'lmasligi).",
+      "en": "1NF: atomic column values, no repeating groups. 2NF: no partial dependency on part of a composite key. 3NF: no transitive dependency (a non-key column depending on another non-key column)."
+    }
+  },
+  {
+    "id": "md-03",
+    "topic": "modeling",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between OLTP and OLAP?",
+    "options": [
+      "They are the same",
+      "OLTP = many small transactions (insert/update), normalized schema, day-to-day apps; OLAP = analytical queries over large historical data, often denormalized (star schema), data warehouses",
+      "OLAP handles the day-to-day transactions",
+      "OLTP is used for reporting and analytics"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "OLTP — ko'p kichik tranzaksiya (insert/update), normallashtirilgan sxema, kundalik ilovalar. OLAP — katta tarixiy ma'lumot ustidan analitik so'rovlar, ko'pincha denormallashtirilgan (star schema), data warehouse.",
+      "en": "OLTP = many small transactions (insert/update), normalized schema, day-to-day apps. OLAP = analytical queries over large historical data, often denormalized (star schema), data warehouses."
+    }
+  },
+  {
+    "id": "md-04",
+    "topic": "modeling",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "You are building a typical business transactional application (orders, customers, payments). Which model fits?",
+    "options": [
+      "OLAP / a data warehouse",
+      "OLTP — a normalized schema optimized for frequent inserts/updates and concurrency",
+      "Neither — use flat files",
+      "A bitmap-only design"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Kundalik biznes ilovasi (buyurtma, mijoz, to'lov) — OLTP: normallashtirilgan sxema, tez-tez insert/update va ko'p parallel foydalanuvchi uchun. OLAP esa hisobot/analitika (data warehouse) uchun.",
+      "en": "A day-to-day business app (orders, customers, payments) is OLTP: a normalized schema tuned for frequent inserts/updates and high concurrency. OLAP is for reporting/analytics (data warehouse)."
+    }
+  },
+  {
+    "id": "md-05",
+    "topic": "modeling",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is a data warehouse, and what is a star schema?",
+    "options": [
+      "A warehouse is just a backup of production; a star schema is an index",
+      "A data warehouse is a system optimized for analytics/reporting over historical data; a star schema has a central FACT table joined to surrounding DIMENSION tables",
+      "A star schema stores data in a single table",
+      "A data warehouse is a memory area in the SGA"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Data warehouse — tarixiy ma'lumot ustidan analitika/hisobot uchun optimallashtirilgan tizim. Star schema — markazda fakt (fact) jadval, atrofida o'lchov (dimension) jadvallar; analitik so'rovlarni soddalashtiradi.",
+      "en": "A data warehouse is a system optimized for analytics/reporting over historical data. A star schema has a central FACT table surrounded by DIMENSION tables, which simplifies analytical queries."
+    }
+  },
+  {
+    "id": "md-06",
+    "topic": "modeling",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Table CHILD has a FOREIGN KEY referencing table PARENT. Which DROP causes an error, and how do you force it?",
+    "options": [
+      "Dropping CHILD fails; nothing can force it",
+      "Dropping PARENT fails while referenced rows exist; DROP TABLE PARENT CASCADE CONSTRAINTS forces it (it drops the FK constraint, so the child table's rows remain but are no longer constrained)",
+      "Both tables drop freely with no error",
+      "Neither table can ever be dropped"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Bola jadval ota jadvalga FK qilgan. Ota jadvalni (PARENT) o'chirish — bog'langan qatorlar bo'lsa — xato beradi. DROP TABLE PARENT CASCADE CONSTRAINTS majburan o'chiradi: FK cheklovi olib tashlanadi, bola jadval qatorlari qoladi (endi cheklanmagan).",
+      "en": "The child references the parent via FK. Dropping the PARENT fails while referenced rows exist. DROP TABLE PARENT CASCADE CONSTRAINTS forces it: the FK constraint is removed, and the child table's rows remain (now unconstrained)."
+    }
+  }
+]
