@@ -2,6 +2,59 @@
 // Kalitlar — ORA-DBA mavzulari bilan bir xil (transactions, concurrency, ...).
 // Har dars o'sha mavzudagi savollar tekshiradigan tushunchalarni to'liq ochadi.
 export default {
+  subprograms: {
+    title: { uz: "Subprogramlar (chuqur): param, NOCOPY, huquqlar", en: "Subprograms (deep): params, NOCOPY, rights" },
+    body: {
+      uz: `PROCEDURE vs FUNCTION vs PACKAGE:
+• Procedure — amal bajaradi, qiymat qaytarishi shart emas (natijani OUT parametr orqali beradi).
+• Function — RETURN bilan albatta qiymat qaytaradi; SQL ifodalarida ishlatilishi mumkin.
+• Package — bog'liq procedure/function/tiplarni guruhlaydi (spec + body).
+
+PARAMETR REJIMLARI:
+• IN — qiymatni ichkariga uzatadi (ichida faqat o'qiladi). Standart.
+• OUT — natijani qaytaradi (ichida boshda NULL).
+• IN OUT — qiymatni uzatib, o'zgartirilganini qaytaradi.
+
+NOCOPY: odatda OUT/IN OUT qiymat nusxasi bilan uzatiladi (copy-in/copy-out). NOCOPY havola (by reference) orqali uzatishni so'raydi — katta kolleksiya/record uchun tez. Kamchiligi: ushlanmagan istisnoda haqiqiy parametr qisman o'zgargan qolishi mumkin.
+\`\`\`plsql
+PROCEDURE load(p_data IN OUT NOCOPY t_big_table) IS ...
+\`\`\`
+
+DEFINER vs INVOKER RIGHTS:
+• Definer's (standart) — subprogram EGASINING huquqlari/sxemasi bilan ishlaydi.
+• Invoker's (AUTHID CURRENT_USER) — CHAQIRUVCHINING huquqlari/sxemasi bilan (masalan har foydalanuvchi o'z jadvaliga).
+
+TRANZAKSIYA NAZORATI: chaqirilgan subprogram ichidagi COMMIT chaqiruvchining ATOMARLIGINI buzadi — endi butun ishni bitta tranzaksiya sifatida rollback qilib bo'lmaydi. Commit/rollback yuqori (chaqiruvchi) darajada boshqarilsin; chinakam mustaqil bo'lsa — autonomous transaction.
+
+XATOLARNI ANIQLASH: 4 ta funksiya chaqirilgan va ichida commit/rollback borligini bilmasangiz — xatolarni WHEN OTHERS THEN NULL bilan "yutmang"; ular yuqoriga ko'tarilsin (RAISE) va SQLERRM'ni loglang.
+
+💡 Yodda tut: function RETURN qiladi, procedure — shart emas; katta parametrga NOCOPY; commit'ni chaqiruvchida ushlang.`,
+      en: `PROCEDURE vs FUNCTION vs PACKAGE:
+• Procedure — performs an action, need not return a value (returns results via OUT params).
+• Function — must return a value with RETURN; usable in SQL expressions.
+• Package — groups related procedures/functions/types (spec + body).
+
+PARAMETER MODES:
+• IN — passes a value in (read-only inside). Default.
+• OUT — returns a value out (NULL inside at first).
+• IN OUT — passes in and returns a modified value.
+
+NOCOPY: normally OUT/IN OUT are passed by value (copy-in/copy-out). NOCOPY asks to pass by reference — faster for large collections/records. Downside: on an unhandled exception the actual parameter may be left partially modified.
+\`\`\`plsql
+PROCEDURE load(p_data IN OUT NOCOPY t_big_table) IS ...
+\`\`\`
+
+DEFINER vs INVOKER RIGHTS:
+• Definer's (default) — runs with the OWNER's privileges/schema.
+• Invoker's (AUTHID CURRENT_USER) — runs with the CALLER's privileges/schema (e.g. each user against their own tables).
+
+TRANSACTION CONTROL: a COMMIT inside a called subprogram breaks the caller's ATOMICITY — the whole unit of work can no longer be rolled back as one transaction. Control commit/rollback at the top level; if truly independent, use an autonomous transaction.
+
+DETECTING ERRORS: if 4 functions are called and you don't know whether they commit/rollback inside — don't "swallow" errors with WHEN OTHERS THEN NULL; let them propagate (RAISE) and log SQLERRM.
+
+💡 Remember: a function RETURNs, a procedure need not; use NOCOPY for large params; control commit in the caller.`,
+    },
+  },
   transactions: {
     title: { uz: "Tranzaksiyalar — to'liq tayyorgarlik", en: "Transactions — full prep" },
     body: {

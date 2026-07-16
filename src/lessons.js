@@ -1,17 +1,21 @@
-// Mini-darslar katalogi (dasturlash tili bo'yicha).
+// Mini-darslar katalogi (dasturlash tili + daraja bo'yicha).
 import javascript from "./lessons/javascript.js";
 import plsql from "./lessons/plsql.js";
 import plsqlDba from "./lessons/plsql-dba.js";
 
-// plsql tarmog'i: asosiy (SQL/PL-SQL) + DBA/Interview darslari birga
-const LESSONS = { javascript, plsql: { ...plsql, ...plsqlDba } };
+// Tarmoq bo'yicha asosiy darslar
+const BASE = { javascript, plsql };
+// Darajaga xos darslar (bir xil topic uchun asosiyni ustunlaydi)
+const BY_LEVEL = { "ORA-DBA": plsqlDba };
 
-// Berilgan til uchun darsli mavzular ro'yxati (topic kalitlari)
-export function lessonTopics(plang) {
-  return LESSONS[plang] ? Object.keys(LESSONS[plang]) : [];
+// Berilgan til+daraja uchun darsli mavzular (asosiy + darajaga xos)
+export function lessonTopics(plang, level) {
+  const base = BASE[plang] ? Object.keys(BASE[plang]) : [];
+  const extra = level && BY_LEVEL[level] ? Object.keys(BY_LEVEL[level]) : [];
+  return [...new Set([...base, ...extra])];
 }
 
-// Bitta mavzu darsi: { title: {uz,en}, body: {uz,en} } yoki null
-export function getLesson(plang, topic) {
-  return LESSONS[plang]?.[topic] || null;
+// Bitta mavzu darsi: avval darajaga xos, keyin asosiy (yoki null)
+export function getLesson(plang, topic, level) {
+  return BY_LEVEL[level]?.[topic] || BASE[plang]?.[topic] || null;
 }
