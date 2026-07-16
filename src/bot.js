@@ -616,8 +616,10 @@ function sendLearnMenu(ctx) {
   const lang = langOf(ctx);
   const prefs = getPrefs(ctx.from.id);
   if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
-  const { plang } = prefs;
-  const topics = lessonTopics(plang);
+  const { plang, level } = prefs;
+  // faqat joriy darajada savoli bor mavzular darsini ko'rsatamiz
+  const counts = topicCounts({ plang, level });
+  const topics = lessonTopics(plang).filter((code) => (counts[code] || 0) > 0);
   if (topics.length === 0) return ctx.reply(t(lang, "no_lessons"));
   const rows = topics.map((code) => [
     Markup.button.callback(PROG_LANGS[plang].topics[code][lang], `learn:${code}`),

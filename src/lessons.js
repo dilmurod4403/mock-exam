@@ -1,8 +1,10 @@
 // Mini-darslar katalogi (dasturlash tili bo'yicha).
 import javascript from "./lessons/javascript.js";
 import plsql from "./lessons/plsql.js";
+import plsqlDba from "./lessons/plsql-dba.js";
 
-const LESSONS = { javascript, plsql };
+// plsql tarmog'i: asosiy (SQL/PL-SQL) + DBA/Interview darslari birga
+const LESSONS = { javascript, plsql: { ...plsql, ...plsqlDba } };
 
 // Berilgan til uchun darsli mavzular ro'yxati (topic kalitlari)
 export function lessonTopics(plang) {
