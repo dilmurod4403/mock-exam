@@ -346,15 +346,22 @@ function mistakeBlocks(session, lang) {
 
 // HTML bloklarni Telegram limitiga sig'diradigan qismlarga bo'lib yuboradi
 async function sendBlocks(ctx, blocks, sep = "\n\n──────────\n\n", limit = 3500) {
+  // Bitta bo'lak limitdan uzun bo'lsa ham — mayda qismlarga bo'lib yuboramiz
+  // (Telegram 4096 limitidan oshmasligi uchun; limit < 4096).
+  const send = async (text) => {
+    for (let i = 0; i < text.length; i += limit) {
+      await ctx.reply(text.slice(i, i + limit), { parse_mode: "HTML" });
+    }
+  };
   let buf = "";
   for (const b of blocks) {
     if (buf && buf.length + sep.length + b.length > limit) {
-      await ctx.reply(buf, { parse_mode: "HTML" });
+      await send(buf);
       buf = "";
     }
     buf = buf ? buf + sep + b : b;
   }
-  if (buf) await ctx.reply(buf, { parse_mode: "HTML" });
+  if (buf) await send(buf);
 }
 
 // grade rejimi natija kartasi: daraja + qiyinlik/mavzu tahlili + keyingi qadam
@@ -923,12 +930,18 @@ bot.action("result", async (ctx) => {
   }
   await ctx.reply(headline, { parse_mode: "HTML" });
 
-  const blocks = mistakeBlocks(session, lang);
-  if (blocks.length) {
-    await ctx.reply(t(lang, "mistakes_title", blocks.length), { parse_mode: "HTML" });
-    await sendBlocks(ctx, blocks);
+  // Xato-tahlilini yuborish (uzun bo'lsa xato berishi mumkin) — menyuni bloklamasin
+  try {
+    const blocks = mistakeBlocks(session, lang);
+    if (blocks.length) {
+      await ctx.reply(t(lang, "mistakes_title", blocks.length), { parse_mode: "HTML" });
+      await sendBlocks(ctx, blocks);
+    }
+  } catch (err) {
+    console.error("⚠️ Xatolar tahlilini yuborib bo'lmadi:", err.message);
   }
 
+  // Har doim ko'rsatiladi: keyingi qadam + orqaga/menyu
   await ctx.reply(t(lang, "retry"), { parse_mode: "HTML", ...menuKeyboard(lang) });
   endSession(ctx.from.id);
 });
