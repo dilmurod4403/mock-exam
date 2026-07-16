@@ -1,0 +1,74 @@
+[
+  {
+    "id": "spx-01",
+    "topic": "subprograms",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What are the three parameter modes IN, OUT, and IN OUT?",
+    "options": [
+      "All three are read-only",
+      "IN passes a value in (read-only inside); OUT returns a value out (starts as NULL inside); IN OUT passes a value in and returns a possibly-modified value",
+      "OUT is read-only inside",
+      "IN OUT cannot be modified"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "IN — qiymatni ichkariga uzatadi (ichida faqat o'qiladi). OUT — natijani qaytaradi (ichida boshda NULL). IN OUT — qiymatni ichkariga uzatib, o'zgartirilgan qiymatni orqaga qaytaradi.",
+      "en": "IN passes a value in (read-only inside). OUT returns a value out (NULL inside at first). IN OUT passes a value in and returns a possibly-modified value."
+    }
+  },
+  {
+    "id": "spx-02",
+    "topic": "subprograms",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What does the NOCOPY hint on an OUT / IN OUT parameter do?",
+    "options": [
+      "It copies the value twice for safety",
+      "It asks Oracle to pass the parameter by reference instead of by value (copy) — faster for large collections/records, but on an unhandled exception the actual parameter may be left partially modified",
+      "It makes the parameter read-only",
+      "It commits the parameter change"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Odatda OUT/IN OUT qiymat nusxasi bilan uzatiladi (copy-in/copy-out). NOCOPY — havola (by reference) orqali uzatishni so'raydi: katta kolleksiya/record uchun tez. Kamchiligi: ushlanmagan istisnoda haqiqiy parametr qisman o'zgargan holda qolishi mumkin.",
+      "en": "Normally OUT/IN OUT are passed by value (copy-in/copy-out). NOCOPY asks to pass by reference: faster for large collections/records. Downside: on an unhandled exception, the actual parameter may be left partially modified."
+    }
+  },
+  {
+    "id": "spx-03",
+    "topic": "subprograms",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Definer's rights (the default) vs Invoker's rights (AUTHID CURRENT_USER)?",
+    "options": [
+      "They are the same",
+      "Definer's rights: the subprogram runs with the privileges and schema of its OWNER (default). Invoker's rights: it runs with the privileges and schema of whoever CALLS it",
+      "Invoker's rights is the default",
+      "Definer's rights uses the caller's schema"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Definer's rights (standart) — subprogram egasining huquqlari va sxemasi bilan ishlaydi. Invoker's rights (AUTHID CURRENT_USER) — chaqiruvchining huquqlari va sxemasi bilan ishlaydi (masalan har foydalanuvchi o'z jadvaliga ishlashi uchun).",
+      "en": "Definer's rights (default): the subprogram runs with the owner's privileges and schema. Invoker's rights (AUTHID CURRENT_USER): it runs with the caller's privileges and schema (e.g. so each user works against their own tables)."
+    }
+  },
+  {
+    "id": "spx-04",
+    "topic": "subprograms",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Why is putting a COMMIT inside a function/procedure that is called within a larger transaction usually a bad idea?",
+    "options": [
+      "It makes the call run faster",
+      "It breaks the caller's atomicity — the caller can no longer roll back the whole unit of work as one transaction; commit/rollback should be controlled at the top level (or use an autonomous transaction if truly independent)",
+      "It is required for the function to return",
+      "It prevents all exceptions"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Chaqirilgan subprogram ichidagi COMMIT chaqiruvchining atomarligini buzadi — endi butun ishni bitta tranzaksiya sifatida ROLLBACK qilib bo'lmaydi. Commit/rollback yuqori (chaqiruvchi) darajada boshqarilishi kerak; chinakam mustaqil bo'lsa — autonomous transaction ishlatiladi.",
+      "en": "A COMMIT inside a called subprogram breaks the caller's atomicity — the whole unit of work can no longer be rolled back as one transaction. Commit/rollback should be controlled at the top level; if the work is truly independent, use an autonomous transaction."
+    }
+  }
+]

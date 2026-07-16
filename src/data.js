@@ -62,6 +62,8 @@ export const PROG_LANGS = {
       indexes: { uz: "Indekslar (turlari, rebuild)", en: "Indexes (types, rebuild)" },
       redoundo: { uz: "Redo/Undo va recovery", en: "Redo/Undo & recovery" },
       jobs: { uz: "Job va Scheduler", en: "Jobs & Scheduler" },
+      bulk: { uz: "Bulk va dinamik SQL", en: "Bulk & dynamic SQL" },
+      datatypes: { uz: "Ma'lumot tiplari (LOB, rowid, rownum)", en: "Data types (LOB, rowid, rownum)" },
     },
     levels: {
       "1Z0-071": { label: "1Z0-071 — Oracle SQL", pass: 63, filter: (q) => q.levels?.includes("1Z0-071") },

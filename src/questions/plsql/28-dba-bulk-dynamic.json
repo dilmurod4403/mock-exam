@@ -1,0 +1,146 @@
+[
+  {
+    "id": "bk-01",
+    "topic": "bulk",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What does BULK COLLECT do?",
+    "options": [
+      "Commits many rows at once",
+      "Fetches multiple rows from a query into a collection in a single operation, instead of row-by-row",
+      "Locks a whole table",
+      "Creates an index in bulk"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "BULK COLLECT so'rov natijasidagi ko'p qatorni bir amalda kolleksiyaga o'qiydi — har qatorni alohida FETCH qilish o'rniga. Bu PL/SQL va SQL dvigatellari orasidagi kontekst almashinuvini keskin kamaytiradi.",
+      "en": "BULK COLLECT fetches many rows of a query into a collection in one operation, instead of fetching row by row. This sharply cuts context switches between the PL/SQL and SQL engines."
+    }
+  },
+  {
+    "id": "bk-02",
+    "topic": "bulk",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What does FORALL do?",
+    "options": [
+      "It is a loop that runs SELECT statements",
+      "It sends a whole collection of DML (INSERT/UPDATE/DELETE) to the SQL engine in one bulk operation",
+      "It declares a cursor",
+      "It commits a transaction"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "FORALL kolleksiyadagi barcha elementlar uchun DML'ni (INSERT/UPDATE/DELETE) bitta bulk amalda SQL dvigateliga uzatadi. U — sikl emas, balki bitta bulk DML operatori.",
+      "en": "FORALL sends DML (INSERT/UPDATE/DELETE) for all elements of a collection to the SQL engine as a single bulk operation. It is not a loop — it is one bulk DML statement."
+    }
+  },
+  {
+    "id": "bk-03",
+    "topic": "bulk",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the key difference between a normal FOR loop doing DML and FORALL?",
+    "options": [
+      "There is no difference",
+      "A FOR loop does one context switch per row (slow); FORALL passes all rows in one switch (much faster) — but FORALL only performs DML, not arbitrary logic",
+      "FORALL is slower than a FOR loop",
+      "A FOR loop cannot contain DML"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "FOR sikl har qatorda PL/SQL↔SQL kontekst almashinuvi qiladi (sekin). FORALL barcha qatorni bitta almashinuvda uzatadi (ancha tez). Lekin FORALL faqat DML bajaradi — ichida ixtiyoriy mantiq yozib bo'lmaydi.",
+      "en": "A FOR loop does one PL/SQL↔SQL context switch per row (slow). FORALL passes all rows in a single switch (much faster). But FORALL only performs DML — you can't put arbitrary logic inside it."
+    }
+  },
+  {
+    "id": "bk-04",
+    "topic": "bulk",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the main reason BULK COLLECT / FORALL are faster than row-by-row processing?",
+    "options": [
+      "They avoid COMMITs",
+      "They cut the number of context switches between the PL/SQL and SQL engines — the main cost of row-by-row processing",
+      "They enforce constraints",
+      "They build indexes automatically"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Qator-ba-qator ishlashning asosiy narxi — PL/SQL va SQL dvigatellari orasidagi kontekst almashinuvlari. BULK COLLECT/FORALL ularni bir necha bittaga tushiradi, shuning uchun tez ishlaydi.",
+      "en": "The main cost of row-by-row work is the context switches between the PL/SQL and SQL engines. BULK COLLECT/FORALL reduce those to a few, which is why they are fast."
+    }
+  },
+  {
+    "id": "bk-05",
+    "topic": "bulk",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "A very large BULK COLLECT can exhaust PGA memory. How do you bound it?",
+    "options": [
+      "You cannot — it always loads everything",
+      "Use the LIMIT clause in a loop: FETCH ... BULK COLLECT INTO ... LIMIT n",
+      "Add more indexes",
+      "Call COMMIT more often"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Katta natijani bir zumda o'qish PGA'ni to'ldiradi. Yechim — FETCH ... BULK COLLECT INTO ... LIMIT n bilan siklda porsiyalab (masalan 1000 tadan) o'qish.",
+      "en": "Loading a huge result at once can exhaust the PGA. The fix is to fetch in batches inside a loop with FETCH ... BULK COLLECT INTO ... LIMIT n (e.g. 1000 at a time)."
+    }
+  },
+  {
+    "id": "bk-06",
+    "topic": "bulk",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is EXECUTE IMMEDIATE used for?",
+    "options": [
+      "To make static SQL run faster",
+      "To run dynamic SQL or DDL built as a string at run time (e.g. 'CREATE TABLE ...', or SQL whose text isn't known until run time)",
+      "To COMMIT a transaction",
+      "To open a cursor"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "EXECUTE IMMEDIATE dinamik SQL yoki DDL'ni satr sifatida ish vaqtida bajaradi — masalan PL/SQL ichida DDL ('CREATE TABLE ...') yoki matni oldindan noma'lum so'rov.",
+      "en": "EXECUTE IMMEDIATE runs dynamic SQL or DDL built as a string at run time — e.g. DDL inside PL/SQL ('CREATE TABLE ...'), or a query whose text isn't known until run time."
+    }
+  },
+  {
+    "id": "bk-07",
+    "topic": "bulk",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is a major downside of dynamic SQL that concatenates values into the string?",
+    "options": [
+      "It is always faster than static SQL",
+      "It is exposed to SQL injection and forces a hard parse each time — use bind variables (the USING clause) to avoid both",
+      "It cannot run DDL",
+      "It commits automatically"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Qiymatlarni satrga ulab yozilgan dinamik SQL — SQL injection xavfi va har safar hard parse. Ikkalasini ham bind o'zgaruvchilar (USING bandi) hal qiladi: EXECUTE IMMEDIATE '... WHERE id = :1' USING v_id.",
+      "en": "Dynamic SQL that concatenates values risks SQL injection and forces a hard parse each time. Bind variables (the USING clause) fix both: EXECUTE IMMEDIATE '... WHERE id = :1' USING v_id."
+    }
+  },
+  {
+    "id": "bk-08",
+    "topic": "bulk",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What does the exception handler do here if the bulk insert fails?\n\n```plsql\nSAVEPOINT sp_before_insert;\nFORALL i IN 1 .. l_data.COUNT\n  INSERT INTO demo_target VALUES (l_data(i).id, l_data(i).name);\nCOMMIT;\nEXCEPTION\n  WHEN OTHERS THEN\n    ROLLBACK TO sp_before_insert;\n```",
+    "options": [
+      "It commits the rows that were inserted before the error",
+      "It undoes changes back to the savepoint (the failed insert's effects), keeping earlier work and leaving the transaction open",
+      "It rolls back every transaction in the database",
+      "It does nothing — SAVEPOINT can't be rolled back to"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "ROLLBACK TO sp_before_insert faqat savepoint'dan keyingi o'zgarishlarni (muvaffaqiyatsiz insert ta'sirini) bekor qiladi; undan oldingi ishlar saqlanadi va tranzaksiya ochiq qoladi. Keyin yakuniy COMMIT yoki ROLLBACK kerak.",
+      "en": "ROLLBACK TO sp_before_insert undoes only changes after the savepoint (the failed insert's effects); earlier work is kept and the transaction stays open. A final COMMIT or ROLLBACK is still needed."
+    }
+  }
+]

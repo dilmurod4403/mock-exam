@@ -1,0 +1,146 @@
+[
+  {
+    "id": "dt-01",
+    "topic": "datatypes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "VARCHAR vs VARCHAR2 in Oracle — which should you use?",
+    "options": [
+      "VARCHAR — it is the modern type",
+      "VARCHAR2 — always. VARCHAR is currently a synonym, but Oracle reserves the right to change its meaning, so use VARCHAR2",
+      "They behave differently today, use VARCHAR",
+      "VARCHAR2 is fixed-length"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oracle'da o'zgaruvchan uzunlikdagi satr uchun har doim VARCHAR2 ishlatiladi. VARCHAR hozircha uning sinonimi, lekin Oracle kelajakda uning ma'nosini o'zgartirishi mumkinligini ogohlantiradi — shuning uchun VARCHAR2.",
+      "en": "In Oracle, always use VARCHAR2 for variable-length strings. VARCHAR is currently a synonym, but Oracle warns it may change VARCHAR's semantics in the future — so use VARCHAR2."
+    }
+  },
+  {
+    "id": "dt-02",
+    "topic": "datatypes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is NVARCHAR2 for?",
+    "options": [
+      "Numeric data",
+      "Unicode / national character set strings — it stores text in the database's national charset (NLS)",
+      "Binary data",
+      "Date and time"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "NVARCHAR2 milliy belgilar to'plamidagi (national charset, ko'pincha Unicode) satrlarni saqlaydi. Bir bazada asosiy charset ASCII bo'lsa ham, NVARCHAR2 orqali Unicode matn saqlash mumkin.",
+      "en": "NVARCHAR2 stores strings in the national character set (often Unicode). Even if the database's main charset is ASCII, NVARCHAR2 lets you store Unicode text."
+    }
+  },
+  {
+    "id": "dt-03",
+    "topic": "datatypes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between CLOB and BLOB?",
+    "options": [
+      "They are the same",
+      "CLOB stores large CHARACTER (text) data; BLOB stores large BINARY data (images, files, PDFs)",
+      "CLOB is for numbers",
+      "BLOB is for text"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "CLOB — katta matn (character) uchun; BLOB — katta ikkilik (binary) ma'lumot uchun: rasm, fayl, PDF. Ikkalasi ham katta obyektlar (LOB) — 4 GB dan oshishi mumkin.",
+      "en": "CLOB is for large CHARACTER (text) data; BLOB is for large BINARY data — images, files, PDFs. Both are large objects (LOBs) and can exceed 4 GB."
+    }
+  },
+  {
+    "id": "dt-04",
+    "topic": "datatypes",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between LENGTH and LENGTHB?",
+    "options": [
+      "They are always equal",
+      "LENGTH counts characters; LENGTHB counts bytes — they differ for multi-byte character sets (e.g. UTF-8, where one character can be several bytes)",
+      "LENGTHB counts characters",
+      "LENGTH counts words"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "LENGTH belgilar sonini, LENGTHB baytlar sonini qaytaradi. Bir baytli charset'da ular teng, lekin ko'p baytli (UTF-8) da farq qiladi — bitta belgi bir necha bayt bo'lishi mumkin.",
+      "en": "LENGTH returns the number of characters; LENGTHB returns the number of bytes. They match in a single-byte charset, but differ in multi-byte charsets (UTF-8), where one character can be several bytes."
+    }
+  },
+  {
+    "id": "dt-05",
+    "topic": "datatypes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What is a ROWID?",
+    "options": [
+      "A sequence-generated number",
+      "The physical address of a row (encodes the datafile, block, and row within the block) — the fastest way to locate a single row",
+      "The primary key value",
+      "A hash of the row"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "ROWID — qatorning jismoniy manzili: qaysi datafile, blok va blok ichidagi qaysi qator. U qatorni topishning eng tez yo'li. Indeks ham aslida rowid'ni saqlaydi. (MOVE'da rowid o'zgaradi.)",
+      "en": "A ROWID is the physical address of a row — which datafile, block, and row within the block. It is the fastest way to locate a single row; an index actually stores rowids. (MOVE changes rowids.)"
+    }
+  },
+  {
+    "id": "dt-06",
+    "topic": "datatypes",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "What is the difference between ROWNUM and ROW_NUMBER()?",
+    "options": [
+      "They are identical",
+      "ROWNUM is a pseudocolumn numbered as rows are produced (before ORDER BY) — tricky for sorted paging; ROW_NUMBER() is an analytic function applied AFTER ORDER BY within partitions — reliable for ranking/paging",
+      "ROW_NUMBER() is the older one",
+      "ROWNUM supports PARTITION BY"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "ROWNUM — qatorlar hosil bo'lgani sari (ORDER BY dan oldin) beriladigan psevdo-ustun, shuning uchun saralangan sahifalash bilan chalkash. ROW_NUMBER() — analitik funksiya, ORDER BY dan keyin (partition ichida) beriladi — reyting/sahifalash uchun ishonchli.",
+      "en": "ROWNUM is a pseudocolumn assigned as rows are produced (before ORDER BY), so it's tricky for sorted paging. ROW_NUMBER() is an analytic function applied after ORDER BY within partitions — reliable for ranking/paging."
+    }
+  },
+  {
+    "id": "dt-07",
+    "topic": "datatypes",
+    "difficulty": "hard",
+    "levels": ["ORA-DBA"],
+    "question": "Why does `SELECT * FROM emp WHERE ROWNUM > 1` return NO rows?",
+    "options": [
+      "It is a syntax error",
+      "ROWNUM is assigned only as a row passes the filter; the first candidate would need ROWNUM=1, which fails '> 1', so no row is ever numbered and the condition can never become true",
+      "The table is empty",
+      "A missing index"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "ROWNUM faqat qator filtrdan o'tganda beriladi. Birinchi qatorga ROWNUM=1 tegishi kerak, lekin u '> 1' shartidan o'tmaydi — shuning uchun hech bir qator raqamlanmaydi va shart hech qachon rost bo'lmaydi. Klassik tuzoq.",
+      "en": "ROWNUM is assigned only when a row passes the filter. The first candidate would get ROWNUM=1, which fails '> 1', so no row is ever numbered and the condition can never be true. A classic gotcha."
+    }
+  },
+  {
+    "id": "dt-08",
+    "topic": "datatypes",
+    "difficulty": "medium",
+    "levels": ["ORA-DBA"],
+    "question": "What are RAW and BASE64 used for?",
+    "options": [
+      "Only for text",
+      "RAW stores binary byte data with no character-set conversion; BASE64 (via UTL_ENCODE) encodes binary as ASCII text so it can be transported safely (e.g. in XML/JSON/email)",
+      "Both are date types",
+      "Both are only for numbers"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "RAW ikkilik baytlarni charset o'zgarishisiz saqlaydi. BASE64 (UTL_ENCODE orqali) ikkilik ma'lumotni ASCII matnga o'giradi — uni matnli kanallarda (XML/JSON/email) xavfsiz uzatish uchun.",
+      "en": "RAW stores binary bytes with no charset conversion. BASE64 (via UTL_ENCODE) encodes binary data as ASCII text so it can travel safely over text channels (XML/JSON/email)."
+    }
+  }
+]
