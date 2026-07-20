@@ -29,6 +29,7 @@ import {
   recordAnswer,
   getWrongQuestionIds,
   getStats,
+  getStageStats,
   recordSrs,
   getDueQuestionIds,
   getSeenIds,
@@ -420,6 +421,7 @@ const levelKeyboard = (plang, lang) =>
 // Doimiy pastki klaviatura — rejimlar har doim qo'l ostida (chat to'lsa ham yo'qolmaydi)
 function mainReplyKeyboard(lang) {
   return Markup.keyboard([
+    [t(lang, "btn_path")],
     [t(lang, "btn_exam"), t(lang, "btn_quiz")],
     [t(lang, "btn_learn"), t(lang, "btn_topic")],
     [t(lang, "btn_review"), t(lang, "btn_practice")],
@@ -431,6 +433,7 @@ function mainReplyKeyboard(lang) {
 // Tugma matni → rejim (ikkala tilda ham tanib oladi)
 const BUTTON_ROUTE = new Map();
 for (const lg of ["uz", "en"]) {
+  BUTTON_ROUTE.set(t(lg, "btn_path"), "path");
   BUTTON_ROUTE.set(t(lg, "btn_exam"), "exam");
   BUTTON_ROUTE.set(t(lg, "btn_quiz"), "quiz");
   BUTTON_ROUTE.set(t(lg, "btn_learn"), "learn");
@@ -724,8 +727,18 @@ async function beginExam(ctx, { mode, size, topic }) {
   if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
   const { plang, level } = prefs;
 
-  const questions = pickQuestions(size, { plang, level, topic }).map(shuffleOptions);
-  if (questions.length === 0) return ctx.reply(t(lang, "no_questions"));
+  // Etap qulfi: yopiq mavzu so'ralsa rad etamiz; umumiy testda faqat ochiq mavzulardan
+  const allowed = unlockedTopics(ctx.from.id, plang, level);
+  if (topic && allowed && !allowed.has(topic)) {
+    const st = stageOfTopic(getPath(ctx.from.id, plang, level), topic);
+    return ctx.reply(t(lang, "locked_alert", st ? st.title[lang] : ""));
+  }
+  let pool = getPool({ plang, level, topic });
+  if (!topic && allowed) pool = pool.filter((q) => allowed.has(q.topic));
+  const questions = shuffle(pool)
+    .slice(0, Math.min(size, pool.length))
+    .map(shuffleOptions);
+  if (questions.length === 0) return ctx.reply(t(lang, topic ? "no_questions" : "locked_exam"));
 
   const session = startSession(ctx.from.id, { mode, questions, plang, level });
   const label =
@@ -868,11 +881,19 @@ function sendTopicMenu(ctx) {
   if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
   const { plang, level } = prefs;
   const counts = topicCounts({ plang, level });
+  const path = getPath(ctx.from.id, plang, level);
   const rows = Object.entries(PROG_LANGS[plang].topics)
     .filter(([code]) => (counts[code] || 0) > 0)
-    .map(([code, names]) => [
-      Markup.button.callback(`${names[lang]} (${counts[code]})`, `topic:${code}`),
-    ]);
+    .map(([code, names]) => {
+      const st = stageOfTopic(path, code);
+      const locked = st && !st.unlocked;
+      return [
+        Markup.button.callback(
+          `${locked ? "🔒 " : ""}${names[lang]} (${counts[code]})`,
+          locked ? `locked:${st.title.uz}` : `topic:${code}`
+        ),
+      ];
+    });
   if (rows.length === 0) return ctx.reply(t(lang, "no_questions"));
   rows.push([Markup.button.callback(t(lang, "btn_menu"), "menu")]);
   return ctx.reply(t(lang, "choose_topic"), Markup.inlineKeyboard(rows));
@@ -890,9 +911,17 @@ function sendLearnMenu(ctx) {
   const counts = topicCounts({ plang, level });
   const topics = lessonTopics(plang, level).filter((code) => (counts[code] || 0) > 0);
   if (topics.length === 0) return ctx.reply(t(lang, "no_lessons"));
-  const rows = topics.map((code) => [
-    Markup.button.callback(PROG_LANGS[plang].topics[code][lang], `learn:${code}`),
-  ]);
+  const lpath = getPath(ctx.from.id, plang, level);
+  const rows = topics.map((code) => {
+    const st = stageOfTopic(lpath, code);
+    const locked = st && !st.unlocked;
+    return [
+      Markup.button.callback(
+        `${locked ? "🔒 " : ""}${PROG_LANGS[plang].topics[code][lang]}`,
+        locked ? `locked:${st.title.uz}` : `learn:${code}`
+      ),
+    ];
+  });
   rows.push([Markup.button.callback(t(lang, "btn_menu"), "menu")]);
   return ctx.reply(t(lang, "choose_lesson"), Markup.inlineKeyboard(rows));
 }
@@ -969,6 +998,8 @@ bot.action("settings", async (ctx) => {
 // Pastki klaviatura tugmalari matn sifatida keladi — shu yerda rejimga yo'naltiramiz
 bot.hears([...BUTTON_ROUTE.keys()], async (ctx) => {
   switch (BUTTON_ROUTE.get(ctx.message.text)) {
+    case "path":
+      return showPath(ctx);
     case "exam":
       return beginExam(ctx, { mode: "exam", size: EXAM_SIZE, topic: null });
     case "quiz":
@@ -1013,6 +1044,78 @@ bot.action("set:level", async (ctx) => {
     ...levelKeyboard(plang, lang),
   });
 });
+
+// ---------- O'quv yo'li (etaplar) ----------
+const STAGE_MIN = 10; // etapni ochish uchun kamida shuncha savol
+const STAGE_PASS = 70; // va shuncha % aniqlik (oxirgi javoblar bo'yicha)
+
+// Har etapning holati: ochiqmi, tugaganmi, progressi qanday
+function getPath(userId, plang, level) {
+  const stages = PROG_LANGS[plang]?.levels?.[level]?.stages || [];
+  if (!stages.length) return [];
+  const pool = getPool({ plang, level });
+  const out = [];
+  let prevDone = true;
+  for (const st of stages) {
+    const available = pool.filter((q) => st.topics.includes(q.topic)).length;
+    const need = Math.min(STAGE_MIN, available);
+    const s = getStageStats(userId, { plang, level, topics: st.topics });
+    const done = available > 0 && s.recent >= need && s.pct >= STAGE_PASS;
+    out.push({ ...st, stats: s, available, need, done, unlocked: prevDone });
+    prevDone = prevDone && done;
+  }
+  return out;
+}
+
+// Ochiq mavzular to'plami (etaplar aniqlanmagan bo'lsa — null, ya'ni cheklov yo'q)
+function unlockedTopics(userId, plang, level) {
+  const path = getPath(userId, plang, level);
+  if (!path.length) return null;
+  const set = new Set();
+  for (const st of path) if (st.unlocked) st.topics.forEach((x) => set.add(x));
+  return set;
+}
+
+// Mavzu qaysi etapda va u ochiqmi
+function stageOfTopic(path, topic) {
+  return path.find((st) => st.topics.includes(topic)) || null;
+}
+
+// Ochilishi kerak bo'lgan (birinchi tugallanmagan) etap
+const currentStage = (path) => path.find((st) => !st.done) || null;
+
+function pathText(userId, plang, level, lang) {
+  const path = getPath(userId, plang, level);
+  if (!path.length) return null;
+  const doneCount = path.filter((s) => s.done).length;
+  let out = `${t(lang, "path_title", doneCount, path.length)}\n\n`;
+  path.forEach((st, i) => {
+    const icon = st.done ? "✅" : st.unlocked ? "▶️" : "🔒";
+    const cur = Math.min(st.stats.recent, st.need);
+    const bar = progressBar(st.need ? (cur / st.need) * 100 : 0, 6);
+    out += `${t(lang, "path_stage", icon, i + 1, st.title[lang], bar, cur, st.need, st.stats.pct)}\n`;
+  });
+  const cs = currentStage(path);
+  out += `\n${cs ? t(lang, "path_current", cs.title[lang]) : t(lang, "path_all_done")}`;
+  out += `\n\n${t(lang, "path_rule", STAGE_MIN, STAGE_PASS)}`;
+  return out;
+}
+
+function showPath(ctx) {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  const text = pathText(ctx.from.id, prefs.plang, prefs.level, lang);
+  if (!text) return ctx.reply(t(lang, "no_questions"));
+  return ctx.reply(text, { parse_mode: "HTML" });
+}
+
+bot.command("path", (ctx) => showPath(ctx));
+
+// Yopiq mavzu tugmasi bosilganda — nima qilish kerakligini aytamiz
+bot.action(/^locked:(.+)$/, (ctx) =>
+  ctx.answerCbQuery(t(langOf(ctx), "locked_alert", ctx.match[1]), { show_alert: true })
+);
 
 // "Bugun nima qilsam?" — foydalanuvchi holatiga qarab bitta aniq tavsiya
 function suggestNext(userId, lang) {

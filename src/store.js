@@ -338,6 +338,29 @@ export function markReminded(userId) {
   schedule();
 }
 
+// ---------- Etap (o'quv yo'li) progressi ----------
+// Aniqlik OXIRGI `window` javob bo'yicha hisoblanadi — yomon boshlagan odam
+// keyin yaxshilansa, etapni ocha oladi (umr bo'yi past foizga qamalib qolmaydi).
+export function getStageStats(userId, { plang, level, topics, window = 20 }) {
+  const set = new Set(topics);
+  const key = String(userId);
+  const mine = [];
+  for (const a of db.answers) {
+    if (String(a.u) !== key) continue;
+    if (plang && a.plang !== plang) continue;
+    if (level && a.level !== level) continue;
+    if (set.has(a.topic)) mine.push(a);
+  }
+  const recent = mine.slice(-window);
+  const correct = recent.reduce((s, a) => s + (a.c ? 1 : 0), 0);
+  return {
+    total: mine.length,
+    recent: recent.length,
+    correct,
+    pct: recent.length ? Math.round((correct / recent.length) * 100) : 0,
+  };
+}
+
 // ---------- Metrikalar (admin) ----------
 // Onboarding funnel: qaysi bosqichda necha kishi qolgan
 export function getFunnel() {

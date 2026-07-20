@@ -14,6 +14,15 @@ const S = {
     level_soon: "Bu daraja uchun savollar tez orada qo'shiladi 🔜",
     menu_title: (level) =>
       `✅ Tayyor! Daraja: <b>${level}</b>\n\nQuyidagilardan birini tanlang:`,
+    btn_path: "🗺 O'quv yo'li",
+    path_title: (done, total) => `🗺 <b>O'quv yo'li</b> — ${done}/${total} etap tugadi`,
+    path_stage: (icon, n, title, bar, cur, need, pct) =>
+      `${icon} <b>${n}. ${title}</b>\n   ${bar} ${cur}/${need} savol · ${pct}%`,
+    path_current: (title) => `▶️ Joriy etap: <b>${title}</b>`,
+    path_rule: (need, pass) => `ℹ️ Etap ochilishi: kamida ${need} ta savol va ${pass}% aniqlik (oxirgi javoblar bo'yicha).`,
+    path_all_done: "🎉 Barcha etaplar tugadi! Endi butun kontent ochiq.",
+    locked_alert: (title) => `🔒 Yopiq. Avval "${title}" etapini tugating.`,
+    locked_exam: "🔒 Hozircha ochiq mavzular kam. Avval joriy etapni mashq qiling.",
     btn_exam: "📝 To'liq imtihon",
     btn_quiz: "⚡ Tezkor test",
     btn_learn: "📖 O'rganish",
@@ -150,6 +159,15 @@ const S = {
     level_soon: "Questions for this level are coming soon 🔜",
     menu_title: (level) =>
       `✅ Ready! Level: <b>${level}</b>\n\nPick one of the following:`,
+    btn_path: "🗺 Learning path",
+    path_title: (done, total) => `🗺 <b>Learning path</b> — ${done}/${total} stages done`,
+    path_stage: (icon, n, title, bar, cur, need, pct) =>
+      `${icon} <b>${n}. ${title}</b>\n   ${bar} ${cur}/${need} questions · ${pct}%`,
+    path_current: (title) => `▶️ Current stage: <b>${title}</b>`,
+    path_rule: (need, pass) => `ℹ️ To unlock: at least ${need} questions and ${pass}% accuracy (over your latest answers).`,
+    path_all_done: "🎉 All stages complete! Everything is unlocked.",
+    locked_alert: (title) => `🔒 Locked. Finish the "${title}" stage first.`,
+    locked_exam: "🔒 Few topics are unlocked yet. Practice your current stage first.",
     btn_exam: "📝 Full exam",
     btn_quiz: "⚡ Quick quiz",
     btn_learn: "📖 Learn",

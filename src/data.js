@@ -9,6 +9,14 @@ const QUESTIONS_DIR = join(__dirname, "questions");
 // ---------- Dasturlash tillari katalogi ----------
 // Har til: label (menyu uchun), topics (mavzular, ikki tilda), levels (sertifikat darajalari).
 // level.filter — savol shu darajaga kiradimi. level.pass — o'tish foizi.
+// Etaplar (bosqichma-bosqich ochiladi). JSE va JSA bir xil mavzular ustida ishlaydi.
+const JS_BASIC_STAGES = [
+  { title: { uz: "Asoslar", en: "Basics" }, topics: ["intro", "variables"] },
+  { title: { uz: "Amallar va boshqaruv", en: "Operators & control" }, topics: ["operators", "control-flow"] },
+  { title: { uz: "Ma'lumot va funksiyalar", en: "Data & functions" }, topics: ["collections", "functions"] },
+  { title: { uz: "Xatoliklar", en: "Errors" }, topics: ["errors"] },
+];
+
 export const PROG_LANGS = {
   javascript: {
     label: "🟨 JavaScript",
@@ -33,6 +41,7 @@ export const PROG_LANGS = {
           uz: "Boshlang'ich: o'zgaruvchi, shart, sikl, massiv",
           en: "Beginner: variables, conditions, loops, arrays",
         },
+        stages: JS_BASIC_STAGES,
         filter: (q) => (q.difficulty === "easy" || q.difficulty === "medium") && !q.levels?.includes("JSP"),
       },
       JSA: {
@@ -42,6 +51,7 @@ export const PROG_LANGS = {
           uz: "O'rta: JS asoslari to'liq (eng ko'p tanlanadi)",
           en: "Intermediate: full JS fundamentals (most popular)",
         },
+        stages: JS_BASIC_STAGES,
         filter: (q) => !q.levels?.includes("JSP"),
       },
       JSP: {
@@ -51,6 +61,11 @@ export const PROG_LANGS = {
           uz: "Ilg'or: OOP, async/await, closure, ES6+",
           en: "Advanced: OOP, async/await, closures, ES6+",
         },
+        stages: [
+          { title: { uz: "Obyektlar va OOP", en: "Objects & OOP" }, topics: ["oop"] },
+          { title: { uz: "Asinxron", en: "Asynchronous" }, topics: ["async"] },
+          { title: { uz: "Ilg'or", en: "Advanced" }, topics: ["advanced"] },
+        ],
         filter: (q) => q.levels?.includes("JSP"),
       },
     },
@@ -94,6 +109,12 @@ export const PROG_LANGS = {
           uz: "SQL sertifikati: SELECT, JOIN, GROUP BY, DML/DDL",
           en: "SQL certification: SELECT, JOIN, GROUP BY, DML/DDL",
         },
+        stages: [
+          { title: { uz: "So'rov asoslari", en: "Query basics" }, topics: ["queries", "functions"] },
+          { title: { uz: "Guruhlash va JOIN", en: "Grouping & joins" }, topics: ["aggregates", "joins"] },
+          { title: { uz: "Ichki so'rovlar", en: "Subqueries" }, topics: ["subqueries"] },
+          { title: { uz: "Ma'lumot va tuzilma", en: "Data & structure" }, topics: ["dml", "ddl"] },
+        ],
         filter: (q) => q.levels?.includes("1Z0-071"),
       },
       "1Z0-149": {
@@ -103,6 +124,12 @@ export const PROG_LANGS = {
           uz: "PL/SQL sertifikati: blok, kursor, procedure, trigger",
           en: "PL/SQL certification: blocks, cursors, procedures, triggers",
         },
+        stages: [
+          { title: { uz: "Blok asoslari", en: "Block basics" }, topics: ["blocks", "control"] },
+          { title: { uz: "Kursor va istisnolar", en: "Cursors & exceptions" }, topics: ["cursors", "exceptions"] },
+          { title: { uz: "Subprogramlar", en: "Subprograms" }, topics: ["subprograms", "triggers"] },
+          { title: { uz: "Kolleksiyalar", en: "Collections" }, topics: ["collections"] },
+        ],
         filter: (q) => q.levels?.includes("1Z0-149"),
       },
       "ORA-DBA": {
@@ -112,6 +139,12 @@ export const PROG_LANGS = {
           uz: "Ish intervyusi: tranzaksiya, lock, arxitektura, optimizatsiya",
           en: "Job interview: transactions, locks, architecture, tuning",
         },
+        stages: [
+          { title: { uz: "Tranzaksiya va konkurentlik", en: "Transactions & concurrency" }, topics: ["transactions", "concurrency"] },
+          { title: { uz: "Arxitektura va recovery", en: "Architecture & recovery" }, topics: ["architecture", "redoundo"] },
+          { title: { uz: "Optimizatsiya va indekslar", en: "Performance & indexes" }, topics: ["performance", "indexes"] },
+          { title: { uz: "Ilg'or amaliyot", en: "Advanced practice" }, topics: ["bulk", "datatypes", "subprograms", "jobs", "modeling"] },
+        ],
         filter: (q) => q.levels?.includes("ORA-DBA"),
       },
     },
