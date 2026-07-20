@@ -43,6 +43,11 @@ import {
   unblockUser,
   removeUser,
   getUserDetail,
+  getOnboardedUsers,
+  getReminderData,
+  remindersEnabled,
+  wasRemindedToday,
+  markReminded,
   flush,
 } from "./store.js";
 import {
@@ -75,6 +80,11 @@ const LETTERS = ["A", "B", "C", "D", "E", "F"];
 // Tashlab ketilgan sessiyalarni tozalash
 const SESSION_TTL = 2 * 60 * 60 * 1000; // 2 soat
 const SWEEP_EVERY = 30 * 60 * 1000; // 30 daqiqada bir
+
+// Kunlik eslatma: Toshkent vaqti bilan shu soatda, kuniga ko'pi bilan 1 marta
+const TZ_OFFSET_MS = 5 * 3600 * 1000; // UTC+5
+const REMIND_HOUR = 19;
+const REMIND_CHECK_EVERY = 15 * 60 * 1000; // 15 daqiqada bir tekshiramiz
 
 const bot = new Telegraf(TOKEN);
 
@@ -751,6 +761,22 @@ function sendStats(ctx) {
 
 bot.command("stats", (ctx) => sendStats(ctx));
 
+// Kunlik eslatmani yoqish/o'chirish
+bot.command("reminders", (ctx) => {
+  const lang = langOf(ctx);
+  const turnOn = !remindersEnabled(ctx.from.id);
+  setPref(ctx.from.id, "reminders", turnOn);
+  return ctx.reply(t(lang, turnOn ? "remind_on" : "remind_off"), { parse_mode: "HTML" });
+});
+
+bot.action("remind:off", async (ctx) => {
+  const lang = langOf(ctx);
+  setPref(ctx.from.id, "reminders", false);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "remind_off"), { parse_mode: "HTML" });
+});
+
 function sendTopicMenu(ctx) {
   const lang = langOf(ctx);
   const prefs = getPrefs(ctx.from.id);
@@ -1109,6 +1135,7 @@ const COMMANDS = {
     { command: "practice", description: "Kunlik mashq (spaced repetition)" },
     { command: "grade", description: "Darajamni aniqlash (adaptiv test)" },
     { command: "stats", description: "Statistikam va rivojim" },
+    { command: "reminders", description: "Kunlik eslatmani yoqish/o'chirish" },
     { command: "stop", description: "Joriy imtihonni to'xtatish" },
   ],
   en: [
@@ -1121,6 +1148,7 @@ const COMMANDS = {
     { command: "practice", description: "Daily practice (spaced repetition)" },
     { command: "grade", description: "Assess my level (adaptive test)" },
     { command: "stats", description: "My stats and progress" },
+    { command: "reminders", description: "Turn daily reminders on/off" },
     { command: "stop", description: "Stop the current exam" },
   ],
 };
@@ -1128,6 +1156,45 @@ const COMMANDS = {
 async function registerCommands() {
   await bot.telegram.setMyCommands(COMMANDS.uz);
   await bot.telegram.setMyCommands(COMMANDS.en, { language_code: "en" });
+}
+
+// ---------- Kunlik eslatmalar ----------
+const tashkentHour = () => new Date(Date.now() + TZ_OFFSET_MS).getUTCHours();
+
+// Bugun mashq qilmagan, lekin sababi bor (streak xavfda / takrorlash kutyapti)
+// foydalanuvchilarga kuniga bir marta turtki yuboradi.
+async function sendReminders() {
+  if (tashkentHour() !== REMIND_HOUR) return;
+  let sent = 0;
+  for (const u of getOnboardedUsers()) {
+    try {
+      if (isBlocked(u.id) || !remindersEnabled(u.id) || wasRemindedToday(u.id)) continue;
+      const d = getReminderData(u.id, { plang: u.plang, level: u.level });
+      if (d.activeToday) continue; // bugun mashq qilgan — turtki shart emas
+      if (d.due === 0 && d.streak === 0) continue; // aytadigan sabab yo'q
+
+      const lines = [];
+      if (d.streak > 0) lines.push(t(u.lang, "remind_streak", d.streak));
+      if (d.due > 0) lines.push(t(u.lang, "remind_due", d.due));
+      const text = `${t(u.lang, "remind_title")}\n\n${lines.join("\n")}\n\n${t(u.lang, "remind_cta")}`;
+
+      await bot.telegram.sendMessage(u.id, text, {
+        parse_mode: "HTML",
+        ...Markup.inlineKeyboard([
+          [Markup.button.callback(t(u.lang, "btn_practice"), "mode:practice")],
+          [Markup.button.callback(t(u.lang, "btn_reminders_off"), "remind:off")],
+        ]),
+      });
+      markReminded(u.id);
+      sent += 1;
+      await new Promise((r) => setTimeout(r, 60)); // Telegram rate limitiga hurmat
+    } catch (err) {
+      // 403 — foydalanuvchi botni bloklagan/o'chirgan: qayta urinmaymiz
+      if (err?.response?.error_code === 403) setPref(u.id, "reminders", false);
+      else console.error(`⚠️ Eslatma yuborilmadi (${u.id}):`, err.message);
+    }
+  }
+  if (sent) console.log(`🔔 ${sent} ta eslatma yuborildi.`);
 }
 
 // ---------- Xatoliklarni ushlash ----------
@@ -1177,6 +1244,12 @@ const sweepTimer = setInterval(() => {
   if (n) console.log(`🧹 ${n} ta eskirgan sessiya tozalandi.`);
 }, SWEEP_EVERY);
 sweepTimer.unref(); // process yopilishiga to'sqinlik qilmasin
+
+// Kunlik eslatma tekshiruvi (faqat REMIND_HOUR da ish bajaradi)
+const remindTimer = setInterval(() => {
+  sendReminders().catch((err) => console.error("⚠️ Eslatma svipi:", err.message));
+}, REMIND_CHECK_EVERY);
+remindTimer.unref();
 
 console.log("✅ Bot ishladi. Telegram'da /start bosing.");
 

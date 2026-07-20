@@ -13,7 +13,8 @@ const FILE = join(DATA_DIR, "store.json");
 // grades:  { [userId]: [ {plang, bandKey, bandName, theta, t} ] }  (baholash tarixi)
 // users:   { [userId]: { name, username, firstSeen, lastSeen } }  (admin uchun kimlik)
 // blocked: { [userId]: { at } }  (bloklangan foydalanuvchilar)
-let db = { prefs: {}, answers: [], srs: {}, grades: {}, users: {}, blocked: {} };
+// reminders: { [userId]: { lastDay } }  (kuniga bir marta eslatma uchun)
+let db = { prefs: {}, answers: [], srs: {}, grades: {}, users: {}, blocked: {}, reminders: {} };
 try {
   const loaded = JSON.parse(readFileSync(FILE, "utf8"));
   db.prefs = loaded.prefs || {};
@@ -22,6 +23,7 @@ try {
   db.grades = loaded.grades || {};
   db.users = loaded.users || {};
   db.blocked = loaded.blocked || {};
+  db.reminders = loaded.reminders || {};
 } catch {
   // fayl yo'q yoki buzuq — bo'sh baza bilan boshlaymiz
 }
@@ -293,6 +295,47 @@ export function getGlobalStats() {
   };
 }
 
+// ---------- Kunlik eslatmalar ----------
+// Onboarding'ni tugatgan (tarmoq+daraja tanlagan) foydalanuvchilar
+export function getOnboardedUsers() {
+  const out = [];
+  for (const [id, p] of Object.entries(db.prefs)) {
+    if (p.plang && p.level) out.push({ id, plang: p.plang, level: p.level, lang: p.lang || "uz" });
+  }
+  return out;
+}
+
+// Eslatma qarori uchun kerakli ma'lumot: takrorlash navbati, streak, bugun faolmi
+export function getReminderData(userId, { plang, level } = {}) {
+  const key = String(userId);
+  const days = new Set();
+  for (const a of db.answers) {
+    if (String(a.u) !== key) continue;
+    if (plang && a.plang !== plang) continue;
+    if (level && a.level !== level) continue;
+    days.add(dayKey(a.t));
+  }
+  return {
+    due: getDueCount(userId, { plang, level }),
+    streak: currentStreak(days),
+    activeToday: days.has(dayKey(Date.now())),
+  };
+}
+
+// Eslatma yoqilganmi (standart — yoqilgan)
+export function remindersEnabled(userId) {
+  return db.prefs[String(userId)]?.reminders !== false;
+}
+
+// Kuniga bir martadan ko'p yubormaslik uchun
+export function wasRemindedToday(userId) {
+  return db.reminders[String(userId)]?.lastDay === dayKey(Date.now());
+}
+export function markReminded(userId) {
+  db.reminders[String(userId)] = { lastDay: dayKey(Date.now()) };
+  schedule();
+}
+
 // ---------- Foydalanuvchini boshqarish (admin) ----------
 export function isBlocked(userId) {
   return !!db.blocked[String(userId)];
@@ -314,6 +357,7 @@ export function removeUser(userId) {
   delete db.grades[key];
   delete db.users[key];
   delete db.blocked[key];
+  delete db.reminders[key];
   db.answers = db.answers.filter((a) => String(a.u) !== key);
   schedule();
 }
