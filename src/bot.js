@@ -1162,6 +1162,20 @@ async function registerCommands() {
 // ---------- Kunlik eslatmalar ----------
 const tashkentHour = () => new Date(Date.now() + TZ_OFFSET_MS).getUTCHours();
 
+// Eslatma xabari (matn + tugmalar)
+function buildReminder(lang, streak, due) {
+  const lines = [];
+  if (streak > 0) lines.push(t(lang, "remind_streak", streak));
+  if (due > 0) lines.push(t(lang, "remind_due", due));
+  return {
+    text: `${t(lang, "remind_title")}\n\n${lines.join("\n")}\n\n${t(lang, "remind_cta")}`,
+    kb: Markup.inlineKeyboard([
+      [Markup.button.callback(t(lang, "btn_practice"), "mode:practice")],
+      [Markup.button.callback(t(lang, "btn_reminders_off"), "remind:off")],
+    ]),
+  };
+}
+
 // Bugun mashq qilmagan, lekin sababi bor (streak xavfda / takrorlash kutyapti)
 // foydalanuvchilarga kuniga bir marta turtki yuboradi.
 async function sendReminders({ force = false } = {}) {
@@ -1177,18 +1191,8 @@ async function sendReminders({ force = false } = {}) {
       if (d.activeToday) { stat.activeToday += 1; continue; } // bugun mashq qilgan
       if (d.due === 0 && d.streak === 0) { stat.noReason += 1; continue; } // sabab yo'q
 
-      const lines = [];
-      if (d.streak > 0) lines.push(t(u.lang, "remind_streak", d.streak));
-      if (d.due > 0) lines.push(t(u.lang, "remind_due", d.due));
-      const text = `${t(u.lang, "remind_title")}\n\n${lines.join("\n")}\n\n${t(u.lang, "remind_cta")}`;
-
-      await bot.telegram.sendMessage(u.id, text, {
-        parse_mode: "HTML",
-        ...Markup.inlineKeyboard([
-          [Markup.button.callback(t(u.lang, "btn_practice"), "mode:practice")],
-          [Markup.button.callback(t(u.lang, "btn_reminders_off"), "remind:off")],
-        ]),
-      });
+      const { text, kb } = buildReminder(u.lang, d.streak, d.due);
+      await bot.telegram.sendMessage(u.id, text, { parse_mode: "HTML", ...kb });
       markReminded(u.id);
       sent += 1;
       await new Promise((r) => setTimeout(r, 60)); // Telegram rate limitiga hurmat
@@ -1204,8 +1208,28 @@ async function sendReminders({ force = false } = {}) {
 }
 
 // Admin: eslatmani darhol sinash (soatni kutmasdan)
+// "/testremind me" — barcha shartlarni chetlab, xabarni o'zingizga namuna qilib yuboradi.
 bot.command("testremind", async (ctx) => {
   if (!isAdmin(ctx.from.id)) return;
+  const lang = langOf(ctx);
+
+  if ((ctx.message.text.split(/\s+/)[1] || "").toLowerCase() === "me") {
+    const prefs = getPrefs(ctx.from.id);
+    const d = prefs?.plang
+      ? getReminderData(ctx.from.id, { plang: prefs.plang, level: prefs.level })
+      : { streak: 0, due: 0 };
+    // Haqiqiy raqamlar 0 bo'lsa — ko'rish uchun namuna raqamlar
+    const streak = d.streak || 3;
+    const due = d.due || 5;
+    const { text, kb } = buildReminder(lang, streak, due);
+    await ctx.reply(text, { parse_mode: "HTML", ...kb });
+    return ctx.reply(
+      `☝️ <i>Namuna (streak ${streak}, due ${due}). Haqiqiy eslatma faqat bugun mashq qilmaganlarga, ` +
+        `${REMIND_HOUR}:00 da yuboriladi.</i>`,
+      { parse_mode: "HTML" }
+    );
+  }
+
   const s = await sendReminders({ force: true });
   await ctx.reply(
     `🔔 <b>Test natijasi</b>\n\n` +
