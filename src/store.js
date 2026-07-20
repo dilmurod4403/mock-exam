@@ -73,13 +73,14 @@ export function getLang(userId) {
 }
 
 // ---------- Javob tarixi ----------
-export function recordAnswer(userId, { questionId, plang, level, topic, isCorrect }) {
+export function recordAnswer(userId, { questionId, plang, level, topic, isCorrect, mode }) {
   db.answers.push({
     u: userId,
     q: questionId,
     plang,
     level,
     topic,
+    m: mode || null, // qaysi rejimda javob berilgan (metrikalar uchun)
     c: isCorrect ? 1 : 0,
     t: Date.now(),
   });
@@ -335,6 +336,62 @@ export function wasRemindedToday(userId) {
 export function markReminded(userId) {
   db.reminders[String(userId)] = { lastDay: dayKey(Date.now()) };
   schedule();
+}
+
+// ---------- Metrikalar (admin) ----------
+// Onboarding funnel: qaysi bosqichda necha kishi qolgan
+export function getFunnel() {
+  const ids = new Set([...Object.keys(db.users), ...Object.keys(db.prefs)]);
+  const answered = new Set(db.answers.map((a) => String(a.u)));
+  const f = { started: 0, lang: 0, plang: 0, level: 0, activated: 0 };
+  for (const id of ids) {
+    f.started += 1;
+    const p = db.prefs[id] || {};
+    if (p.lang) f.lang += 1;
+    if (p.plang) f.plang += 1;
+    if (p.level) f.level += 1;
+    if (answered.has(id)) f.activated += 1;
+  }
+  return f;
+}
+
+// Ushlab qolish: DAU/WAU/MAU, qaytganlar va D1/D7/D30 kogortalari
+export function getRetention() {
+  const today = dayKey(Date.now());
+  const byUser = {};
+  for (const a of db.answers) (byUser[String(a.u)] ||= new Set()).add(dayKey(a.t));
+  const users = Object.values(byUser).map((set) => [...set].sort((x, y) => x - y));
+
+  const cohort = (window) => {
+    // Faqat kamida `window` kun oldin boshlaganlar hisobga olinadi
+    const eligible = users.filter((days) => today - days[0] >= window);
+    if (!eligible.length) return null;
+    const kept = eligible.filter((days) =>
+      days.some((d) => d > days[0] && d <= days[0] + window)
+    ).length;
+    return { size: eligible.length, kept, pct: Math.round((kept / eligible.length) * 100) };
+  };
+
+  return {
+    total: users.length,
+    dau: users.filter((d) => d.includes(today)).length,
+    wau: users.filter((d) => d.some((x) => today - x < 7)).length,
+    mau: users.filter((d) => d.some((x) => today - x < 30)).length,
+    returning: users.filter((d) => d.length >= 2).length,
+    d1: cohort(1),
+    d7: cohort(7),
+    d30: cohort(30),
+  };
+}
+
+// Qaysi rejimda qancha javob berilgan
+export function getModeUsage() {
+  const by = {};
+  for (const a of db.answers) {
+    const m = a.m || "—";
+    by[m] = (by[m] || 0) + 1;
+  }
+  return Object.entries(by).sort((a, b) => b[1] - a[1]);
 }
 
 // ---------- Savol haqida shikoyat (foydalanuvchi xabari) ----------

@@ -45,6 +45,9 @@ import {
   getUserDetail,
   addReport,
   getReports,
+  getFunnel,
+  getRetention,
+  getModeUsage,
   getOnboardedUsers,
   getReminderData,
   remindersEnabled,
@@ -245,6 +248,32 @@ bot.command("user", (ctx) => {
   if (!id) return ctx.reply("Foydalanish: /user &lt;id&gt;", { parse_mode: "HTML" });
   return showUserCard(ctx, id);
 });
+// Admin: mahsulot metrikalari — funnel va retention
+bot.command("metrics", (ctx) => {
+  if (!isAdmin(ctx.from.id)) return;
+  const f = getFunnel();
+  const r = getRetention();
+  const pct = (x, base) => (base ? Math.round((x / base) * 100) : 0);
+  const coh = (c) => (c ? `${c.pct}% (${c.kept}/${c.size})` : "—");
+
+  let out =
+    `📊 <b>Metrikalar</b>\n\n` +
+    `🚪 <b>Onboarding funnel</b>\n` +
+    `Botni ochdi: <b>${f.started}</b>\n` +
+    `Til tanladi: <b>${f.lang}</b> (${pct(f.lang, f.started)}%)\n` +
+    `Yo'nalish tanladi: <b>${f.plang}</b> (${pct(f.plang, f.started)}%)\n` +
+    `Daraja tanladi: <b>${f.level}</b> (${pct(f.level, f.started)}%)\n` +
+    `✅ Birinchi javob: <b>${f.activated}</b> (${pct(f.activated, f.started)}%)\n\n` +
+    `🔁 <b>Ushlab qolish</b>\n` +
+    `Bugun faol: <b>${r.dau}</b> · 7 kun: <b>${r.wau}</b> · 30 kun: <b>${r.mau}</b>\n` +
+    `Qaytganlar (≥2 kun): <b>${r.returning}</b>/${r.total} (${pct(r.returning, r.total)}%)\n` +
+    `D1: <b>${coh(r.d1)}</b> · D7: <b>${coh(r.d7)}</b> · D30: <b>${coh(r.d30)}</b>\n\n` +
+    `🎮 <b>Rejim bo'yicha javoblar</b>\n`;
+  const modes = getModeUsage();
+  out += modes.length ? modes.map(([m, c]) => `• ${m}: ${c}`).join("\n") : "—";
+  return sendChunked(ctx, out);
+});
+
 // Admin: foydalanuvchilar shikoyat qilgan savollar
 bot.command("reports", (ctx) => {
   if (!isAdmin(ctx.from.id)) return;
@@ -1123,6 +1152,7 @@ async function handleSubmit(ctx) {
     level: session.level,
     topic: q.topic,
     isCorrect,
+    mode: session.mode,
   };
   recordAnswer(ctx.from.id, answerInfo);
   recordSrs(ctx.from.id, answerInfo); // Leitner holatini yangilaydi (barcha rejimlar)
