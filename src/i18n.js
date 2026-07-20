@@ -24,8 +24,30 @@ const S = {
     btn_stats: "🏆 Statistikam",
     btn_change: "⚙️ Sozlamalar (til/daraja)",
     welcome: (name) =>
-      `👋 Salom, ${name}!\n\nBu — dasturlash sertifikatlariga tayyorgarlik uchun mock imtihon boti.\n\nBoshlash uchun quyidan tanlang 👇`,
-    help: "ℹ️ Har savolda variant tugmasini bosing. Ba'zi savollarda bir nechta to'g'ri javob bo'ladi — ularni belgilab, tasdiqlang.\n\n/start — qaytadan sozlash\n/exam, /quiz, /topic",
+      `👋 Salom, ${name}!\n\n` +
+      `Bu bot sizni sertifikat va ish intervyusiga tayyorlaydi:\n` +
+      `📖 <b>O'rgatadi</b> — mavzu bo'yicha qisqa darslar\n` +
+      `📝 <b>Mashq qildiradi</b> — imtihon, test, mavzu bo'yicha\n` +
+      `🧠 <b>Takrorlatadi</b> — xatolaringizni aqlli navbat bilan\n` +
+      `🎓 <b>Darajangizni aniqlaydi</b> — Junior? Middle? Senior?\n\n` +
+      `Boshlash uchun tilni tanlang 👇`,
+    help:
+      `ℹ️ <b>Bot nima qila oladi</b>\n\n` +
+      `📖 <b>O'rganish</b>\n/learn — mavzu bo'yicha mini-dars\n\n` +
+      `📝 <b>Mashq</b>\n/exam — to'liq imtihon\n/quiz — tezkor test (10 savol)\n/topic — mavzu bo'yicha\n\n` +
+      `🔁 <b>Takrorlash</b>\n/review — xato qilgan savollaringiz\n/practice — bugun takrorlash vaqti kelganlari\n\n` +
+      `🎓 <b>Baholash</b>\n/grade — darajangizni aniqlash (adaptiv test)\n\n` +
+      `📊 <b>Kuzatish</b>\n/stats — natijalaringiz va streak\n/reminders — kunlik eslatmani yoqish/o'chirish\n\n` +
+      `⚙️ /start — qaytadan sozlash · /stop — imtihonni to'xtatish\n\n` +
+      `<i>Savolda variant tugmasini bosing. Ba'zi savollarda bir nechta to'g'ri javob bo'ladi — belgilab, tasdiqlang.</i>`,
+    level_hint_grade: "💡 Qaysi biri sizga mosligini bilmasangiz — keyin /grade bilan darajangizni aniqlang.",
+    suggest_title: "💡 <b>Bugun nima qilsam?</b>",
+    suggest_practice: (n) => `🧠 <b>${n}</b> ta savolni takrorlash vaqti keldi → /practice`,
+    suggest_review: (n) => `🔁 <b>${n}</b> ta xatoyingiz ustida ishlash mumkin → /review`,
+    suggest_start: "📖 Yangi boshlayapsizmi? Avval mini-dars: /learn, keyin /quiz",
+    suggest_weak: (topic) => `📚 Eng zaif mavzu: <b>${topic}</b> — shuni mashq qiling → /topic`,
+    suggest_grade: "🎓 Darajangizni hali bilmaysiz — /grade bilan aniqlang",
+    suggest_quiz: "⚡ Formani saqlash uchun tezkor test → /quiz",
     exam_label: "To'liq imtihon",
     quiz_label: "Tezkor test",
     review_label: "Xatolar takrori",
@@ -130,8 +152,30 @@ const S = {
     btn_stats: "🏆 My stats",
     btn_change: "⚙️ Settings (language/level)",
     welcome: (name) =>
-      `👋 Hi, ${name}!\n\nThis is a mock exam bot to prepare for programming certifications.\n\nChoose below to get started 👇`,
-    help: "ℹ️ Tap an option button for each question. Some questions have multiple correct answers — select them and confirm.\n\n/start — reconfigure\n/exam, /quiz, /topic",
+      `👋 Hi, ${name}!\n\n` +
+      `This bot prepares you for certifications and job interviews:\n` +
+      `📖 <b>Teaches</b> — short lessons per topic\n` +
+      `📝 <b>Drills</b> — full exams, quick quizzes, by topic\n` +
+      `🧠 <b>Repeats</b> — your mistakes, on a smart schedule\n` +
+      `🎓 <b>Rates you</b> — Junior? Middle? Senior?\n\n` +
+      `Pick your language to start 👇`,
+    help:
+      `ℹ️ <b>What this bot can do</b>\n\n` +
+      `📖 <b>Learn</b>\n/learn — mini-lesson per topic\n\n` +
+      `📝 <b>Practice</b>\n/exam — full mock exam\n/quiz — quick quiz (10 questions)\n/topic — by topic\n\n` +
+      `🔁 <b>Repeat</b>\n/review — questions you got wrong\n/practice — the ones due for review today\n\n` +
+      `🎓 <b>Assess</b>\n/grade — find your level (adaptive test)\n\n` +
+      `📊 <b>Track</b>\n/stats — your results and streak\n/reminders — turn daily reminders on/off\n\n` +
+      `⚙️ /start — reconfigure · /stop — stop the current exam\n\n` +
+      `<i>Tap an option button for each question. Some have multiple correct answers — select them and confirm.</i>`,
+    level_hint_grade: "💡 Not sure which fits you? Find your level later with /grade.",
+    suggest_title: "💡 <b>What should I do today?</b>",
+    suggest_practice: (n) => `🧠 <b>${n}</b> question(s) are due for review → /practice`,
+    suggest_review: (n) => `🔁 You can work on <b>${n}</b> past mistake(s) → /review`,
+    suggest_start: "📖 New here? Start with a mini-lesson: /learn, then /quiz",
+    suggest_weak: (topic) => `📚 Weakest topic: <b>${topic}</b> — drill it → /topic`,
+    suggest_grade: "🎓 You don't know your level yet — find it with /grade",
+    suggest_quiz: "⚡ Keep your edge with a quick quiz → /quiz",
     exam_label: "Full exam",
     quiz_label: "Quick quiz",
     review_label: "Mistake review",

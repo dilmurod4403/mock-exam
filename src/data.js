@@ -29,10 +29,30 @@ export const PROG_LANGS = {
       JSE: {
         label: "JSE — Entry-Level",
         pass: 70,
+        hint: {
+          uz: "Boshlang'ich: o'zgaruvchi, shart, sikl, massiv",
+          en: "Beginner: variables, conditions, loops, arrays",
+        },
         filter: (q) => (q.difficulty === "easy" || q.difficulty === "medium") && !q.levels?.includes("JSP"),
       },
-      JSA: { label: "JSA — Associate", pass: 70, filter: (q) => !q.levels?.includes("JSP") },
-      JSP: { label: "JSP — Professional", pass: 70, filter: (q) => q.levels?.includes("JSP") },
+      JSA: {
+        label: "JSA — Associate",
+        pass: 70,
+        hint: {
+          uz: "O'rta: JS asoslari to'liq (eng ko'p tanlanadi)",
+          en: "Intermediate: full JS fundamentals (most popular)",
+        },
+        filter: (q) => !q.levels?.includes("JSP"),
+      },
+      JSP: {
+        label: "JSP — Professional",
+        pass: 70,
+        hint: {
+          uz: "Ilg'or: OOP, async/await, closure, ES6+",
+          en: "Advanced: OOP, async/await, closures, ES6+",
+        },
+        filter: (q) => q.levels?.includes("JSP"),
+      },
     },
   },
   plsql: {
@@ -67,9 +87,33 @@ export const PROG_LANGS = {
       modeling: { uz: "Modellashtirish (normal form, OLAP/OLTP)", en: "Data modeling (normal forms, OLAP/OLTP)" },
     },
     levels: {
-      "1Z0-071": { label: "1Z0-071 — Oracle SQL", pass: 63, filter: (q) => q.levels?.includes("1Z0-071") },
-      "1Z0-149": { label: "1Z0-149 — PL/SQL Developer", pass: 65, filter: (q) => q.levels?.includes("1Z0-149") },
-      "ORA-DBA": { label: "🔥 Oracle DBA / Interview", pass: 60, filter: (q) => q.levels?.includes("ORA-DBA") },
+      "1Z0-071": {
+        label: "1Z0-071 — Oracle SQL",
+        pass: 63,
+        hint: {
+          uz: "SQL sertifikati: SELECT, JOIN, GROUP BY, DML/DDL",
+          en: "SQL certification: SELECT, JOIN, GROUP BY, DML/DDL",
+        },
+        filter: (q) => q.levels?.includes("1Z0-071"),
+      },
+      "1Z0-149": {
+        label: "1Z0-149 — PL/SQL Developer",
+        pass: 65,
+        hint: {
+          uz: "PL/SQL sertifikati: blok, kursor, procedure, trigger",
+          en: "PL/SQL certification: blocks, cursors, procedures, triggers",
+        },
+        filter: (q) => q.levels?.includes("1Z0-149"),
+      },
+      "ORA-DBA": {
+        label: "🔥 Oracle DBA / Interview",
+        pass: 60,
+        hint: {
+          uz: "Ish intervyusi: tranzaksiya, lock, arxitektura, optimizatsiya",
+          en: "Job interview: transactions, locks, architecture, tuning",
+        },
+        filter: (q) => q.levels?.includes("ORA-DBA"),
+      },
     },
   },
 };

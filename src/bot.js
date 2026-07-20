@@ -839,7 +839,7 @@ bot.action(/^plang:(.+)$/, async (ctx) => {
   setPref(ctx.from.id, "plang", code);
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(t(lang, "choose_level"), levelKeyboard(code, lang));
+  await ctx.reply(levelChooserText(code, lang), { parse_mode: "HTML", ...levelKeyboard(code, lang) });
 });
 
 bot.action(/^level:(.+)$/, async (ctx) => {
@@ -854,7 +854,7 @@ bot.action(/^level:(.+)$/, async (ctx) => {
   setPref(ctx.from.id, "level", code);
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(t(lang, "menu_title", PROG_LANGS[plang].levels[code].label), {
+  await ctx.reply(menuText(ctx.from.id, lang, PROG_LANGS[plang].levels[code].label), {
     parse_mode: "HTML",
     ...menuKeyboard(lang),
   });
@@ -867,12 +867,57 @@ bot.action("settings", async (ctx) => {
   await ctx.reply(t(lang, "choose_language"), languageKeyboard(lang));
 });
 
+// "Bugun nima qilsam?" — foydalanuvchi holatiga qarab bitta aniq tavsiya
+function suggestNext(userId, lang) {
+  const prefs = getPrefs(userId);
+  if (!prefs?.plang || !prefs?.level) return "";
+  const { plang, level } = prefs;
+
+  const due = getDueCount(userId, { plang, level });
+  if (due > 0) return t(lang, "suggest_practice", due);
+
+  const wrong = getWrongQuestionIds(userId, { plang, level }).length;
+  if (wrong > 0) return t(lang, "suggest_review", wrong);
+
+  const stats = getStats(userId, { plang, level });
+  if (stats.total === 0) return t(lang, "suggest_start");
+
+  // Eng zaif mavzu (yetarli namuna bo'lganda)
+  const topics = PROG_LANGS[plang]?.topics || {};
+  const weak = Object.entries(stats.byTopic)
+    .filter(([, s]) => s.total >= 3)
+    .map(([code, s]) => ({
+      name: topics[code]?.[lang] || code,
+      pct: Math.round((s.correct / s.total) * 100),
+    }))
+    .sort((a, b) => a.pct - b.pct)[0];
+  if (weak && weak.pct < 60) return t(lang, "suggest_weak", weak.name);
+
+  if (!getLastGrade(userId, plang)) return t(lang, "suggest_grade");
+  return t(lang, "suggest_quiz");
+}
+
+// Menyu matni: daraja sarlavhasi + bugungi tavsiya
+function menuText(userId, lang, levelLabel) {
+  const s = suggestNext(userId, lang);
+  return t(lang, "menu_title", levelLabel) + (s ? `\n\n${t(lang, "suggest_title")}\n${s}` : "");
+}
+
+// Daraja tanlash matni: har darajaning qisqa izohi bilan
+function levelChooserText(plang, lang) {
+  const lines = Object.values(PROG_LANGS[plang].levels).map(
+    (l) => `• <b>${esc(l.label)}</b> — ${esc(l.hint?.[lang] || "")}`
+  );
+  return `${t(lang, "choose_level")}\n\n${lines.join("\n")}\n\n${t(lang, "level_hint_grade")}`;
+}
+
 // Asosiy menyuga qaytish (istalgan bo'limdan)
 function mainMenu(ctx) {
   const lang = langOf(ctx);
   const prefs = getPrefs(ctx.from.id);
   if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
-  return ctx.reply(t(lang, "menu_title", PROG_LANGS[prefs.plang].levels[prefs.level].label), {
+  const label = PROG_LANGS[prefs.plang].levels[prefs.level].label;
+  return ctx.reply(menuText(ctx.from.id, lang, label), {
     parse_mode: "HTML",
     ...menuKeyboard(lang),
   });
@@ -902,7 +947,7 @@ bot.action("back:level", async (ctx) => {
   if (!plang) return ctx.answerCbQuery(t(lang, "need_start"), { show_alert: true });
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(t(lang, "choose_level"), levelKeyboard(plang, lang));
+  await ctx.reply(levelChooserText(plang, lang), { parse_mode: "HTML", ...levelKeyboard(plang, lang) });
 });
 
 // ---------- Rejim tanlash ----------
