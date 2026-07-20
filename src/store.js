@@ -14,7 +14,7 @@ const FILE = join(DATA_DIR, "store.json");
 // users:   { [userId]: { name, username, firstSeen, lastSeen } }  (admin uchun kimlik)
 // blocked: { [userId]: { at } }  (bloklangan foydalanuvchilar)
 // reminders: { [userId]: { lastDay } }  (kuniga bir marta eslatma uchun)
-let db = { prefs: {}, answers: [], srs: {}, grades: {}, users: {}, blocked: {}, reminders: {} };
+let db = { prefs: {}, answers: [], srs: {}, grades: {}, users: {}, blocked: {}, reminders: {}, reports: [] };
 try {
   const loaded = JSON.parse(readFileSync(FILE, "utf8"));
   db.prefs = loaded.prefs || {};
@@ -24,6 +24,7 @@ try {
   db.users = loaded.users || {};
   db.blocked = loaded.blocked || {};
   db.reminders = loaded.reminders || {};
+  db.reports = loaded.reports || [];
 } catch {
   // fayl yo'q yoki buzuq — bo'sh baza bilan boshlaymiz
 }
@@ -334,6 +335,24 @@ export function wasRemindedToday(userId) {
 export function markReminded(userId) {
   db.reminders[String(userId)] = { lastDay: dayKey(Date.now()) };
   schedule();
+}
+
+// ---------- Savol haqida shikoyat (foydalanuvchi xabari) ----------
+export function addReport(userId, questionId) {
+  db.reports.push({ u: String(userId), q: questionId, t: Date.now() });
+  schedule();
+}
+
+// Savol bo'yicha guruhlangan shikoyatlar (ko'p shikoyat qilingani birinchi)
+export function getReports() {
+  const by = {};
+  for (const r of db.reports) {
+    const s = by[r.q] || { q: r.q, count: 0, last: 0 };
+    s.count += 1;
+    if (r.t > s.last) s.last = r.t;
+    by[r.q] = s;
+  }
+  return Object.values(by).sort((a, b) => b.count - a.count || b.last - a.last);
 }
 
 // ---------- Foydalanuvchini boshqarish (admin) ----------

@@ -43,6 +43,8 @@ import {
   unblockUser,
   removeUser,
   getUserDetail,
+  addReport,
+  getReports,
   getOnboardedUsers,
   getReminderData,
   remindersEnabled,
@@ -76,6 +78,11 @@ const QUIZ_SIZE = 10;
 const REVIEW_SIZE = 20;
 const PRACTICE_SIZE = 10;
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
+
+// Test tugagach xatolar tahlili shu yerda kutadi (foydalanuvchi tugmani bosgunicha).
+// userId -> { blocks, at }; eskirganlari sessiya svipida tozalanadi.
+const pendingMistakes = new Map();
+const MISTAKES_TTL = 2 * 60 * 60 * 1000; // 2 soat
 
 // Tashlab ketilgan sessiyalarni tozalash
 const SESSION_TTL = 2 * 60 * 60 * 1000; // 2 soat
@@ -238,6 +245,22 @@ bot.command("user", (ctx) => {
   if (!id) return ctx.reply("Foydalanish: /user &lt;id&gt;", { parse_mode: "HTML" });
   return showUserCard(ctx, id);
 });
+// Admin: foydalanuvchilar shikoyat qilgan savollar
+bot.command("reports", (ctx) => {
+  if (!isAdmin(ctx.from.id)) return;
+  const rows = getReports();
+  if (!rows.length) return ctx.reply("✅ Shikoyat qilingan savol yo'q.");
+  const byId = new Map(ALL_QUESTIONS.map((q) => [q.id, q]));
+  let out = `⚠️ <b>Shikoyat qilingan savollar</b> (${rows.length} ta)\n\n`;
+  rows.slice(0, 30).forEach((r, i) => {
+    const q = byId.get(r.q);
+    const where = q ? `${q.plang}/${q.topic}` : "?";
+    const txt = q ? esc(q.question.split("\n")[0].slice(0, 60)) : "(savol topilmadi)";
+    out += `${i + 1}. <code>${esc(r.q)}</code> · ${r.count}× · ${where}\n   ${txt}\n`;
+  });
+  return sendChunked(ctx, out);
+});
+
 bot.command("block", (ctx) => {
   if (!isAdmin(ctx.from.id)) return;
   const id = ctx.message.text.split(/\s+/)[1];
@@ -428,9 +451,13 @@ function feedbackText(q, picked, isCorrect, lang) {
   const correctLetters = q.correct.map((i) => LETTERS[i]).join(", ");
   const pickedLetters = picked.length ? picked.map((i) => LETTERS[i]).join(", ") : "—";
   const head = isCorrect ? t(lang, "correct_head") : t(lang, "wrong_head", pickedLetters);
+  // To'g'ri variant(lar) matni ham ko'rsatiladi — yuqoriga scroll qilish shart emas
+  const correctText = q.correct
+    .map((i) => `${LETTERS[i]}) ${renderText(q.options[i])}`)
+    .join("\n");
   return (
     `${head}\n` +
-    `${t(lang, "correct_answer", correctLetters)}\n\n` +
+    `${t(lang, "correct_answer", correctLetters)}\n${correctText}\n\n` +
     `${t(lang, "explanation_label")} ${esc(explanationOf(q, lang))}`
   );
 }
@@ -443,7 +470,10 @@ async function afterAnswer(ctx, session, q, picked, isCorrect, lang) {
     : Markup.button.callback(t(lang, "next_btn"), "next");
   await ctx.reply(feedbackText(q, picked, isCorrect, lang), {
     parse_mode: "HTML",
-    ...Markup.inlineKeyboard([[btn]]),
+    ...Markup.inlineKeyboard([
+      [btn],
+      [Markup.button.callback(t(lang, "btn_report"), `report:${q.id}`)],
+    ]),
   });
 }
 
@@ -860,11 +890,46 @@ bot.action(/^level:(.+)$/, async (ctx) => {
   });
 });
 
+// Sozlamalar: butun oqimni qaytadan yurgizmasdan, faqat kerakligini o'zgartirish
 bot.action("settings", async (ctx) => {
   const lang = langOf(ctx);
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "settings_title"), {
+    parse_mode: "HTML",
+    ...Markup.inlineKeyboard([
+      [
+        Markup.button.callback(t(lang, "btn_set_lang"), "set:lang"),
+        Markup.button.callback(t(lang, "btn_set_plang"), "set:plang"),
+        Markup.button.callback(t(lang, "btn_set_level"), "set:level"),
+      ],
+      [Markup.button.callback(t(lang, "btn_menu"), "menu")],
+    ]),
+  });
+});
+
+bot.action("set:lang", async (ctx) => {
+  const lang = langOf(ctx);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await ctx.reply(t(lang, "choose_language"), languageKeyboard(lang));
+});
+bot.action("set:plang", async (ctx) => {
+  const lang = langOf(ctx);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(t(lang, "choose_proglang"), proglangKeyboard(lang));
+});
+bot.action("set:level", async (ctx) => {
+  const lang = langOf(ctx);
+  const plang = getPrefs(ctx.from.id)?.plang;
+  if (!plang) return ctx.answerCbQuery(t(lang, "need_start"), { show_alert: true });
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await ctx.reply(levelChooserText(plang, lang), {
+    parse_mode: "HTML",
+    ...levelKeyboard(plang, lang),
+  });
 });
 
 // "Bugun nima qilsam?" — foydalanuvchi holatiga qarab bitta aniq tavsiya
@@ -1153,20 +1218,44 @@ bot.action("result", async (ctx) => {
   }
   await ctx.reply(headline, { parse_mode: "HTML" });
 
-  // Xato-tahlilini yuborish (uzun bo'lsa xato berishi mumkin) — menyuni bloklamasin
-  try {
-    const blocks = mistakeBlocks(session, lang);
-    if (blocks.length) {
-      await ctx.reply(t(lang, "mistakes_title", blocks.length), { parse_mode: "HTML" });
-      await sendBlocks(ctx, blocks);
-    }
-  } catch (err) {
-    console.error("⚠️ Xatolar tahlilini yuborib bo'lmadi:", err.message);
+  // Xatolar tahlili — majburan tashlanmaydi; foydalanuvchi xohlasa tugma orqali ko'radi
+  const blocks = mistakeBlocks(session, lang);
+  if (blocks.length) {
+    pendingMistakes.set(ctx.from.id, { blocks, at: Date.now() });
+    await ctx.reply(t(lang, "mistakes_prompt", blocks.length), {
+      parse_mode: "HTML",
+      ...Markup.inlineKeyboard([
+        [Markup.button.callback(t(lang, "btn_show_mistakes", blocks.length), "mistakes")],
+      ]),
+    });
   }
 
   // Har doim ko'rsatiladi: keyingi qadam + orqaga/menyu
   await ctx.reply(t(lang, "retry"), { parse_mode: "HTML", ...menuKeyboard(lang) });
   endSession(ctx.from.id);
+});
+
+// Xatolar tahlilini talab bo'yicha ko'rsatish
+bot.action("mistakes", async (ctx) => {
+  const lang = langOf(ctx);
+  const entry = pendingMistakes.get(ctx.from.id);
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  if (!entry) return ctx.reply(t(lang, "session_not_found"));
+  pendingMistakes.delete(ctx.from.id);
+  await ctx.reply(t(lang, "mistakes_title", entry.blocks.length), { parse_mode: "HTML" });
+  try {
+    await sendBlocks(ctx, entry.blocks);
+  } catch (err) {
+    console.error("⚠️ Xatolar tahlilini yuborib bo'lmadi:", err.message);
+  }
+  await ctx.reply(t(lang, "retry"), { parse_mode: "HTML", ...menuKeyboard(lang) });
+});
+
+// Savolda xato bor — foydalanuvchi xabari (admin /reports da ko'radi)
+bot.action(/^report:(.+)$/, async (ctx) => {
+  addReport(ctx.from.id, ctx.match[1]);
+  await ctx.answerCbQuery(t(langOf(ctx), "report_thanks"), { show_alert: true });
 });
 
 // ---------- Telegram buyruqlar menyusi ----------
@@ -1331,6 +1420,8 @@ registerCommands().catch((err) =>
 const sweepTimer = setInterval(() => {
   const n = sweepSessions(SESSION_TTL);
   if (n) console.log(`🧹 ${n} ta eskirgan sessiya tozalandi.`);
+  const now = Date.now();
+  for (const [uid, e] of pendingMistakes) if (now - e.at > MISTAKES_TTL) pendingMistakes.delete(uid);
 }, SWEEP_EVERY);
 sweepTimer.unref(); // process yopilishiga to'sqinlik qilmasin
 
