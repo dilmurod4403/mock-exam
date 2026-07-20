@@ -81,9 +81,10 @@ const LETTERS = ["A", "B", "C", "D", "E", "F"];
 const SESSION_TTL = 2 * 60 * 60 * 1000; // 2 soat
 const SWEEP_EVERY = 30 * 60 * 1000; // 30 daqiqada bir
 
-// Kunlik eslatma: Toshkent vaqti bilan shu soatda, kuniga ko'pi bilan 1 marta
+// Kunlik eslatma: Toshkent vaqti bilan shu soatda, kuniga ko'pi bilan 1 marta.
+// REMIND_HOUR env orqali sozlanadi (0-23), standart 19:00.
 const TZ_OFFSET_MS = 5 * 3600 * 1000; // UTC+5
-const REMIND_HOUR = 19;
+const REMIND_HOUR = Math.min(23, Math.max(0, Number(process.env.REMIND_HOUR ?? 19) || 0));
 const REMIND_CHECK_EVERY = 15 * 60 * 1000; // 15 daqiqada bir tekshiramiz
 
 const bot = new Telegraf(TOKEN);
@@ -1163,15 +1164,18 @@ const tashkentHour = () => new Date(Date.now() + TZ_OFFSET_MS).getUTCHours();
 
 // Bugun mashq qilmagan, lekin sababi bor (streak xavfda / takrorlash kutyapti)
 // foydalanuvchilarga kuniga bir marta turtki yuboradi.
-async function sendReminders() {
-  if (tashkentHour() !== REMIND_HOUR) return;
+async function sendReminders({ force = false } = {}) {
+  const stat = { sent: 0, blocked: 0, off: 0, alreadySent: 0, activeToday: 0, noReason: 0 };
+  if (!force && tashkentHour() !== REMIND_HOUR) return stat;
   let sent = 0;
   for (const u of getOnboardedUsers()) {
     try {
-      if (isBlocked(u.id) || !remindersEnabled(u.id) || wasRemindedToday(u.id)) continue;
+      if (isBlocked(u.id)) { stat.blocked += 1; continue; }
+      if (!remindersEnabled(u.id)) { stat.off += 1; continue; }
+      if (wasRemindedToday(u.id)) { stat.alreadySent += 1; continue; }
       const d = getReminderData(u.id, { plang: u.plang, level: u.level });
-      if (d.activeToday) continue; // bugun mashq qilgan — turtki shart emas
-      if (d.due === 0 && d.streak === 0) continue; // aytadigan sabab yo'q
+      if (d.activeToday) { stat.activeToday += 1; continue; } // bugun mashq qilgan
+      if (d.due === 0 && d.streak === 0) { stat.noReason += 1; continue; } // sabab yo'q
 
       const lines = [];
       if (d.streak > 0) lines.push(t(u.lang, "remind_streak", d.streak));
@@ -1194,8 +1198,24 @@ async function sendReminders() {
       else console.error(`⚠️ Eslatma yuborilmadi (${u.id}):`, err.message);
     }
   }
+  stat.sent = sent;
   if (sent) console.log(`🔔 ${sent} ta eslatma yuborildi.`);
+  return stat;
 }
+
+// Admin: eslatmani darhol sinash (soatni kutmasdan)
+bot.command("testremind", async (ctx) => {
+  if (!isAdmin(ctx.from.id)) return;
+  const s = await sendReminders({ force: true });
+  await ctx.reply(
+    `🔔 <b>Test natijasi</b>\n\n` +
+      `Yuborildi: <b>${s.sent}</b>\n` +
+      `O'tkazildi — bugun mashq qilgan: ${s.activeToday} · sabab yo'q: ${s.noReason} · ` +
+      `bugun yuborilgan: ${s.alreadySent} · o'chirgan: ${s.off} · bloklangan: ${s.blocked}\n\n` +
+      `<i>Eslatma soati: ${REMIND_HOUR}:00 (Toshkent)</i>`,
+    { parse_mode: "HTML" }
+  );
+});
 
 // ---------- Xatoliklarni ushlash ----------
 bot.catch((err, ctx) => {
