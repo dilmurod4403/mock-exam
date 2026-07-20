@@ -16,13 +16,13 @@ const S = {
       `✅ Tayyor! Daraja: <b>${level}</b>\n\nQuyidagilardan birini tanlang:`,
     btn_exam: "📝 To'liq imtihon",
     btn_quiz: "⚡ Tezkor test",
-    btn_learn: "📖 O'rganish (mini-dars)",
+    btn_learn: "📖 O'rganish",
     btn_topic: "📚 Mavzu bo'yicha",
-    btn_review: "🔁 Xatolarim ustida ishlash",
+    btn_review: "🔁 Xatolarim",
     btn_practice: "🧠 Bugungi takrorlash",
-    btn_grade: "🎓 Darajamni aniqlash",
+    btn_grade: "🎓 Darajam",
     btn_stats: "🏆 Statistikam",
-    btn_change: "⚙️ Sozlamalar (til/daraja)",
+    btn_change: "⚙️ Sozlamalar",
     welcome: (name) =>
       `👋 Salom, ${name}!\n\n` +
       `Bu bot sizni sertifikat va ish intervyusiga tayyorlaydi:\n` +
@@ -152,13 +152,13 @@ const S = {
       `✅ Ready! Level: <b>${level}</b>\n\nPick one of the following:`,
     btn_exam: "📝 Full exam",
     btn_quiz: "⚡ Quick quiz",
-    btn_learn: "📖 Learn (mini-lessons)",
+    btn_learn: "📖 Learn",
     btn_topic: "📚 By topic",
-    btn_review: "🔁 My past mistakes",
-    btn_practice: "🧠 Today's review queue",
-    btn_grade: "🎓 Assess my level",
+    btn_review: "🔁 My mistakes",
+    btn_practice: "🧠 Today's review",
+    btn_grade: "🎓 My level",
     btn_stats: "🏆 My stats",
-    btn_change: "⚙️ Settings (language/level)",
+    btn_change: "⚙️ Settings",
     welcome: (name) =>
       `👋 Hi, ${name}!\n\n` +
       `This bot prepares you for certifications and job interviews:\n` +

@@ -417,6 +417,31 @@ const levelKeyboard = (plang, lang) =>
     [Markup.button.callback(t(lang, "btn_back"), "back:plang")],
   ]);
 
+// Doimiy pastki klaviatura — rejimlar har doim qo'l ostida (chat to'lsa ham yo'qolmaydi)
+function mainReplyKeyboard(lang) {
+  return Markup.keyboard([
+    [t(lang, "btn_exam"), t(lang, "btn_quiz")],
+    [t(lang, "btn_learn"), t(lang, "btn_topic")],
+    [t(lang, "btn_review"), t(lang, "btn_practice")],
+    [t(lang, "btn_grade"), t(lang, "btn_stats")],
+    [t(lang, "btn_change")],
+  ]).resize();
+}
+
+// Tugma matni → rejim (ikkala tilda ham tanib oladi)
+const BUTTON_ROUTE = new Map();
+for (const lg of ["uz", "en"]) {
+  BUTTON_ROUTE.set(t(lg, "btn_exam"), "exam");
+  BUTTON_ROUTE.set(t(lg, "btn_quiz"), "quiz");
+  BUTTON_ROUTE.set(t(lg, "btn_learn"), "learn");
+  BUTTON_ROUTE.set(t(lg, "btn_topic"), "topic");
+  BUTTON_ROUTE.set(t(lg, "btn_review"), "review");
+  BUTTON_ROUTE.set(t(lg, "btn_practice"), "practice");
+  BUTTON_ROUTE.set(t(lg, "btn_grade"), "grade");
+  BUTTON_ROUTE.set(t(lg, "btn_stats"), "stats");
+  BUTTON_ROUTE.set(t(lg, "btn_change"), "settings");
+}
+
 function menuKeyboard(lang) {
   return Markup.inlineKeyboard([
     [Markup.button.callback(t(lang, "btn_exam"), "mode:exam")],
@@ -915,16 +940,14 @@ bot.action(/^level:(.+)$/, async (ctx) => {
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await ctx.reply(menuText(ctx.from.id, lang, PROG_LANGS[plang].levels[code].label), {
     parse_mode: "HTML",
-    ...menuKeyboard(lang),
+    ...mainReplyKeyboard(lang),
   });
 });
 
 // Sozlamalar: butun oqimni qaytadan yurgizmasdan, faqat kerakligini o'zgartirish
-bot.action("settings", async (ctx) => {
+function showSettings(ctx) {
   const lang = langOf(ctx);
-  await ctx.answerCbQuery();
-  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
-  await ctx.reply(t(lang, "settings_title"), {
+  return ctx.reply(t(lang, "settings_title"), {
     parse_mode: "HTML",
     ...Markup.inlineKeyboard([
       [
@@ -935,6 +958,36 @@ bot.action("settings", async (ctx) => {
       [Markup.button.callback(t(lang, "btn_menu"), "menu")],
     ]),
   });
+}
+
+bot.action("settings", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await showSettings(ctx);
+});
+
+// Pastki klaviatura tugmalari matn sifatida keladi — shu yerda rejimga yo'naltiramiz
+bot.hears([...BUTTON_ROUTE.keys()], async (ctx) => {
+  switch (BUTTON_ROUTE.get(ctx.message.text)) {
+    case "exam":
+      return beginExam(ctx, { mode: "exam", size: EXAM_SIZE, topic: null });
+    case "quiz":
+      return beginExam(ctx, { mode: "quiz", size: QUIZ_SIZE, topic: null });
+    case "learn":
+      return sendLearnMenu(ctx);
+    case "topic":
+      return sendTopicMenu(ctx);
+    case "review":
+      return beginReview(ctx);
+    case "practice":
+      return beginPractice(ctx);
+    case "grade":
+      return beginGrade(ctx);
+    case "stats":
+      return sendStats(ctx);
+    case "settings":
+      return showSettings(ctx);
+  }
 });
 
 bot.action("set:lang", async (ctx) => {
@@ -1013,7 +1066,7 @@ function mainMenu(ctx) {
   const label = PROG_LANGS[prefs.plang].levels[prefs.level].label;
   return ctx.reply(menuText(ctx.from.id, lang, label), {
     parse_mode: "HTML",
-    ...menuKeyboard(lang),
+    ...mainReplyKeyboard(lang),
   });
 }
 
