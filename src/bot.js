@@ -1058,7 +1058,9 @@ function getPath(userId, plang, level) {
   let prevDone = true;
   for (const st of stages) {
     const available = pool.filter((q) => st.topics.includes(q.topic)).length;
-    const need = Math.min(STAGE_MIN, available);
+    // Mavzu savollarining yarmi yetarli (ko'pi bilan STAGE_MIN) — kichik etaplar
+    // butun mavzuni yechishni talab qilmasin
+    const need = Math.min(STAGE_MIN, Math.ceil(available / 2));
     const s = getStageStats(userId, { plang, level, topics: st.topics });
     const done = available > 0 && s.recent >= need && s.pct >= STAGE_PASS;
     out.push({ ...st, stats: s, available, need, done, unlocked: prevDone });

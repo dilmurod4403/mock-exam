@@ -19,7 +19,7 @@ const S = {
     path_stage: (icon, n, title, bar, cur, need, pct) =>
       `${icon} <b>${n}. ${title}</b>\n   ${bar} ${cur}/${need} savol · ${pct}%`,
     path_current: (title) => `▶️ Joriy etap: <b>${title}</b>`,
-    path_rule: (need, pass) => `ℹ️ Etap ochilishi: kamida ${need} ta savol va ${pass}% aniqlik (oxirgi javoblar bo'yicha).`,
+    path_rule: (need, pass) => `ℹ️ Etap ochilishi: mavzu savollarining yarmi (ko'pi bilan ${need} ta) va ${pass}% aniqlik — oxirgi javoblar bo'yicha.`,
     path_all_done: "🎉 Barcha etaplar tugadi! Endi butun kontent ochiq.",
     locked_alert: (title) => `🔒 Yopiq. Avval "${title}" etapini tugating.`,
     locked_exam: "🔒 Hozircha ochiq mavzular kam. Avval joriy etapni mashq qiling.",
@@ -164,7 +164,7 @@ const S = {
     path_stage: (icon, n, title, bar, cur, need, pct) =>
       `${icon} <b>${n}. ${title}</b>\n   ${bar} ${cur}/${need} questions · ${pct}%`,
     path_current: (title) => `▶️ Current stage: <b>${title}</b>`,
-    path_rule: (need, pass) => `ℹ️ To unlock: at least ${need} questions and ${pass}% accuracy (over your latest answers).`,
+    path_rule: (need, pass) => `ℹ️ To unlock: half of the stage's questions (at most ${need}) and ${pass}% accuracy — over your latest answers.`,
     path_all_done: "🎉 All stages complete! Everything is unlocked.",
     locked_alert: (title) => `🔒 Locked. Finish the "${title}" stage first.`,
     locked_exam: "🔒 Few topics are unlocked yet. Practice your current stage first.",
