@@ -14,6 +14,7 @@ const S = {
     level_soon: "Bu daraja uchun savollar tez orada qo'shiladi 🔜",
     menu_title: (level) =>
       `✅ Tayyor! Daraja: <b>${level}</b>\n\nQuyidagilardan birini tanlang:`,
+    unknown_text: "🤔 Tushunmadim. Pastdagi tugmalardan foydalaning yoki /help ni bosing.",
     btn_path: "🗺 O'quv yo'li",
     path_title: (done, total) => `🗺 <b>O'quv yo'li</b> — ${done}/${total} etap tugadi`,
     path_stage: (icon, n, title, bar, cur, need, pct) =>
@@ -159,6 +160,7 @@ const S = {
     level_soon: "Questions for this level are coming soon 🔜",
     menu_title: (level) =>
       `✅ Ready! Level: <b>${level}</b>\n\nPick one of the following:`,
+    unknown_text: "🤔 I did not understand that. Use the buttons below, or tap /help.",
     btn_path: "🗺 Learning path",
     path_title: (done, total) => `🗺 <b>Learning path</b> — ${done}/${total} stages done`,
     path_stage: (icon, n, title, bar, cur, need, pct) =>

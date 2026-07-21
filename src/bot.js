@@ -1563,6 +1563,19 @@ bot.command("testremind", async (ctx) => {
   );
 });
 
+// Noma'lum matn — masalan ESKIRGAN klaviatura tugmasi (yorliqlar o'zgargan bo'lsa).
+// Foydalanuvchi "hech narsa bo'lmadi" holatida qolmasin: yangi klaviaturani qaytaramiz.
+// Barcha buyruq va tugma handlerlaridan KEYIN turishi shart.
+bot.on("text", async (ctx) => {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  await ctx.reply(t(lang, "unknown_text"), {
+    parse_mode: "HTML",
+    ...mainReplyKeyboard(lang),
+  });
+});
+
 // ---------- Xatoliklarni ushlash ----------
 bot.catch((err, ctx) => {
   console.error(`⚠️ Handler xatosi (${ctx?.updateType}):`, err);
@@ -1623,7 +1636,13 @@ console.log("✅ Bot ishladi. Telegram'da /start bosing.");
 
 function shutdown(signal) {
   flush();
-  bot.stop(signal);
+  // bot hali polling boshlamagan bo'lishi mumkin (409 kutish / launch xatosi) —
+  // bunda stop() xato tashlaydi va jarayon qulaydi. Shuning uchun himoyalaymiz.
+  try {
+    bot.stop(signal);
+  } catch {
+    /* ishga tushmagan — to'xtatadigan narsa yo'q */
+  }
 }
 process.once("SIGINT", () => shutdown("SIGINT"));
 process.once("SIGTERM", () => shutdown("SIGTERM"));
