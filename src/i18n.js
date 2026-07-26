@@ -32,6 +32,9 @@ const S = {
     btn_practice: "🧠 Bugungi takrorlash",
     btn_grade: "🎓 Darajam",
     btn_stats: "🏆 Statistikam",
+    btn_resources: "📚 Manbalar (maqolalar)",
+    resources_title: "📚 <b>Foydali manbalar</b> — rasmiy hujjatlar va maqolalar:",
+    resources_none: "Bu bo'lim uchun manbalar hozircha yo'q.",
     btn_change: "⚙️ Sozlamalar",
     welcome: (name) =>
       `👋 Salom, ${name}!\n\n` +
@@ -178,6 +181,9 @@ const S = {
     btn_practice: "🧠 Today's review",
     btn_grade: "🎓 My level",
     btn_stats: "🏆 My stats",
+    btn_resources: "📚 Resources (articles)",
+    resources_title: "📚 <b>Useful resources</b> — official docs and articles:",
+    resources_none: "No resources for this section yet.",
     btn_change: "⚙️ Settings",
     welcome: (name) =>
       `👋 Hi, ${name}!\n\n` +

@@ -12,6 +12,7 @@ import {
 } from "./data.js";
 import { t, LANGS } from "./i18n.js";
 import { getLesson, lessonTopics } from "./lessons.js";
+import { getResources } from "./resources.js";
 import {
   GRADE_TARGET,
   initGradingState,
@@ -455,6 +456,7 @@ function menuKeyboard(lang) {
     [Markup.button.callback(t(lang, "btn_practice"), "mode:practice")],
     [Markup.button.callback(t(lang, "btn_grade"), "mode:grade")],
     [Markup.button.callback(t(lang, "btn_stats"), "mode:stats")],
+    [Markup.button.callback(t(lang, "btn_resources"), "mode:resources")],
     [
       Markup.button.callback(t(lang, "btn_back"), "back:level"),
       Markup.button.callback(t(lang, "btn_change"), "settings"),
@@ -899,6 +901,23 @@ function sendTopicMenu(ctx) {
   return ctx.reply(t(lang, "choose_topic"), Markup.inlineKeyboard(rows));
 }
 
+// Sohaga doir manbalar (maqolalar/hujjatlar) — tanlangan til/daraja bo'yicha
+function sendResources(ctx) {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
+  const items = getResources(prefs.plang, prefs.level);
+  if (!items.length) return ctx.reply(t(lang, "resources_none"));
+  const body = items.map((r) => `• <a href="${r.url}">${esc(r.title)}</a>`).join("\n");
+  return ctx.reply(`${t(lang, "resources_title")}\n\n${body}`, {
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
+    ...Markup.inlineKeyboard([[Markup.button.callback(t(lang, "btn_menu"), "menu")]]),
+  });
+}
+
+bot.command("resources", (ctx) => sendResources(ctx));
+
 bot.command("topic", (ctx) => sendTopicMenu(ctx));
 
 // O'rganish: darsli mavzular menyusi
@@ -1217,6 +1236,11 @@ bot.action("mode:topic", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageReplyMarkup(undefined).catch(() => {});
   await sendTopicMenu(ctx);
+});
+bot.action("mode:resources", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+  await sendResources(ctx);
 });
 bot.action("mode:learn", async (ctx) => {
   await ctx.answerCbQuery();
