@@ -35,6 +35,7 @@ const S = {
     btn_resources: "📚 Manbalar (maqolalar)",
     resources_title: "📚 <b>Foydali manbalar</b> — rasmiy hujjatlar va maqolalar:",
     resources_none: "Bu bo'lim uchun manbalar hozircha yo'q.",
+    resources_pick: "👇 Chuqurroq — mavzu bo'yicha manbalar:",
     btn_change: "⚙️ Sozlamalar",
     welcome: (name) =>
       `👋 Salom, ${name}!\n\n` +
@@ -184,6 +185,7 @@ const S = {
     btn_resources: "📚 Resources (articles)",
     resources_title: "📚 <b>Useful resources</b> — official docs and articles:",
     resources_none: "No resources for this section yet.",
+    resources_pick: "👇 Go deeper — resources by topic:",
     btn_change: "⚙️ Settings",
     welcome: (name) =>
       `👋 Hi, ${name}!\n\n` +

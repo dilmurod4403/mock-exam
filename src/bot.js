@@ -12,7 +12,7 @@ import {
 } from "./data.js";
 import { t, LANGS } from "./i18n.js";
 import { getLesson, lessonTopics } from "./lessons.js";
-import { getResources } from "./resources.js";
+import { getResources, getTopicResources } from "./resources.js";
 import {
   GRADE_TARGET,
   initGradingState,
@@ -901,22 +901,56 @@ function sendTopicMenu(ctx) {
   return ctx.reply(t(lang, "choose_topic"), Markup.inlineKeyboard(rows));
 }
 
-// Sohaga doir manbalar (maqolalar/hujjatlar) — tanlangan til/daraja bo'yicha
+const linkList = (items) =>
+  items.map((r) => `• <a href="${r.url}">${esc(r.title)}</a>`).join("\n");
+
+// Sohaga doir manbalar — umumiy havolalar + mavzular ro'yxati (chuqurroq)
 function sendResources(ctx) {
   const lang = langOf(ctx);
   const prefs = getPrefs(ctx.from.id);
   if (!prefs?.plang || !prefs?.level) return ctx.reply(t(lang, "need_start"));
-  const items = getResources(prefs.plang, prefs.level);
-  if (!items.length) return ctx.reply(t(lang, "resources_none"));
-  const body = items.map((r) => `• <a href="${r.url}">${esc(r.title)}</a>`).join("\n");
-  return ctx.reply(`${t(lang, "resources_title")}\n\n${body}`, {
+  const { plang, level } = prefs;
+  const general = getResources(plang, level);
+  const counts = topicCounts({ plang, level });
+  const topicRows = Object.entries(PROG_LANGS[plang].topics)
+    .filter(([code]) => (counts[code] || 0) > 0 && getTopicResources(plang, code).length)
+    .map(([code, names]) => [Markup.button.callback(`📖 ${names[lang]}`, `res:${code}`)]);
+  topicRows.push([Markup.button.callback(t(lang, "btn_menu"), "menu")]);
+
+  const head = general.length
+    ? `${t(lang, "resources_title")}\n\n${linkList(general)}`
+    : t(lang, "resources_title");
+  const body = topicRows.length > 1 ? `${head}\n\n${t(lang, "resources_pick")}` : head;
+  return ctx.reply(body, {
     parse_mode: "HTML",
     disable_web_page_preview: true,
-    ...Markup.inlineKeyboard([[Markup.button.callback(t(lang, "btn_menu"), "menu")]]),
+    ...Markup.inlineKeyboard(topicRows),
   });
 }
 
 bot.command("resources", (ctx) => sendResources(ctx));
+
+// Mavzu bo'yicha manbalar
+bot.action(/^res:(.+)$/, async (ctx) => {
+  const lang = langOf(ctx);
+  const prefs = getPrefs(ctx.from.id);
+  await ctx.answerCbQuery();
+  if (!prefs?.plang) return;
+  const topic = ctx.match[1];
+  const items = getTopicResources(prefs.plang, topic);
+  if (!items.length) return;
+  const name = PROG_LANGS[prefs.plang].topics[topic]?.[lang] || topic;
+  await ctx.reply(`📖 <b>${esc(name)}</b>\n\n${linkList(items)}`, {
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
+    ...Markup.inlineKeyboard([
+      [
+        Markup.button.callback(t(lang, "btn_resources"), "mode:resources"),
+        Markup.button.callback(t(lang, "btn_menu"), "menu"),
+      ],
+    ]),
+  });
+});
 
 bot.command("topic", (ctx) => sendTopicMenu(ctx));
 
