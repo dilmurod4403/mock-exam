@@ -1,0 +1,141 @@
+[
+  {
+    "id": "web-01",
+    "topic": "webnet",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "In the DOM, what is the default order in which event handlers fire?",
+    "options": [
+      "Capturing (top → target), then bubbling (target → top)",
+      "Only bubbling",
+      "Only capturing",
+      "Random order"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "Hodisa avval CAPTURING fazasida yuqoridan (document) target'ga tushadi, keyin BUBBLING fazasida target'dan yuqoriga ko'tariladi. addEventListener standart holatda bubbling'da tinglaydi; capture uchun {capture:true} beriladi.",
+      "en": "An event first goes DOWN in the CAPTURING phase (document → target), then UP in the BUBBLING phase (target → document). addEventListener listens in the bubbling phase by default; pass {capture:true} for capturing."
+    }
+  },
+  {
+    "id": "web-02",
+    "topic": "webnet",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is EVENT DELEGATION?",
+    "options": [
+      "Adding a separate listener to every child element",
+      "Attaching one listener to a parent and using event.target to handle events from many children (leverages bubbling)",
+      "Preventing events from firing",
+      "A CSS technique"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Event delegation — ko'p bola elementga alohida listener qo'yish o'rniga, bitta ota elementga bitta listener qo'yib, `event.target` orqali qaysi bola bosilganini aniqlash. Bubbling'dan foydalanadi — samarali va dinamik elementlar uchun qulay.",
+      "en": "Event delegation attaches ONE listener to a parent and uses `event.target` to handle events from many children, instead of one listener per child. It leverages bubbling — efficient and works with dynamically added elements."
+    }
+  },
+  {
+    "id": "web-03",
+    "topic": "webnet",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What is the difference between event.preventDefault() and event.stopPropagation()?",
+    "options": [
+      "They do the same thing",
+      "preventDefault cancels the browser's default action; stopPropagation stops the event from bubbling further",
+      "preventDefault stops bubbling; stopPropagation cancels the default",
+      "Both stop bubbling"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`preventDefault()` brauzerning standart harakatini bekor qiladi (masalan formani yubormaslik, link'ga o'tmaslik). `stopPropagation()` esa hodisaning boshqa elementlarga tarqalishini (bubbling) to'xtatadi. Ular har xil ishlarni bajaradi.",
+      "en": "`preventDefault()` cancels the browser's default action (e.g. not submitting a form, not following a link). `stopPropagation()` stops the event from propagating (bubbling) to other elements. They do different things."
+    }
+  },
+  {
+    "id": "web-04",
+    "topic": "webnet",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What is the key difference between localStorage and sessionStorage?",
+    "options": [
+      "localStorage is deleted when the tab closes; sessionStorage persists",
+      "sessionStorage is cleared when the tab/session ends; localStorage persists until explicitly cleared",
+      "They are identical",
+      "sessionStorage is sent to the server automatically"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`localStorage` — brauzerda doimiy saqlanadi (o'chirilmaguncha). `sessionStorage` — faqat tab/sessiya davomida yashaydi, tab yopilganda o'chadi. Ikkalasi ham (cookie'dan farqli) serverga avtomatik yuborilmaydi.",
+      "en": "`localStorage` persists in the browser until explicitly cleared. `sessionStorage` lives only for the tab/session and is cleared when the tab closes. Unlike cookies, neither is sent to the server automatically."
+    }
+  },
+  {
+    "id": "web-05",
+    "topic": "webnet",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "Which HTTP method is NOT idempotent (repeating it may create multiple resources)?",
+    "options": ["GET", "PUT", "DELETE", "POST"],
+    "correct": [3],
+    "explanation": {
+      "uz": "GET, PUT, DELETE — idempotent: bir xil so'rovni takrorlash natijani o'zgartirmaydi. POST esa idempotent EMAS — takrorlash yangi resurslar yaratishi mumkin (masalan bir buyurtma ikki marta). Shuning uchun POST takrorlashdan ehtiyot bo'linadi.",
+      "en": "GET, PUT, DELETE are idempotent: repeating the same request doesn't change the outcome. POST is NOT idempotent — repeating it may create multiple resources (e.g. a double order). That's why POST retries need care."
+    }
+  },
+  {
+    "id": "web-06",
+    "topic": "webnet",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "An HTTP status code in the 4xx range indicates:",
+    "options": [
+      "Success",
+      "A client error (e.g. 404 Not Found, 401 Unauthorized)",
+      "A server error",
+      "A redirect"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "2xx — muvaffaqiyat, 3xx — yo'naltirish (redirect), 4xx — MIJOZ xatosi (404 topilmadi, 401 avtorizatsiyasiz, 400 noto'g'ri so'rov), 5xx — SERVER xatosi (500, 503).",
+      "en": "2xx — success, 3xx — redirect, 4xx — CLIENT error (404 Not Found, 401 Unauthorized, 400 Bad Request), 5xx — SERVER error (500, 503)."
+    }
+  },
+  {
+    "id": "web-07",
+    "topic": "webnet",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is CORS?",
+    "options": [
+      "A JavaScript framework",
+      "A browser security mechanism that controls whether a page may make requests to a DIFFERENT origin",
+      "A way to compress responses",
+      "A database protocol"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "CORS (Cross-Origin Resource Sharing) — brauzer xavfsizlik mexanizmi: sahifa BOSHQA origin (domen/port/protokol) ga so'rov yuborishiga serverning ruxsatini (Access-Control-Allow-Origin sarlavhasi) talab qiladi. Ba'zi so'rovlardan oldin 'preflight' (OPTIONS) yuboriladi.",
+      "en": "CORS (Cross-Origin Resource Sharing) is a browser security mechanism: it requires the server's permission (the Access-Control-Allow-Origin header) for a page to request a DIFFERENT origin (domain/port/protocol). Some requests send a 'preflight' (OPTIONS) first."
+    }
+  },
+  {
+    "id": "web-08",
+    "topic": "webnet",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "Does fetch() reject its promise on an HTTP 404 or 500 response?",
+    "options": [
+      "Yes, any error status rejects the promise",
+      "No — fetch only rejects on network failure; you must check response.ok / response.status yourself",
+      "Only on 500, not 404",
+      "It throws synchronously"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`fetch` faqat TARMOQ uzilishida (network failure) rad etadi. 404/500 kabi HTTP xato statuslarida promise MUVAFFAQIYATLI hal bo'ladi — shuning uchun `response.ok` yoki `response.status` ni o'zingiz tekshirishingiz kerak. (Bu axios'dan muhim farq.)",
+      "en": "`fetch` rejects only on a NETWORK failure. For HTTP error statuses like 404/500 the promise still RESOLVES — so you must check `response.ok` or `response.status` yourself. (An important difference from axios.)"
+    }
+  }
+]

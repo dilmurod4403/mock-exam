@@ -31,8 +31,13 @@ export const PROG_LANGS = {
       oop: { uz: "Obyektlar va OOP (this, class)", en: "Objects & OOP (this, class)" },
       async: { uz: "Asinxron (Promise, async/await)", en: "Asynchronous (Promise, async/await)" },
       advanced: { uz: "Ilg'or (closure, ES6+, generator)", en: "Advanced (closures, ES6+, generators)" },
+      // Interview (JS-INT) tarmoqlari
+      coredeep: { uz: "Core JS chuqur (this, closure, event loop)", en: "Core JS deep (this, closures, event loop)" },
+      webnet: { uz: "Browser/DOM va tarmoq (HTTP, fetch, CORS)", en: "Browser/DOM & networking (HTTP, fetch, CORS)" },
+      nodejs: { uz: "Node.js asoslari", en: "Node.js basics" },
+      typescript: { uz: "TypeScript asoslari", en: "TypeScript basics" },
     },
-    // JSE/JSA — asosiy bank (JSP-teglilardan tashqari); JSP — faqat ilg'or (levels: ["JSP"]) savollar
+    // JSE/JSA — asosiy bank (JSP/JS-INT teglilardan tashqari); JSP va JS-INT — o'z teglari bo'yicha
     levels: {
       JSE: {
         label: "JSE — Entry-Level",
@@ -42,7 +47,9 @@ export const PROG_LANGS = {
           en: "Beginner: variables, conditions, loops, arrays",
         },
         stages: JS_BASIC_STAGES,
-        filter: (q) => (q.difficulty === "easy" || q.difficulty === "medium") && !q.levels?.includes("JSP"),
+        filter: (q) =>
+          (q.difficulty === "easy" || q.difficulty === "medium") &&
+          !q.levels?.some((l) => l === "JSP" || l === "JS-INT"),
       },
       JSA: {
         label: "JSA — Associate",
@@ -52,7 +59,7 @@ export const PROG_LANGS = {
           en: "Intermediate: full JS fundamentals (most popular)",
         },
         stages: JS_BASIC_STAGES,
-        filter: (q) => !q.levels?.includes("JSP"),
+        filter: (q) => !q.levels?.some((l) => l === "JSP" || l === "JS-INT"),
       },
       JSP: {
         label: "JSP — Professional",
@@ -67,6 +74,21 @@ export const PROG_LANGS = {
           { title: { uz: "Ilg'or", en: "Advanced" }, topics: ["advanced"] },
         ],
         filter: (q) => q.levels?.includes("JSP"),
+      },
+      "JS-INT": {
+        label: "🔥 JS Developer / Interview",
+        pass: 60,
+        hint: {
+          uz: "Suhbat: core JS, DOM/tarmoq, Node.js, TypeScript",
+          en: "Interview: core JS, DOM/networking, Node.js, TypeScript",
+        },
+        stages: [
+          { title: { uz: "Core JS (chuqur)", en: "Core JS deep" }, topics: ["coredeep"] },
+          { title: { uz: "Browser/DOM & tarmoq", en: "Browser/DOM & networking" }, topics: ["webnet"] },
+          { title: { uz: "Node.js", en: "Node.js" }, topics: ["nodejs"] },
+          { title: { uz: "TypeScript", en: "TypeScript" }, topics: ["typescript"] },
+        ],
+        filter: (q) => q.levels?.includes("JS-INT"),
       },
     },
   },

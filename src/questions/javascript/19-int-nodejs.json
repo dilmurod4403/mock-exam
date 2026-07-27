@@ -1,0 +1,146 @@
+[
+  {
+    "id": "node-01",
+    "topic": "nodejs",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "How do you export and import in CommonJS (the classic Node module system)?",
+    "options": [
+      "export / import",
+      "module.exports = ... / const x = require('...')",
+      "include / using",
+      "define / load"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "CommonJS'da: `module.exports = ...` (yoki exports.foo) bilan eksport, `require('...')` bilan import qilinadi. ESM'da esa `export` / `import` ishlatiladi (package.json'da \"type\":\"module\" yoki .mjs). Node ikkalasini qo'llab-quvvatlaydi.",
+      "en": "In CommonJS: export with `module.exports = ...` (or exports.foo) and import with `require('...')`. ESM uses `export` / `import` (with \"type\":\"module\" in package.json or .mjs). Node supports both."
+    }
+  },
+  {
+    "id": "node-02",
+    "topic": "nodejs",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "How does Node.js handle many concurrent I/O operations despite being single-threaded?",
+    "options": [
+      "It creates one thread per request",
+      "Non-blocking, event-driven I/O via the event loop (libuv) — I/O runs in the background and callbacks fire when ready",
+      "It blocks until each operation finishes",
+      "It uses multiple processes only"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Node bitta asosiy oqimda ishlaydi, lekin I/O ni bloklamaydi: event loop (libuv) yordamida I/O fonda bajariladi va tayyor bo'lganda callback ishga tushadi. Shuning uchun bitta oqim minglab ulanishni boshqara oladi (I/O-bog'liq ishlar uchun).",
+      "en": "Node runs on a single main thread but doesn't block on I/O: with the event loop (libuv), I/O runs in the background and a callback fires when it's ready. So one thread handles thousands of connections (for I/O-bound work)."
+    }
+  },
+  {
+    "id": "node-03",
+    "topic": "nodejs",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What is the Node.js 'error-first callback' convention?",
+    "options": [
+      "The callback takes the result first, error last",
+      "The callback's FIRST argument is the error (null if none), followed by the result: (err, data) => ...",
+      "Errors are ignored",
+      "There is no such convention"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "An'anaviy Node callback'ida birinchi argument — XATO (err), agar xato bo'lmasa null; keyin natija: `(err, data) => {}`. Avval err ni tekshirish kerak. Promise/async-await bu naqshni soddalashtiradi.",
+      "en": "In a classic Node callback, the FIRST argument is the ERROR (err), null if none, followed by the result: `(err, data) => {}`. You check err first. Promises/async-await simplify this pattern."
+    }
+  },
+  {
+    "id": "node-04",
+    "topic": "nodejs",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "Why use STREAMS in Node.js (e.g. for reading a large file)?",
+    "options": [
+      "They load the whole file into memory at once",
+      "They process data in chunks, so memory stays low even for very large data",
+      "They are slower but simpler",
+      "They only work with text"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Streamlar ma'lumotni bo'laklar (chunk) bilan qayta ishlaydi — butun faylni xotiraga yuklamaydi. Shuning uchun juda katta fayllar/ma'lumot oqimlarini kam xotira bilan (va tezroq) qayta ishlash mumkin (masalan fs.createReadStream, pipe).",
+      "en": "Streams process data in chunks — they don't load the whole file into memory. So you can handle very large files/data flows with low memory (and faster) — e.g. fs.createReadStream, pipe()."
+    }
+  },
+  {
+    "id": "node-05",
+    "topic": "nodejs",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "In package.json, what is the difference between \"dependencies\" and \"devDependencies\"?",
+    "options": [
+      "They are the same",
+      "dependencies are needed at runtime in production; devDependencies are only for development/build/testing",
+      "devDependencies ship to production; dependencies do not",
+      "Only devDependencies are installed by npm install"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`dependencies` — dastur ishlashi uchun ishlab chiqarishda (production) kerak bo'lgan paketlar. `devDependencies` — faqat ishlab chiqish/test/build uchun (masalan test framework, linter). `npm install --production` devDependencies'ni o'rnatmaydi.",
+      "en": "`dependencies` are packages needed at runtime in production. `devDependencies` are only for development/testing/build (e.g. a test framework, a linter). `npm install --production` skips devDependencies."
+    }
+  },
+  {
+    "id": "node-06",
+    "topic": "nodejs",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "In semver, what does the caret in \"^1.2.3\" allow?",
+    "options": [
+      "Only exactly 1.2.3",
+      "Compatible updates that do not change the leftmost non-zero digit — i.e. >=1.2.3 <2.0.0",
+      "Any version at all",
+      "Only patch 1.2.x but never minor updates"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Semver'da `^1.2.3` — MAJOR o'zgarmaydigan yangilanishlarga ruxsat: >=1.2.3 va <2.0.0 (minor+patch yangilanadi). `~1.2.3` esa faqat patch: >=1.2.3 <1.3.0. Aniq versiya uchun oddiy `1.2.3` yoziladi.",
+      "en": "In semver, `^1.2.3` allows updates that don't change the major: >=1.2.3 and <2.0.0 (minor+patch update). `~1.2.3` allows only patch: >=1.2.3 <1.3.0. Use a plain `1.2.3` to pin an exact version."
+    }
+  },
+  {
+    "id": "node-07",
+    "topic": "nodejs",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "How should secrets like a database password or API token be provided to a Node app?",
+    "options": [
+      "Hard-coded in the source and committed to git",
+      "Through environment variables (process.env), kept out of version control",
+      "In a public README",
+      "In the frontend JavaScript"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Maxfiy ma'lumotlar (parol, token) `process.env` (muhit o'zgaruvchilari) orqali beriladi va git'ga kiritilmaydi (.env gitignore'da). Kodga yozish yoki frontendga qo'yish — jiddiy xavfsizlik xatosi.",
+      "en": "Secrets (passwords, tokens) should come from `process.env` (environment variables), kept out of version control (.env in .gitignore). Hard-coding them or putting them in the frontend is a serious security flaw."
+    }
+  },
+  {
+    "id": "node-08",
+    "topic": "nodejs",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "Node is single-threaded for JS. How do you use multiple CPU cores for CPU-heavy work?",
+    "options": [
+      "You can't — Node ignores extra cores",
+      "Use the cluster module or worker_threads (or multiple processes) to run work in parallel",
+      "Add more setTimeout calls",
+      "Use a bigger event loop"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "JS bitta oqimda ishlagani uchun og'ir CPU ishlari event loop'ni bloklaydi. Bir nechta yadrodan foydalanish uchun `worker_threads`, `cluster` moduli yoki alohida jarayonlar ishlatiladi. Node I/O-bog'liq ishlar uchun a'lo, CPU-bog'liq ishlar uchun bu yechimlar kerak.",
+      "en": "Since JS runs on one thread, heavy CPU work blocks the event loop. To use multiple cores, use `worker_threads`, the `cluster` module, or separate processes. Node excels at I/O-bound work; for CPU-bound work you need these."
+    }
+  }
+]

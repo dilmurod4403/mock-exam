@@ -1,0 +1,146 @@
+[
+  {
+    "id": "ts-01",
+    "topic": "typescript",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is a key difference between an `interface` and a `type` alias in TypeScript?",
+    "options": [
+      "They are completely different and never interchangeable",
+      "Both can describe object shapes; interfaces can be re-opened/merged (declaration merging), while `type` can also express unions, tuples, and primitives",
+      "Only `type` can describe objects",
+      "Interfaces cannot be extended"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Ikkalasi ham obyekt shaklini tavsiflaydi va ko'p holatda o'zaro almashinuvchan. Farqlar: `interface` qayta ochilib birlashishi mumkin (declaration merging) va odatda obyekt/klasslar uchun; `type` esa union, tuple, primitiv va murakkab tiplarni ham ifodalaydi.",
+      "en": "Both can describe object shapes and are often interchangeable. Differences: an `interface` can be re-opened and merged (declaration merging) and suits objects/classes; a `type` alias can also express unions, tuples, primitives, and more complex types."
+    }
+  },
+  {
+    "id": "ts-02",
+    "topic": "typescript",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is the difference between `any` and `unknown`?",
+    "options": [
+      "They are identical",
+      "`any` disables type checking entirely; `unknown` is type-safe — you must narrow it (check the type) before using it",
+      "`unknown` disables checking; `any` is safe",
+      "Both cause compile errors"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`any` — tip tekshiruvini butunlay o'chiradi (xavfli). `unknown` — xavfsiz muqobil: qiymatni ishlatishdan oldin uning tipini tekshirish (narrowing) shart, aks holda kompilyator ruxsat bermaydi.",
+      "en": "`any` turns off type checking entirely (unsafe). `unknown` is the type-safe alternative: you must narrow (check the type) before using the value, otherwise the compiler won't allow it."
+    }
+  },
+  {
+    "id": "ts-03",
+    "topic": "typescript",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What does this union type require before calling .toUpperCase()?\n\n```ts\nfunction f(x: string | number) {\n  // ...\n}\n```",
+    "options": [
+      "Nothing, just call x.toUpperCase()",
+      "Narrowing — e.g. if (typeof x === 'string') { x.toUpperCase() }",
+      "Cast x to any first",
+      "It is not allowed at all"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`string | number` — union tip. `.toUpperCase()` faqat stringda bor, shuning uchun avval NARROWING kerak: `if (typeof x === 'string') { ... }`. Shundan so'ng TS x ni string deb biladi va metodga ruxsat beradi.",
+      "en": "`string | number` is a union type. `.toUpperCase()` exists only on string, so you must NARROW first: `if (typeof x === 'string') { ... }`. Then TS knows x is a string and allows the method."
+    }
+  },
+  {
+    "id": "ts-04",
+    "topic": "typescript",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What do GENERICS provide here?\n\n```ts\nfunction identity<T>(value: T): T {\n  return value;\n}\n```",
+    "options": [
+      "They make the function slower",
+      "Reusable, type-safe code — the type T is inferred/passed so identity(5) returns number, identity('a') returns string",
+      "They force everything to be `any`",
+      "They only work with arrays"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Generiklar (`<T>`) tipni parametr sifatida oladi — qayta ishlatiladigan, tip-xavfsiz kod yaratadi. identity(5) → number, identity('a') → string qaytaradi. `any`dan farqli, tip ma'lumoti saqlanadi.",
+      "en": "Generics (`<T>`) take the type as a parameter — producing reusable, type-safe code. identity(5) returns number, identity('a') returns string. Unlike `any`, the type information is preserved."
+    }
+  },
+  {
+    "id": "ts-05",
+    "topic": "typescript",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "At RUNTIME, are TypeScript types available (e.g. can you check `if (x is MyType)`)?",
+    "options": [
+      "Yes, types exist at runtime",
+      "No — types are erased during compilation to JavaScript; they exist only at compile time",
+      "Only interfaces exist at runtime",
+      "Only in strict mode"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "TypeScript tiplari faqat KOMPILYATSIYA vaqtida mavjud — tsc JS'ga o'girganda tiplar O'CHIRILADI (type erasure). Ish vaqtida (runtime) tip tekshiruvi uchun oddiy JS usullari (typeof, instanceof, xossa tekshirish) ishlatiladi.",
+      "en": "TypeScript types exist only at COMPILE time — when tsc compiles to JS, types are ERASED (type erasure). At runtime you must use plain JS checks (typeof, instanceof, property checks) for type guards."
+    }
+  },
+  {
+    "id": "ts-06",
+    "topic": "typescript",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What do `?` and `readonly` mean in this interface?\n\n```ts\ninterface User {\n  readonly id: number;\n  name?: string;\n}\n```",
+    "options": [
+      "id is optional; name cannot change",
+      "id cannot be reassigned after creation; name is optional (may be omitted)",
+      "Both are optional",
+      "Both are read-only"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`readonly id` — id yaratilgandan keyin o'zgartirilmaydi (faqat o'qish). `name?` — ixtiyoriy xossa, berilmasligi mumkin (type string | undefined). Ular tuzilmani aniqroq va xavfsizroq qiladi.",
+      "en": "`readonly id` — id can't be reassigned after creation (read-only). `name?` — an optional property that may be omitted (type string | undefined). They make the shape more precise and safer."
+    }
+  },
+  {
+    "id": "ts-07",
+    "topic": "typescript",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is the `never` type used for?",
+    "options": [
+      "A value that can be anything",
+      "A value that NEVER occurs — e.g. a function that always throws or an exhaustiveness check in a switch",
+      "The same as void",
+      "A nullable string"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "`never` — hech qachon yuz bermaydigan qiymat tipi: masalan doim xato tashlaydigan funksiya yoki cheksiz sikl. Shuningdek switch/union'da to'liqlik (exhaustiveness) tekshiruvida ishlatiladi — barcha holatlar qamralganini kompilyator kafolatlaydi. `void` esa 'qiymat qaytarmaydi' degani.",
+      "en": "`never` is the type of a value that NEVER occurs: e.g. a function that always throws or an infinite loop. It's also used for exhaustiveness checks in a switch/union — the compiler guarantees all cases are handled. `void` instead means 'returns no value'."
+    }
+  },
+  {
+    "id": "ts-08",
+    "topic": "typescript",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What does this tuple type enforce?\n\n```ts\nlet pair: [string, number] = ['age', 30];\n```",
+    "options": [
+      "An array of any length",
+      "A fixed-length array with specific types per position: index 0 is string, index 1 is number",
+      "An object with keys string and number",
+      "Two separate variables"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Tuple — belgilangan uzunlik va har pozitsiyada aniq tipga ega massiv. `[string, number]` — 0-element string, 1-element number bo'lishi shart. ['age', 30] to'g'ri; [30, 'age'] xato bo'lardi.",
+      "en": "A tuple is a fixed-length array with a specific type per position. `[string, number]` requires index 0 to be a string and index 1 a number. ['age', 30] is valid; [30, 'age'] would be an error."
+    }
+  }
+]

@@ -1,0 +1,126 @@
+[
+  {
+    "id": "cd-01",
+    "topic": "coredeep",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is the output order?\n\n```js\nconsole.log(1);\nsetTimeout(() => console.log(2));\nPromise.resolve().then(() => console.log(3));\nconsole.log(4);\n```",
+    "options": ["1 2 3 4", "1 4 3 2", "1 4 2 3", "1 3 4 2"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Avval sinxron kod: 1, 4. So'ng mikrovazifalar (Promise.then): 3. Oxirida makrovazifa (setTimeout): 2. Event loop mikrovazifalarni har doim makrovazifalardan oldin bajaradi. Natija: 1 4 3 2.",
+      "en": "First synchronous code: 1, 4. Then microtasks (Promise.then): 3. Last the macrotask (setTimeout): 2. The event loop always drains microtasks before macrotasks. Result: 1 4 3 2."
+    }
+  },
+  {
+    "id": "cd-02",
+    "topic": "coredeep",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What is the main purpose of a closure in JavaScript?",
+    "options": [
+      "To make code run faster",
+      "To let an inner function remember and access variables from its outer scope, enabling private state",
+      "To create global variables",
+      "To copy objects deeply"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Closure — ichki funksiya tashqi doiradagi o'zgaruvchilarni 'eslab qolib', ularga keyin ham murojaat qila olishi. Bu maxfiy (private) holat va inkapsulyatsiya yaratishga imkon beradi (masalan hisoblagich, modul patterni).",
+      "en": "A closure lets an inner function 'remember' and access variables from its outer scope even later. This enables private state and encapsulation (e.g. counters, the module pattern)."
+    }
+  },
+  {
+    "id": "cd-03",
+    "topic": "coredeep",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is the output?\n\n```js\nconst obj = {\n  val: 42,\n  regular() { return this.val; },\n  arrow: () => this.val,\n};\nconsole.log(obj.regular(), obj.arrow());\n```",
+    "options": ["42 42", "42 undefined", "undefined 42", "undefined undefined"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Oddiy metod obyekt orqali chaqirilganda `this` — obj (42). Arrow funksiya esa o'z `this` iga ega emas — u tashqi (bu yerda modul/global) `this` ni oladi, u yerda val yo'q → undefined. Natija: 42 undefined.",
+      "en": "A regular method called via the object has `this` = obj (42). An arrow function has no own `this` — it uses the outer (here module/global) `this`, which has no val → undefined. Result: 42 undefined."
+    }
+  },
+  {
+    "id": "cd-04",
+    "topic": "coredeep",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What happens?\n\n```js\nconsole.log(x);\nlet x = 5;\n```",
+    "options": [
+      "Prints undefined",
+      "Prints 5",
+      "ReferenceError: Cannot access 'x' before initialization",
+      "Prints null"
+    ],
+    "correct": [2],
+    "explanation": {
+      "uz": "`let`/`const` hoisting bo'ladi, lekin e'longacha 'temporal dead zone' (TDZ) da bo'ladi — unga murojaat ReferenceError beradi. (`var` bo'lganda undefined chiqardi.)",
+      "en": "`let`/`const` are hoisted but live in the 'temporal dead zone' (TDZ) until declared — accessing them throws a ReferenceError. (With `var` it would print undefined.)"
+    }
+  },
+  {
+    "id": "cd-05",
+    "topic": "coredeep",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is the output?\n\n```js\nconsole.log([] == ![]);\n```",
+    "options": ["false", "true", "TypeError", "undefined"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Klassik tuzoq. `![]` → false (massiv truthy, inkor → false). Endi [] == false → false 0 ga, [] esa \"\" → 0 ga aylanadi → 0 == 0 → true. `==` ning coercion qoidalari shunday ishlaydi.",
+      "en": "A classic trap. `![]` → false (an array is truthy, negated → false). Now [] == false → false becomes 0, and [] becomes \"\" → 0 → 0 == 0 → true. This is how `==` coercion rules work."
+    }
+  },
+  {
+    "id": "cd-06",
+    "topic": "coredeep",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What is the difference between DEBOUNCE and THROTTLE?",
+    "options": [
+      "They are the same",
+      "Debounce runs the function only after events STOP for a delay; throttle runs it at most once per time interval",
+      "Debounce runs on every event; throttle runs once total",
+      "Throttle delays until events stop"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Debounce — hodisalar TO'XTAGACH belgilangan kutishdan keyin bir marta ishlaydi (masalan qidiruv inputi). Throttle — har vaqt oralig'ida ko'pi bilan bir marta ishlaydi (masalan scroll/resize). Ikkalasi ham tez-tez chaqiruvlarni cheklaydi.",
+      "en": "Debounce runs the function once after events STOP for a delay (e.g. a search input). Throttle runs it at most once per time interval (e.g. scroll/resize). Both limit how often a function fires."
+    }
+  },
+  {
+    "id": "cd-07",
+    "topic": "coredeep",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is the output?\n\n```js\nconst a = { x: 1, nested: { y: 2 } };\nconst b = { ...a };\nb.nested.y = 99;\nconsole.log(a.nested.y);\n```",
+    "options": ["2", "99", "undefined", "TypeError"],
+    "correct": [1],
+    "explanation": {
+      "uz": "Spread `{...a}` — YUZAKI (shallow) nusxa: faqat birinchi daraja ko'chiriladi. `nested` obyekti esa umumiy havola bo'lib qoladi, shuning uchun b.nested.y ni o'zgartirish a.nested.y ni ham o'zgartiradi → 99. Chuqur nusxa uchun structuredClone() kerak.",
+      "en": "Spread `{...a}` is a SHALLOW copy: only the top level is copied. The `nested` object is still shared by reference, so changing b.nested.y also changes a.nested.y → 99. Use structuredClone() for a deep copy."
+    }
+  },
+  {
+    "id": "cd-08",
+    "topic": "coredeep",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What does this currying pattern let you do?\n\n```js\nconst add = a => b => a + b;\nconst add5 = add(5);\nconsole.log(add5(3), add5(10));\n```",
+    "options": [
+      "Nothing useful",
+      "Partially apply arguments — fix `a` once and reuse (8, 15)",
+      "Run asynchronously",
+      "Mutate the original function"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Karrilash (currying) — argumentlarni bosqichma-bosqich berish. add(5) `a=5` ni yodda saqlagan yangi funksiya (closure) qaytaradi; add5(3)=8, add5(10)=15. Bu qisman qo'llash (partial application) va qayta ishlatishga imkon beradi.",
+      "en": "Currying supplies arguments step by step. add(5) returns a new function (a closure) remembering `a=5`; add5(3)=8, add5(10)=15. It enables partial application and reuse."
+    }
+  }
+]

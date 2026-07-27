@@ -64,6 +64,22 @@ const TOPIC_RESOURCES = {
       { title: "MDN — Closures", url: `${MDN}/Closures` },
       { title: "MDN — Iterators and generators", url: `${MDN}/Guide/Iterators_and_generators` },
     ],
+    // JS-INT (interview) tarmoqlari
+    coredeep: [
+      { title: "MDN — Closures", url: `${MDN}/Closures` },
+      { title: "MDN — The event loop (concurrency model)", url: `${MDN}/Event_loop` },
+    ],
+    webnet: [
+      { title: "MDN — HTTP overview", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview" },
+      { title: "MDN — Using the Fetch API", url: "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch" },
+    ],
+    nodejs: [
+      { title: "Node.js — Official API docs", url: "https://nodejs.org/docs/latest/api/" },
+      { title: "Node.js — Learn (guides)", url: "https://nodejs.org/en/learn" },
+    ],
+    typescript: [
+      { title: "TypeScript Handbook", url: "https://www.typescriptlang.org/docs/handbook/intro.html" },
+    ],
   },
   plsql: {
     // 1Z0-071 (SQL)
