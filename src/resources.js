@@ -80,6 +80,11 @@ const TOPIC_RESOURCES = {
     typescript: [
       { title: "TypeScript Handbook", url: "https://www.typescriptlang.org/docs/handbook/intro.html" },
     ],
+    protocols: [
+      { title: "MDN — HTTP overview", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview" },
+      { title: "MDN — WebSockets API", url: "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API" },
+      { title: "Wikipedia — Internet protocol suite (TCP/IP)", url: "https://en.wikipedia.org/wiki/Internet_protocol_suite" },
+    ],
   },
   plsql: {
     // 1Z0-071 (SQL)
