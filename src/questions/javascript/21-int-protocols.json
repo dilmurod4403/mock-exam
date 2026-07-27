@@ -1,0 +1,218 @@
+[
+  {
+    "id": "proto-01",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What best contrasts TCP and UDP?",
+    "options": [
+      "TCP is fast but unreliable; UDP is reliable but slow",
+      "TCP is connection-oriented and reliable (ordered, retransmits lost packets); UDP is connectionless and fast with no delivery guarantee",
+      "They are identical",
+      "UDP is only used for web pages"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "TCP — ulanishga asoslangan, ishonchli (tartibli, yo'qolgan paketlarni qayta yuboradi). Qayerda: web (HTTP), email, fayl uzatish — ma'lumot to'liq va tartibli kelishi shart bo'lgan joyda. UDP — ulanishsiz, tez, kafolatsiz. Qayerda: video/ovoz oqimi, onlayn o'yin, DNS — tezlik muhim, kichik yo'qotish chidasa bo'ladigan joyda.",
+      "en": "TCP is connection-oriented and reliable (ordered, retransmits lost packets). Where: the web (HTTP), email, file transfer — anywhere data must arrive complete and in order. UDP is connectionless and fast with no guarantee. Where: video/voice streaming, online gaming, DNS — where low latency matters and small losses are tolerable."
+    }
+  },
+  {
+    "id": "proto-02",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What is HTTP?",
+    "options": [
+      "A transport-layer protocol like TCP",
+      "A stateless application-layer request/response protocol used for the web",
+      "A database query language",
+      "An encryption standard"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "HTTP — application (ilova) qatlamidagi so'rov/javob protokoli, u TCP ustida ishlaydi. Stateless: har so'rov mustaqil (server oldingi so'rovni eslamaydi — shuning uchun cookie/token kerak). Qayerda: brauzer ↔ server, REST API'lar, veb-sahifalarni yuklash.",
+      "en": "HTTP is a stateless application-layer request/response protocol that runs over TCP. Stateless: each request is independent (the server doesn't remember prior ones — hence cookies/tokens). Where: browser ↔ server, REST APIs, loading web pages."
+    }
+  },
+  {
+    "id": "proto-03",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What does HTTPS add over HTTP, and on which default port?",
+    "options": [
+      "Nothing; it is the same as HTTP",
+      "Encryption via TLS/SSL (confidentiality + integrity + server authentication), default port 443",
+      "Faster DNS resolution, port 80",
+      "Only response compression"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "HTTPS = HTTP + TLS/SSL shifrlash. U ma'lumotni yo'lda o'qib/o'zgartirib bo'lmaydigan qiladi va serverni tasdiqlaydi (sertifikat). Standart port 443 (HTTP esa 80). Qayerda: barcha zamonaviy saytlar, ayniqsa login/to'lov — maxfiylik kerak bo'lgan hamma joyda.",
+      "en": "HTTPS = HTTP + TLS/SSL encryption. It makes data unreadable/untamperable in transit and authenticates the server (certificate). Default port 443 (HTTP is 80). Where: all modern sites, especially login/payment — anywhere confidentiality is needed."
+    }
+  },
+  {
+    "id": "proto-04",
+    "topic": "protocols",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "When is a WebSocket a better choice than repeated HTTP requests?",
+    "options": [
+      "Never — HTTP is always better",
+      "For real-time, two-way (full-duplex) communication over a single persistent connection (chat, live prices, notifications)",
+      "For downloading a static image once",
+      "For DNS lookups"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "WebSocket — bitta doimiy ulanish orqali ikki tomonlama (full-duplex) real vaqt aloqasi. HTTP so'rov/javob va bir tomonlama; server o'zi xabar yubora olmaydi (polling kerak). Qayerda: chat, jonli narx/ballar, bildirishnomalar, ko'p o'yinchili o'yinlar. Ulanish HTTP bilan boshlanib, 101 Switching Protocols bilan 'upgrade' bo'ladi.",
+      "en": "A WebSocket gives real-time, two-way (full-duplex) communication over one persistent connection. HTTP is request/response and one-directional; the server can't push on its own (needs polling). Where: chat, live prices/scores, notifications, multiplayer games. The connection starts as HTTP and 'upgrades' via 101 Switching Protocols."
+    }
+  },
+  {
+    "id": "proto-05",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What does DNS do, and which transport/port does it typically use?",
+    "options": [
+      "Encrypts traffic; TCP port 443",
+      "Resolves domain names to IP addresses; typically UDP port 53",
+      "Transfers files; port 21",
+      "Sends email; port 25"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "DNS domen nomini (example.com) IP manzilga (93.184.x.x) o'giradi — 'internetning telefon kitobi'. Odatda UDP port 53 (tez); katta javob yoki zona uzatishda TCP'ga o'tadi. Qayerda: har qanday saytga ulanishdan oldin brauzer/OS avtomatik bajaradi.",
+      "en": "DNS resolves a domain name (example.com) to an IP address (93.184.x.x) — the 'phone book of the internet'. Typically UDP port 53 (fast); it falls back to TCP for large responses or zone transfers. Where: performed automatically by the browser/OS before connecting to any site."
+    }
+  },
+  {
+    "id": "proto-06",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "Which set of default port numbers is correct?",
+    "options": [
+      "HTTP 443, HTTPS 80, SSH 25",
+      "HTTP 80, HTTPS 443, SSH 22, DNS 53",
+      "HTTP 22, HTTPS 21, SSH 80",
+      "They all use port 8080"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "Standart portlar: HTTP 80, HTTPS 443, SSH 22, DNS 53, FTP 21, SMTP 25, IMAP 143, POP3 110. Portlar bir IP'da qaysi xizmat ishlayotganini ajratadi. Qayerda: server sozlashda, firewall qoidalarida, URL'da (masalan :443) bilinadi.",
+      "en": "Standard ports: HTTP 80, HTTPS 443, SSH 22, DNS 53, FTP 21, SMTP 25, IMAP 143, POP3 110. Ports distinguish which service runs on one IP. Where: relevant in server config, firewall rules, and URLs (e.g. :443)."
+    }
+  },
+  {
+    "id": "proto-07",
+    "topic": "protocols",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is a key improvement of HTTP/2 over HTTP/1.1?",
+    "options": [
+      "It removes encryption",
+      "Multiplexing many requests/responses over a single connection plus header compression (reducing latency)",
+      "It switches from TCP to email",
+      "It makes every request slower"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "HTTP/2 bitta ulanishda ko'p so'rov/javobni parallel (multiplexing) uzatadi va sarlavhalarni siqadi — HTTP/1.1'dagi navbat (head-of-line) muammosini kamaytiradi, sahifa tezroq yuklanadi. HTTP/3 esa yana ilgarilab, QUIC (UDP ustida) ishlatadi. Qayerda: zamonaviy veb-serverlar/CDN'lar.",
+      "en": "HTTP/2 multiplexes many requests/responses over a single connection and compresses headers — reducing HTTP/1.1's head-of-line queuing and loading pages faster. HTTP/3 goes further, using QUIC (over UDP). Where: modern web servers/CDNs."
+    }
+  },
+  {
+    "id": "proto-08",
+    "topic": "protocols",
+    "difficulty": "hard",
+    "levels": ["JS-INT"],
+    "question": "What is the TCP three-way handshake sequence to establish a connection?",
+    "options": [
+      "ACK → FIN → RST",
+      "SYN → SYN-ACK → ACK",
+      "GET → POST → PUT",
+      "OPEN → SEND → CLOSE"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "TCP ulanishni o'rnatish uchun uch qadamli 'handshake': mijoz SYN yuboradi → server SYN-ACK bilan javob beradi → mijoz ACK yuboradi. Shundan so'ng ishonchli kanal tayyor. Qayerda: har TCP ulanishda (HTTP, HTTPS, SSH...) fon rejimda sodir bo'ladi. Yopishda FIN/ACK ishlatiladi.",
+      "en": "To establish a TCP connection, a three-way handshake: the client sends SYN → the server replies SYN-ACK → the client sends ACK. Then the reliable channel is ready. Where: happens under the hood on every TCP connection (HTTP, HTTPS, SSH...). Closing uses FIN/ACK."
+    }
+  },
+  {
+    "id": "proto-09",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "Which is a typical use of UDP rather than TCP?",
+    "options": [
+      "Loading a bank web page",
+      "Live video streaming, VoIP calls, online gaming, and DNS",
+      "Downloading a PDF that must arrive intact",
+      "Submitting a payment form"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "UDP tez va kafolatsiz — kechikish (latency) muhim, kichik paket yo'qolsa ham chidasa bo'ladigan joylarda ishlatiladi: jonli video/ovoz (VoIP), onlayn o'yin, DNS so'rovlari. Bank sahifasi, PDF, to'lov kabi to'liqlik shart joylarda TCP ishlatiladi.",
+      "en": "UDP is fast and unguaranteed — used where latency matters and small packet loss is acceptable: live video/voice (VoIP), online gaming, DNS queries. For a bank page, a PDF, or a payment where completeness is required, TCP is used."
+    }
+  },
+  {
+    "id": "proto-10",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "Which email protocol SENDS mail, and which ones RETRIEVE it?",
+    "options": [
+      "SMTP sends; IMAP/POP3 retrieve",
+      "IMAP sends; SMTP retrieves",
+      "HTTP sends; FTP retrieves",
+      "All email uses only DNS"
+    ],
+    "correct": [0],
+    "explanation": {
+      "uz": "SMTP (port 25/587) — xat YUBORISH uchun. IMAP (143) va POP3 (110) — xatni serverdan OLISH uchun. IMAP xatni serverda saqlab ko'p qurilmada sinxronlaydi; POP3 esa yuklab olib serverdan o'chiradi. Qayerda: pochta mijozlari (Gmail, Outlook) va pochta serverlari.",
+      "en": "SMTP (port 25/587) is for SENDING mail. IMAP (143) and POP3 (110) are for RETRIEVING it. IMAP keeps mail on the server and syncs across devices; POP3 downloads and removes it from the server. Where: mail clients (Gmail, Outlook) and mail servers."
+    }
+  },
+  {
+    "id": "proto-11",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What is the main job of the IP protocol?",
+    "options": [
+      "Encrypting application data",
+      "Addressing and routing packets between hosts across networks (IPv4 / IPv6)",
+      "Managing a database",
+      "Rendering HTML pages"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "IP (Internet Protocol) — tarmoq qatlami: har qurilmaga manzil (IP address) beradi va paketlarni manbadan manzilga yo'naltiradi (routing). IPv4 (32-bit, tugab bormoqda) va IPv6 (128-bit) bor. Qayerda: internetdagi HAR aloqaning asosi — TCP/UDP IP ustida ishlaydi.",
+      "en": "IP (Internet Protocol) is the network layer: it gives each host an address (IP address) and routes packets from source to destination. There is IPv4 (32-bit, running out) and IPv6 (128-bit). Where: the foundation of EVERY internet communication — TCP/UDP run on top of IP."
+    }
+  },
+  {
+    "id": "proto-12",
+    "topic": "protocols",
+    "difficulty": "medium",
+    "levels": ["JS-INT"],
+    "question": "What is SSH used for, and on which default port?",
+    "options": [
+      "Serving web pages, port 80",
+      "Secure, encrypted remote login and command execution (and file transfer via SFTP/SCP), port 22",
+      "Resolving domain names, port 53",
+      "Sending email, port 25"
+    ],
+    "correct": [1],
+    "explanation": {
+      "uz": "SSH (Secure Shell) — masofadagi serverga shifrlangan, xavfsiz ulanish: buyruq bajarish, boshqarish; SFTP/SCP orqali fayl uzatish. Standart port 22. Qayerda: serverlarni boshqarish (DevOps), git (git@github.com), deploy. Eski, shifrlanmagan Telnet o'rnini egallagan.",
+      "en": "SSH (Secure Shell) provides an encrypted, secure connection to a remote server: running commands, administration; file transfer via SFTP/SCP. Default port 22. Where: managing servers (DevOps), git (git@github.com), deploys. It replaced the old, unencrypted Telnet."
+    }
+  }
+]

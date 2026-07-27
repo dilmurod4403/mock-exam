@@ -36,6 +36,7 @@ export const PROG_LANGS = {
       webnet: { uz: "Browser/DOM va tarmoq (HTTP, fetch, CORS)", en: "Browser/DOM & networking (HTTP, fetch, CORS)" },
       nodejs: { uz: "Node.js asoslari", en: "Node.js basics" },
       typescript: { uz: "TypeScript asoslari", en: "TypeScript basics" },
+      protocols: { uz: "Tarmoq protokollari (HTTP, TCP, UDP...)", en: "Network protocols (HTTP, TCP, UDP...)" },
     },
     // JSE/JSA — asosiy bank (JSP/JS-INT teglilardan tashqari); JSP va JS-INT — o'z teglari bo'yicha
     levels: {
@@ -87,6 +88,7 @@ export const PROG_LANGS = {
           { title: { uz: "Browser/DOM & tarmoq", en: "Browser/DOM & networking" }, topics: ["webnet"] },
           { title: { uz: "Node.js", en: "Node.js" }, topics: ["nodejs"] },
           { title: { uz: "TypeScript", en: "TypeScript" }, topics: ["typescript"] },
+          { title: { uz: "Protokollar", en: "Protocols" }, topics: ["protocols"] },
         ],
         filter: (q) => q.levels?.includes("JS-INT"),
       },
