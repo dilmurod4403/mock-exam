@@ -157,7 +157,7 @@ const TOPIC_RESOURCES = {
   },
 };
 
-// Umumiy (daraja) manbalar: umumiy + darajaга xos
+// Umumiy (daraja) manbalar: umumiy + darajaga xos
 export function getResources(plang, level) {
   const cfg = RESOURCES[plang] || {};
   return [...(cfg.common || []), ...(cfg[level] || [])];
