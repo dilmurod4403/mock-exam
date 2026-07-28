@@ -1,4 +1,5 @@
 import "dotenv/config";
+import http from "node:http";
 import { Telegraf, Markup } from "telegraf";
 import {
   PROG_LANGS,
@@ -1667,6 +1668,20 @@ async function launchWithRetry() {
       process.exit(1);
     }
   }
+}
+
+// Railway va boshqa hostlar servisni PORT'da tinglashini kutadi. Bot long-polling —
+// port ochmaydi, shuning uchun host uni "nosog'lom" deb to'xtatishi mumkin. Kichik
+// health-check serveri shu muammoni yopadi (PORT o'rnatilgan bo'lsagina ishlaydi).
+if (process.env.PORT) {
+  http
+    .createServer((_req, res) => {
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end("ok");
+    })
+    .listen(Number(process.env.PORT), () =>
+      console.log(`🌐 Health-check server: port ${process.env.PORT}`)
+    );
 }
 
 console.log("⏳ Bot ishga tushmoqda...");
